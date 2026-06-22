@@ -864,18 +864,16 @@ with tab4:
         ]
         
         sq_cols = st.columns(3)
-        selected_suggestion = None
         for i, sq in enumerate(suggested_qs):
             with sq_cols[i % 3]:
                 if st.button(sq, key=f"sq_{i}", use_container_width=True):
-                    selected_suggestion = sq
+                    st.session_state.ask_reviews_input = sq
         
         st.markdown("---")
         
         # Text input for custom question
         user_question = st.text_input(
             "Your Question",
-            value=selected_suggestion if selected_suggestion else "",
             placeholder="Type your question here... e.g. 'Why do users feel stuck in echo chambers?'",
             key="ask_reviews_input"
         )
