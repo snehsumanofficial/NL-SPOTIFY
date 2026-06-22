@@ -1,0 +1,123 @@
+[
+  {
+    "executive_summary": "Analyzed 640 feedback items from 5 platforms. Top themes relate to recommendation quality and discovery difficulty. Average app store rating: 3.7/5.",
+    "discovery_struggles": [
+      "Users report difficulty finding new music (98 mentions)",
+      "Algorithm feels repetitive and doesn't surface diverse artists"
+    ],
+    "recommendation_frustrations": [
+      "Recommendation complaints appear in 127 items",
+      "Negative sentiment in 59 feedback items"
+    ],
+    "desired_listening_behaviors": [
+      "Users want personalized but fresh music discovery",
+      "Interest in curated playlists and genre exploration"
+    ],
+    "repeat_listening_causes": [
+      "Repeat listening mentioned in 47 items",
+      "Comfort with familiar playlists over algorithmic exploration"
+    ],
+    "user_segments": [
+      {
+        "segment": "Power listeners",
+        "challenges": [
+          "Algorithm fatigue",
+          "Same artists in Discover Weekly"
+        ],
+        "evidence": "Common in Reddit and forum discussions"
+      },
+      {
+        "segment": "Casual listeners",
+        "challenges": [
+          "Don't know where to start",
+          "Rely on same playlists"
+        ],
+        "evidence": "Visible in app store reviews"
+      }
+    ],
+    "unmet_needs": [
+      "More control over recommendation diversity",
+      "Better surfacing of niche/new artists",
+      "Clearer discovery paths beyond default playlists"
+    ],
+    "top_themes": [
+      {
+        "theme": "Recommendation Quality",
+        "frequency": "medium",
+        "sentiment": "mixed",
+        "example_quotes": [
+          "This app is great for kids and adults and premeuim is even better I highly recommend",
+          "I love Spotify, it’s usually my go to music app. I can’t afford Premium, so I’ve always stuck with the free version, and honestly I was fine with that. But lately it’s been driving me crazy. I’ll play",
+          "I absolutely love how Spotify can pick up on what’s songs you like or would like after you play your whole playlist. That’s how I discover new music and artist! Apple Music can’t even compare!"
+        ]
+      },
+      {
+        "theme": "Playlist Behavior",
+        "frequency": "medium",
+        "sentiment": "mixed",
+        "example_quotes": [
+          "This app is amazing have good graphics it’s really good I am happy for finding this app\nI can create my own playlist is my favor part",
+          "I wish there were less ads and like if I have a playlist, I want it to go in the same order as the songs are. Thank you, have a nice day!! I loveee Spotify 👑👑",
+          "Smart shuffle ruined Spotify because you can’t listen to the songs you want without going back to the app and changing it yourself"
+        ]
+      },
+      {
+        "theme": "Discovery Difficulty",
+        "frequency": "medium",
+        "sentiment": "mixed",
+        "example_quotes": [
+          "I absolutely love how Spotify can pick up on what’s songs you like or would like after you play your whole playlist. That’s how I discover new music and artist! Apple Music can’t even compare!",
+          "It always repeats the same songs, I skip & skip and it’s always the same. I search for new music but it always comes back to the same playlist.",
+          "over the last month or so your app screws up playing over bluetooth. if i wanted audio this choppy i would go back to using cds"
+        ]
+      },
+      {
+        "theme": "Frustration",
+        "frequency": "medium",
+        "sentiment": "negative",
+        "example_quotes": [
+          "This is good but TERRIBLE each time a song changes an ad is played or every 30 seconds to get premium and it’s just way too much ads then it’s soo much for premium im just going to go back to apple mu",
+          "u literally have to pay for everything.. like what ? , and they say 30 mins of no ads , whole time its 5 mins genuinely hate this app",
+          "Love the app but even with family premium it will not let me access my PURCHASED audio books and stuff related in thy sense. I would love to be able to view the things I pay for, but I guess amazon is"
+        ]
+      },
+      {
+        "theme": "Repetitive Listening",
+        "frequency": "low",
+        "sentiment": "negative",
+        "example_quotes": [
+          "This app is good but it has WAY TO MANY ADDS I GET ONE AFTER EVERY SINGLE SONG, and why do I have to buy the premium membership in order to listen to the song on repeat it’s ridicules, I like how you ",
+          "App won’t stop playing the same songs over and over within your playlist.",
+          "Got everything you need and still growing, new things keep being added to make this app better and I’ve tried other apps and I’ve stuck here"
+        ]
+      },
+      {
+        "theme": "Positive Discovery",
+        "frequency": "low",
+        "sentiment": "mixed",
+        "example_quotes": [
+          "I don't have a ton of playlists yet but I love seeing what people are listening to and love discovering new music. Also I follow a lot of lesser known artists.\n\n[https://open.spotify.com/user/314as7er"
+        ]
+      }
+    ],
+    "actionable_opportunities": [
+      "Introduce discovery mode that prioritizes novelty over familiarity",
+      "Let users tune recommendation diversity (more new / more familiar)",
+      "Surface 'why this was recommended' to build trust in the algorithm"
+    ],
+    "metadata": {
+      "analysis_type": "rule_based_fallback",
+      "total_records": 640,
+      "platform_breakdown": {
+        "app_store": 200,
+        "community_forum": 23,
+        "play_store": 253,
+        "reddit": 99,
+        "social_media": 65
+      },
+      "note": "Configure OPENAI_API_KEY or ANTHROPIC_API_KEY for AI-powered analysis",
+      "ai_error": "Error code: 401 - {'error': {'message': 'Incorrect API key provided: P7-7iv!2***dUG2. You can find your API key at https://platform.openai.com/account/api-keys.', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_api_key'}}",
+      "total_records_analyzed": 640
+    }
+  }
+]
