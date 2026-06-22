@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spotify AI Vibe Check</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Mock -->
+        <nav class="sidebar">
+            <div class="logo">
+                <img src="https://storage.googleapis.com/pr-newsroom-wp/1/2018/11/Spotify_Logo_RGB_White.png" alt="Spotify" width="120">
+            </div>
+            <ul class="nav-links">
+                <li><i class="icon">🏠</i> Home</li>
+                <li><i class="icon">🔍</i> Search</li>
+                <li><i class="icon">📚</i> Your Library</li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="header">
+                <div class="user-profile">
+                    <img src="https://i.pravatar.cc/150?img=68" alt="User">
+                </div>
+            </header>
+
+            <div class="vibe-container">
+                <div class="vibe-hero">
+                    <span class="badge">AI-NATIVE PROTOTYPE</span>
+                    <h1>What's your exact vibe right now?</h1>
+                    <p>Break the algorithm. Tell us exactly what you want to hear, and we'll curate a completely fresh session just for you.</p>
+                </div>
+
+                <div class="vibe-card glass-panel">
+                    <form id="vibe-form">
+                        <div class="input-group">
+                            <label for="vibe-input">Describe your context (e.g. "Hype music for a workout")</label>
+                            <input type="text" id="vibe-input" placeholder="Start typing your vibe..." required autocomplete="off">
+                        </div>
+
+                        <div class="input-group">
+                            <label>Familiarity Preference</label>
+                            <div class="radio-group">
+                                <label class="radio-card">
+                                    <input type="radio" name="familiarity" value="low" required>
+                                    <div class="card-content">
+                                        <h4>Discover Only</h4>
+                                        <p>Completely new tracks</p>
+                                    </div>
+                                </label>
+                                <label class="radio-card">
+                                    <input type="radio" name="familiarity" value="medium" checked>
+                                    <div class="card-content">
+                                        <h4>Blend</h4>
+                                        <p>Familiar meets new</p>
+                                    </div>
+                                </label>
+                                <label class="radio-card">
+                                    <input type="radio" name="familiarity" value="high">
+                                    <div class="card-content">
+                                        <h4>Comfort</h4>
+                                        <p>Songs I know</p>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="generate-btn" id="submit-btn">
+                            <span class="btn-text">Generate My Session</span>
+                            <div class="spinner hidden" id="spinner"></div>
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Results Section (Hidden initially) -->
+                <div id="results-section" class="results-section hidden">
+                    <div class="results-header">
+                        <div class="play-btn-large">▶</div>
+                        <div>
+                            <h2 id="playlist-title">Your Custom Session</h2>
+                            <p id="playlist-desc">Curated by AI to break the algorithm loop.</p>
+                        </div>
+                    </div>
+                    <div class="tracklist" id="tracklist">
+                        <!-- Tracks will be injected here -->
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
