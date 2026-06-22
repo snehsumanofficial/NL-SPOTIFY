@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // For local testing, we use the local FastAPI server
     const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
         ? 'http://127.0.0.1:8000/generate-vibe-playlist'
-        : 'https://nl-spotify-api.onrender.com/generate-vibe-playlist'; // Replace with real Render URL later
+        : 'https://nl-spotify.onrender.com/generate-vibe-playlist'; // Live Render URL
 
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
