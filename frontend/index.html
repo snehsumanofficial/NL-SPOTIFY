@@ -23,6 +23,19 @@
                     <i class="fa-solid fa-search search-icon"></i>
                     <input type="text" id="vibe-search" placeholder="What's your vibe rn?" autocomplete="off">
                     <button class="mic-btn" id="voice-btn" title="Voice Search"><i class="fa-solid fa-microphone"></i></button>
+                    
+                    <!-- Search Dropdown -->
+                    <div class="search-dropdown hidden" id="search-dropdown">
+                        <div class="dropdown-header">SEARCH OPTIONS</div>
+                        <div class="dropdown-grid">
+                            <div class="dropdown-item">Songs</div>
+                            <div class="dropdown-item">Artists</div>
+                            <div class="dropdown-item">Albums</div>
+                            <div class="dropdown-item">Podcasts</div>
+                            <div class="dropdown-item">Playlists</div>
+                            <div class="dropdown-item">Voice</div>
+                        </div>
+                    </div>
                 </div>
             </div>
             
@@ -46,16 +59,25 @@
             <div class="filter-pills">
                 <button class="pill-btn">Playlists</button>
                 <button class="pill-btn"><i class="fa-solid fa-wand-magic-sparkles"></i> Blend</button>
+                <button class="pill-btn"><i class="fa-regular fa-folder"></i> Folder</button>
+                <button class="pill-btn active">Discover</button>
             </div>
             
             <div class="surprise-me-container">
                 <button class="surprise-btn" id="surprise-btn">
-                    <div class="surprise-icon"><i class="fa-solid fa-sparkles"></i></div>
+                    <div class="surprise-icon">
+                        <i class="fa-solid fa-sparkles"></i>
+                    </div>
                     <div class="surprise-text">
                         <h4>Surprise Me</h4>
                         <p>A random pick, tuned to you</p>
                     </div>
                 </button>
+            </div>
+            
+            <div class="search-recents">
+                <i class="fa-solid fa-search"></i>
+                <span>Recents <i class="fa-solid fa-caret-down"></i></span>
             </div>
             
             <div class="playlist-list">
@@ -66,93 +88,214 @@
                         <p>Playlist • 248 songs</p>
                     </div>
                 </div>
+                <div class="playlist-item">
+                    <div class="playlist-img blue-img"><i class="fa-solid fa-podcast"></i></div>
+                    <div class="playlist-info">
+                        <h4>Deep Focus</h4>
+                        <p>Playlist • Spotify</p>
+                    </div>
+                </div>
+                <div class="playlist-item">
+                    <div class="playlist-img orange-img"><i class="fa-solid fa-compact-disc"></i></div>
+                    <div class="playlist-info">
+                        <h4>Late Night Drive</h4>
+                        <p>Playlist • You</p>
+                    </div>
+                </div>
+                <div class="playlist-item">
+                    <div class="playlist-img bg-red"><i class="fa-solid fa-dumbbell"></i></div>
+                    <div class="playlist-info">
+                        <h4>Workout Beasts</h4>
+                        <p>Playlist • 92 songs</p>
+                    </div>
+                </div>
             </div>
         </nav>
 
-        <!-- Main Content Area: The Hybrid Form -->
+        <!-- Main Content Area -->
         <main class="main-view">
-            <div class="vibe-container">
-                <div class="vibe-hero">
-                    <span class="badge"><i class="fa-solid fa-wand-magic-sparkles"></i> AI-NATIVE PROTOTYPE</span>
-                    <h1>What's your exact vibe right now?</h1>
-                    <p>Break the algorithm. Tell us exactly what you want to hear, and we'll curate a completely fresh session just for you.</p>
+            <div class="main-header">
+                <div id="dynamic-header-content">
+                    <p class="discovery-label"><i class="fa-solid fa-wand-magic-sparkles"></i> DISCOVERY, PERSONALIZED</p>
+                    <h1 class="greeting">Good evening, Sneh.</h1>
+                    <h2 class="sub-greeting">Pick a mood — or let us pick.</h2>
                 </div>
-
-                <div class="vibe-card glass-panel">
-                    <form id="vibe-form">
-                        <div class="input-group">
-                            <label for="vibe-input">Describe your context (e.g. "Hype music for a workout")</label>
-                            <input type="text" id="vibe-input" placeholder="Start typing your vibe..." required autocomplete="off">
-                        </div>
-
-                        <!-- Hybrid Dropdowns -->
-                        <div class="dropdowns-row">
-                            <div class="input-group flex-1">
-                                <label>Mood Check</label>
-                                <div class="custom-dropdown" id="mood-dropdown">
-                                    <div class="dropdown-selected" id="mood-selected">Select Mood <i class="fa-solid fa-chevron-down"></i></div>
-                                    <div class="dropdown-options hidden" id="mood-options">
-                                        <div class="dropdown-option" data-value="Happy">Happy</div>
-                                        <div class="dropdown-option" data-value="Relaxed">Relaxed</div>
-                                        <div class="dropdown-option" data-value="Motivate">Motivate</div>
-                                        <div class="dropdown-option" data-value="Sleepy">Sleepy</div>
-                                        <div class="dropdown-option" data-value="Party">Party</div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="input-group flex-1">
-                                <label>Activity</label>
-                                <div class="custom-dropdown" id="activity-dropdown">
-                                    <div class="dropdown-selected" id="activity-selected">Select Activity <i class="fa-solid fa-chevron-down"></i></div>
-                                    <div class="dropdown-options hidden" id="activity-options">
-                                        <div class="dropdown-option" data-value="Study">Study</div>
-                                        <div class="dropdown-option" data-value="Work">Work</div>
-                                        <div class="dropdown-option" data-value="Workout">Workout</div>
-                                        <div class="dropdown-option" data-value="Travel">Travel</div>
-                                        <div class="dropdown-option" data-value="Meditate">Meditate</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <button type="submit" class="generate-btn" id="submit-btn">
-                            <span class="btn-text">Generate My Session</span>
-                            <div class="spinner hidden" id="spinner"></div>
-                        </button>
-                    </form>
+                
+                <div class="category-pills">
+                    <button class="category-btn active" data-target="view-discovery">All</button>
+                    <button class="category-btn" data-target="view-music">Music</button>
+                    <button class="category-btn" data-target="view-podcasts">Podcasts</button>
+                    <button class="category-btn" data-target="view-audiobooks">Audiobooks</button>
+                    <button class="category-btn" data-target="view-live">Live</button>
+                    <button class="category-btn" data-target="view-events">Events</button>
                 </div>
-
-                <!-- Results Section -->
-                <div id="results-section" class="results-section hidden">
-                    <div class="results-header">
-                        <div class="play-btn-large"><i class="fa-solid fa-play"></i></div>
-                        <div>
-                            <h2 id="playlist-title">Your Custom Session</h2>
-                            <p id="playlist-desc">Curated by AI to break the algorithm loop.</p>
+            </div>
+            
+            <!-- View: Discovery (AI MVP Features) -->
+            <div id="view-discovery" class="content-view active">
+                <div class="interactive-panels">
+                    <!-- Mood Check Panel (Accordion) -->
+                    <div class="panel mood-panel">
+                        <div class="panel-header" id="mood-header">
+                            <span><i class="fa-regular fa-face-smile"></i> MOOD CHECK</span>
+                            <i class="fa-solid fa-chevron-down accordion-icon"></i>
+                        </div>
+                        <h3 class="panel-title" id="active-mood-title">Happy</h3>
+                        <div class="selector-container collapsible collapsed" id="mood-selectors">
+                            <div class="selector-item mood active" data-mood="Happy">
+                                <div class="selector-icon bg-yellow"><i class="fa-regular fa-face-smile"></i></div>
+                                <span>Happy</span>
+                            </div>
+                            <div class="selector-item mood" data-mood="Relaxed">
+                                <div class="selector-icon bg-green"><i class="fa-solid fa-leaf"></i></div>
+                                <span>Relaxed</span>
+                            </div>
+                            <div class="selector-item mood" data-mood="Motivate">
+                                <div class="selector-icon bg-red"><i class="fa-solid fa-fire"></i></div>
+                                <span>Motivate</span>
+                            </div>
+                            <div class="selector-item mood" data-mood="Sleepy">
+                                <div class="selector-icon bg-purple"><i class="fa-solid fa-moon"></i></div>
+                                <span>Sleepy</span>
+                            </div>
+                            <div class="selector-item mood" data-mood="Party">
+                                <div class="selector-icon bg-pink"><i class="fa-solid fa-party-horn"></i></div>
+                                <span>Party</span>
+                            </div>
                         </div>
                     </div>
-                    <div class="tracklist" id="tracklist">
-                        <!-- Tracks will be injected here -->
+                    
+                    <!-- Activity Panel (Accordion) -->
+                    <div class="panel activity-panel">
+                        <div class="panel-header" id="activity-header">
+                            <span><i class="fa-solid fa-chart-line"></i> ACTIVITY</span>
+                            <i class="fa-solid fa-chevron-down accordion-icon"></i>
+                        </div>
+                        <h3 class="panel-title" id="active-activity-title">What are you doing?</h3>
+                        <div class="selector-container collapsible collapsed" id="activity-selectors">
+                            <div class="selector-item activity" data-activity="Study">
+                                <div class="selector-icon bg-blue"><i class="fa-solid fa-book"></i></div>
+                                <span>Study</span>
+                            </div>
+                            <div class="selector-item activity" data-activity="Work">
+                                <div class="selector-icon bg-gray"><i class="fa-solid fa-briefcase"></i></div>
+                                <span>Work</span>
+                            </div>
+                            <div class="selector-item activity" data-activity="Workout">
+                                <div class="selector-icon bg-orange"><i class="fa-solid fa-dumbbell"></i></div>
+                                <span>Workout</span>
+                            </div>
+                            <div class="selector-item activity" data-activity="Travel">
+                                <div class="selector-icon bg-teal"><i class="fa-solid fa-plane"></i></div>
+                                <span>Travel</span>
+                            </div>
+                            <div class="selector-item activity" data-activity="Meditate">
+                                <div class="selector-icon bg-indigo"><i class="fa-solid fa-spa"></i></div>
+                                <span>Meditate</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="loading-indicator" class="hidden">
+                    <div class="loader"></div>
+                    <p>AI is generating your context-aware session...</p>
+                </div>
+            </div>
+
+            <!-- View: Music -->
+            <div id="view-music" class="content-view hidden">
+                <h2 class="section-title">New releases for you</h2>
+                <div class="card-grid">
+                    <div class="media-card clickable">
+                        <div class="card-img bg-indigo"></div>
+                        <h4>Midnight Vibes</h4>
+                        <p>The latest tracks</p>
+                    </div>
+                    <div class="media-card clickable">
+                        <div class="card-img bg-pink"></div>
+                        <h4>Pop Remixes</h4>
+                        <p>Upbeat hits</p>
+                    </div>
+                    <div class="media-card clickable">
+                        <div class="card-img bg-teal"></div>
+                        <h4>Indie Mix</h4>
+                        <p>Acoustic and fresh</p>
+                    </div>
+                    <div class="media-card clickable">
+                        <div class="card-img bg-orange"></div>
+                        <h4>Summer Hits</h4>
+                        <p>Warm weather jams</p>
                     </div>
                 </div>
             </div>
+
+            <!-- View: Podcasts -->
+            <div id="view-podcasts" class="content-view hidden">
+                <h2 class="section-title">Top Podcasts</h2>
+                <div class="card-grid">
+                    <div class="media-card clickable">
+                        <div class="card-img bg-blue" style="border-radius: 8px;"></div>
+                        <h4>Tech Today</h4>
+                        <p>Daily tech news</p>
+                    </div>
+                    <div class="media-card clickable">
+                        <div class="card-img bg-red" style="border-radius: 8px;"></div>
+                        <h4>True Crime</h4>
+                        <p>Unsolved mysteries</p>
+                    </div>
+                    <div class="media-card clickable">
+                        <div class="card-img bg-green" style="border-radius: 8px;"></div>
+                        <h4>Mindful Living</h4>
+                        <p>Meditation guides</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="view-audiobooks" class="content-view hidden">
+                <h2 class="section-title">Best Selling Audiobooks</h2>
+                <p style="color: var(--text-subdued)">Discover your next great read.</p>
+            </div>
+            <div id="view-live" class="content-view hidden"><h2 class="section-title">Live Events</h2></div>
+            <div id="view-events" class="content-view hidden"><h2 class="section-title">Concerts Near You</h2></div>
+
         </main>
 
-        <!-- Right Panel (Playing Info) -->
+        <!-- Right Panel (Playing Info / Up Next) -->
         <aside class="right-panel" id="right-panel">
             <div class="now-playing-large">
-                <div class="cover-art-large bg-gradient-yellow">
-                    <i class="fa-solid fa-music" style="font-size: 80px; color: #ffb703;"></i>
+                <div class="cover-art-large bg-gradient-yellow" id="rp-cover">
+                    <i class="fa-regular fa-face-smile" style="font-size: 80px; color: #ffb703;"></i>
                 </div>
                 <div class="track-header">
-                    <h2 id="rp-title">Select a vibe</h2>
-                    <p id="rp-artist">Waiting for AI...</p>
+                    <h2 id="rp-title">Sunflower Skies</h2>
+                    <p id="rp-artist">Lila & The Bloom</p>
                 </div>
                 <div class="track-actions">
-                    <button class="action-btn active"><i class="fa-solid fa-heart"></i></button>
-                    <button class="action-btn"><i class="fa-regular fa-thumbs-down"></i></button>
+                    <button class="action-btn active like-btn" title="Save to Liked Songs"><i class="fa-solid fa-heart"></i></button>
+                    <!-- Dislike button right next to like button -->
+                    <button class="action-btn dislike-btn" title="Don't play this"><i class="fa-solid fa-thumbs-down"></i></button>
                     <button class="add-playlist-btn">Add to playlist +</button>
+                </div>
+                
+                <div class="about-artist-card">
+                    <p class="card-label">ABOUT THE ARTIST</p>
+                    <h3 id="rp-about-artist">Lila & The Bloom</h3>
+                    <p class="artist-desc">Genre-bending sound shaped for happy moments. 1.2M monthly listeners.</p>
+                </div>
+                
+                <div class="up-next-section">
+                    <p class="section-label">UP NEXT</p>
+                    <div id="up-next-list">
+                        <!-- Up next tracks injected here -->
+                        <div class="up-next-item">
+                            <div class="up-next-icon"><i class="fa-solid fa-music"></i></div>
+                            <div class="up-next-info">
+                                <h4>Waiting for session...</h4>
+                                <p>Select a mood to begin</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </aside>
@@ -162,13 +305,15 @@
             <div class="player-left">
                 <div class="now-playing-mini">
                     <div class="cover-art-mini bg-gradient-yellow">
-                        <i class="fa-solid fa-music"></i>
+                        <i class="fa-regular fa-face-smile"></i>
                     </div>
                     <div class="mini-info">
-                        <h4 id="bp-title">Ready to play</h4>
-                        <p id="bp-artist">-</p>
+                        <h4 id="bp-title">Sunflower Skies</h4>
+                        <p id="bp-artist">Lila & The Bloom</p>
                     </div>
-                    <button class="action-btn active mini"><i class="fa-solid fa-heart"></i></button>
+                    <button class="action-btn active mini like-btn"><i class="fa-solid fa-heart"></i></button>
+                    <!-- Dislike button in bottom player too -->
+                    <button class="action-btn mini dislike-btn"><i class="fa-solid fa-thumbs-down"></i></button>
                 </div>
             </div>
             
@@ -176,21 +321,29 @@
                 <div class="player-controls">
                     <button class="control-btn"><i class="fa-solid fa-shuffle"></i></button>
                     <button class="control-btn"><i class="fa-solid fa-backward-step"></i></button>
-                    <button class="control-btn play-pause" id="bp-play-btn"><i class="fa-solid fa-play"></i></button>
+                    <button class="control-btn play-pause"><i class="fa-solid fa-play"></i></button>
                     <button class="control-btn"><i class="fa-solid fa-forward-step"></i></button>
                     <button class="control-btn"><i class="fa-solid fa-repeat"></i></button>
                 </div>
                 <div class="playback-bar">
-                    <span class="time" id="bp-current-time">0:00</span>
+                    <span class="time">0:00</span>
                     <div class="progress-bar">
-                        <div class="progress-fill" id="bp-progress" style="width: 0%;"></div>
+                        <div class="progress-fill"></div>
                     </div>
-                    <span class="time" id="bp-duration">0:00</span>
+                    <span class="time" id="bp-duration">2:26</span>
                 </div>
             </div>
             
             <div class="player-right">
-                <button class="control-btn"><i class="fa-solid fa-volume-high"></i></button>
+                <button class="control-btn"><i class="fa-solid fa-microphone"></i></button>
+                <button class="control-btn"><i class="fa-solid fa-list-ul"></i></button>
+                <button class="control-btn"><i class="fa-solid fa-laptop"></i></button>
+                <div class="volume-control">
+                    <button class="control-btn"><i class="fa-solid fa-volume-high"></i></button>
+                    <div class="progress-bar volume-bar">
+                        <div class="progress-fill" style="width: 70%;"></div>
+                    </div>
+                </div>
             </div>
         </footer>
     </div>
