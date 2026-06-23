@@ -160,10 +160,18 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Trigger API if both mood and activity are selected
+    // Trigger API if either mood or activity is selected
     function checkAndGenerate() {
+        let query = "";
         if (currentMood && currentActivity) {
-            const query = `Feeling ${currentMood} and doing ${currentActivity}`;
+            query = `Feeling ${currentMood} and doing ${currentActivity}`;
+        } else if (currentMood) {
+            query = `Feeling ${currentMood}`;
+        } else if (currentActivity) {
+            query = `Doing ${currentActivity}`;
+        }
+        
+        if (query) {
             fetchPlaylist(query, 'low'); // "low" familiarity for pure discovery
         }
     }
