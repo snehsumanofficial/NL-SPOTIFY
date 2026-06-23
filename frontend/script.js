@@ -1,3 +1,17 @@
+// Global function for card clicks (Music, Podcasts, Audiobooks, Live, Events)
+window.playCard = function(el, title, artist) {
+    document.getElementById('bp-title').textContent = title;
+    document.getElementById('bp-artist').textContent = artist;
+    document.getElementById('rp-title').textContent = title;
+    document.getElementById('rp-artist').textContent = artist;
+    document.getElementById('rp-about-artist').textContent = artist;
+    const playBtn = document.querySelector('.control-btn.play-pause i');
+    if (playBtn) {
+        playBtn.className = 'fa-solid fa-pause';
+        setTimeout(() => { playBtn.className = 'fa-solid fa-play'; }, 3000);
+    }
+};
+
 document.addEventListener('DOMContentLoaded', () => {
     // API Setup - try backend but always show something instantly
     const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 

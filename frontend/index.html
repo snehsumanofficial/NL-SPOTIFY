@@ -213,59 +213,200 @@
 
             <!-- View: Music -->
             <div id="view-music" class="content-view hidden">
-                <h2 class="section-title">New releases for you</h2>
+                <h2 class="section-title">🎵 New Releases For You</h2>
                 <div class="card-grid">
-                    <div class="media-card clickable">
-                        <div class="card-img bg-indigo"></div>
-                        <h4>Midnight Vibes</h4>
-                        <p>The latest tracks</p>
+                    <div class="media-card clickable" onclick="playCard(this, 'Midnights', 'Taylor Swift')">
+                        <img class="card-img" src="https://upload.wikimedia.org/wikipedia/en/9/9f/Midnights_-_Taylor_Swift.png" alt="Midnights" onerror="this.style.background='#3a0ca3';this.removeAttribute('src')">
+                        <h4>Midnights</h4>
+                        <p>Taylor Swift</p>
                     </div>
-                    <div class="media-card clickable">
-                        <div class="card-img bg-pink"></div>
-                        <h4>Pop Remixes</h4>
-                        <p>Upbeat hits</p>
+                    <div class="media-card clickable" onclick="playCard(this, 'After Hours', 'The Weeknd')">
+                        <img class="card-img" src="https://upload.wikimedia.org/wikipedia/en/c/c1/The_Weeknd_-_After_Hours.png" alt="After Hours" onerror="this.style.background='#e63946';this.removeAttribute('src')">
+                        <h4>After Hours</h4>
+                        <p>The Weeknd</p>
                     </div>
-                    <div class="media-card clickable">
-                        <div class="card-img bg-teal"></div>
-                        <h4>Indie Mix</h4>
-                        <p>Acoustic and fresh</p>
+                    <div class="media-card clickable" onclick="playCard(this, 'Future Nostalgia', 'Dua Lipa')">
+                        <img class="card-img" src="https://upload.wikimedia.org/wikipedia/en/f/f5/Dua_Lipa_-_Future_Nostalgia_%28Official_Album_Cover%29.png" alt="Future Nostalgia" onerror="this.style.background='#f72585';this.removeAttribute('src')">
+                        <h4>Future Nostalgia</h4>
+                        <p>Dua Lipa</p>
                     </div>
-                    <div class="media-card clickable">
-                        <div class="card-img bg-orange"></div>
-                        <h4>Summer Hits</h4>
-                        <p>Warm weather jams</p>
+                    <div class="media-card clickable" onclick="playCard(this, 'DAMN.', 'Kendrick Lamar')">
+                        <img class="card-img" src="https://upload.wikimedia.org/wikipedia/en/a/a2/Kendrick_Lamar_-_DAMN.png" alt="DAMN." onerror="this.style.background='#e63946';this.removeAttribute('src')">
+                        <h4>DAMN.</h4>
+                        <p>Kendrick Lamar</p>
+                    </div>
+                    <div class="media-card clickable" onclick="playCard(this, 'Fine Line', 'Harry Styles')">
+                        <img class="card-img" src="https://upload.wikimedia.org/wikipedia/en/b/b5/Harry_Styles_-_Fine_Line.png" alt="Fine Line" onerror="this.style.background='#00b4d8';this.removeAttribute('src')">
+                        <h4>Fine Line</h4>
+                        <p>Harry Styles</p>
+                    </div>
+                    <div class="media-card clickable" onclick="playCard(this, 'Random Access Memories', 'Daft Punk')">
+                        <img class="card-img" src="https://upload.wikimedia.org/wikipedia/en/a/a7/Random_Access_Memories.jpg" alt="Random Access Memories" onerror="this.style.background='#f4a261';this.removeAttribute('src')">
+                        <h4>Random Access Memories</h4>
+                        <p>Daft Punk</p>
+                    </div>
+                    <div class="media-card clickable" onclick="playCard(this, '30', 'Adele')">
+                        <img class="card-img" src="https://upload.wikimedia.org/wikipedia/en/7/76/Adele_-_30.png" alt="30" onerror="this.style.background='#6c757d';this.removeAttribute('src')">
+                        <h4>30</h4>
+                        <p>Adele</p>
+                    </div>
+                    <div class="media-card clickable" onclick="playCard(this, 'Divide', 'Ed Sheeran')">
+                        <img class="card-img" src="https://upload.wikimedia.org/wikipedia/en/4/45/Divide_cover.png" alt="Divide" onerror="this.style.background='#2a9d8f';this.removeAttribute('src')">
+                        <h4>Divide</h4>
+                        <p>Ed Sheeran</p>
                     </div>
                 </div>
             </div>
 
             <!-- View: Podcasts -->
             <div id="view-podcasts" class="content-view hidden">
-                <h2 class="section-title">Top Podcasts</h2>
+                <h2 class="section-title">🎙️ Top Podcasts</h2>
                 <div class="card-grid">
-                    <div class="media-card clickable">
-                        <div class="card-img bg-blue" style="border-radius: 8px;"></div>
-                        <h4>Tech Today</h4>
-                        <p>Daily tech news</p>
+                    <div class="media-card clickable" onclick="playCard(this, 'The Joe Rogan Experience', 'Joe Rogan')">
+                        <img class="card-img podcast-img" src="https://upload.wikimedia.org/wikipedia/en/thumb/6/6f/The_Joe_Rogan_Experience_logo.jpg/220px-The_Joe_Rogan_Experience_logo.jpg" alt="JRE" onerror="this.style.background='#0077b6';this.removeAttribute('src')">
+                        <h4>The Joe Rogan Experience</h4>
+                        <p>Joe Rogan</p>
                     </div>
-                    <div class="media-card clickable">
-                        <div class="card-img bg-red" style="border-radius: 8px;"></div>
-                        <h4>True Crime</h4>
-                        <p>Unsolved mysteries</p>
+                    <div class="media-card clickable" onclick="playCard(this, 'Crime Junkie', 'audiochuck')">
+                        <img class="card-img podcast-img" src="https://picsum.photos/seed/crimejunkie/300/300" alt="Crime Junkie" onerror="this.style.background='#e63946';this.removeAttribute('src')">
+                        <h4>Crime Junkie</h4>
+                        <p>audiochuck</p>
                     </div>
-                    <div class="media-card clickable">
-                        <div class="card-img bg-green" style="border-radius: 8px;"></div>
-                        <h4>Mindful Living</h4>
-                        <p>Meditation guides</p>
+                    <div class="media-card clickable" onclick="playCard(this, 'Huberman Lab', 'Andrew Huberman')">
+                        <img class="card-img podcast-img" src="https://picsum.photos/seed/hubermanlab/300/300" alt="Huberman Lab" onerror="this.style.background='#2a9d8f';this.removeAttribute('src')">
+                        <h4>Huberman Lab</h4>
+                        <p>Andrew Huberman</p>
+                    </div>
+                    <div class="media-card clickable" onclick="playCard(this, 'Lex Fridman Podcast', 'Lex Fridman')">
+                        <img class="card-img podcast-img" src="https://picsum.photos/seed/lexfridman/300/300" alt="Lex Fridman" onerror="this.style.background='#3a0ca3';this.removeAttribute('src')">
+                        <h4>Lex Fridman Podcast</h4>
+                        <p>Lex Fridman</p>
+                    </div>
+                    <div class="media-card clickable" onclick="playCard(this, 'Diary of a CEO', 'Steven Bartlett')">
+                        <img class="card-img podcast-img" src="https://picsum.photos/seed/diaryofaceo/300/300" alt="Diary of CEO" onerror="this.style.background='#f72585';this.removeAttribute('src')">
+                        <h4>Diary of a CEO</h4>
+                        <p>Steven Bartlett</p>
+                    </div>
+                    <div class="media-card clickable" onclick="playCard(this, 'My Favorite Murder', 'Karen & Georgia')">
+                        <img class="card-img podcast-img" src="https://picsum.photos/seed/myfavmurder/300/300" alt="My Favorite Murder" onerror="this.style.background='#6c757d';this.removeAttribute('src')">
+                        <h4>My Favorite Murder</h4>
+                        <p>Karen & Georgia</p>
                     </div>
                 </div>
             </div>
             
+            <!-- View: Audiobooks -->
             <div id="view-audiobooks" class="content-view hidden">
-                <h2 class="section-title">Best Selling Audiobooks</h2>
-                <p style="color: var(--text-subdued)">Discover your next great read.</p>
+                <h2 class="section-title">📚 Best Selling Audiobooks</h2>
+                <div class="card-grid">
+                    <div class="media-card clickable" onclick="playCard(this, 'Atomic Habits', 'James Clear')">
+                        <img class="card-img podcast-img" src="https://upload.wikimedia.org/wikipedia/en/a/a6/Atomic_Habits.jpg" alt="Atomic Habits" onerror="this.style.background='#f4a261';this.removeAttribute('src')">
+                        <h4>Atomic Habits</h4>
+                        <p>James Clear · 5h 35m</p>
+                    </div>
+                    <div class="media-card clickable" onclick="playCard(this, 'The Psychology of Money', 'Morgan Housel')">
+                        <img class="card-img podcast-img" src="https://upload.wikimedia.org/wikipedia/en/3/32/The_Psychology_of_Money.jpg" alt="Psychology of Money" onerror="this.style.background='#2a9d8f';this.removeAttribute('src')">
+                        <h4>The Psychology of Money</h4>
+                        <p>Morgan Housel · 5h 48m</p>
+                    </div>
+                    <div class="media-card clickable" onclick="playCard(this, 'Ikigai', 'Héctor García')">
+                        <img class="card-img podcast-img" src="https://picsum.photos/seed/ikigai/300/300" alt="Ikigai" onerror="this.style.background='#f72585';this.removeAttribute('src')">
+                        <h4>Ikigai</h4>
+                        <p>Héctor García · 3h 22m</p>
+                    </div>
+                    <div class="media-card clickable" onclick="playCard(this, 'Think Like a Monk', 'Jay Shetty')">
+                        <img class="card-img podcast-img" src="https://picsum.photos/seed/thinklikeamonk/300/300" alt="Think Like a Monk" onerror="this.style.background='#3a0ca3';this.removeAttribute('src')">
+                        <h4>Think Like a Monk</h4>
+                        <p>Jay Shetty · 9h 9m</p>
+                    </div>
+                    <div class="media-card clickable" onclick="playCard(this, 'Can\'t Hurt Me', 'David Goggins')">
+                        <img class="card-img podcast-img" src="https://picsum.photos/seed/canthurtme/300/300" alt="Can't Hurt Me" onerror="this.style.background='#e63946';this.removeAttribute('src')">
+                        <h4>Can't Hurt Me</h4>
+                        <p>David Goggins · 13h 34m</p>
+                    </div>
+                    <div class="media-card clickable" onclick="playCard(this, 'The Alchemist', 'Paulo Coelho')">
+                        <img class="card-img podcast-img" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/The_Alchemist.jpg/250px-The_Alchemist.jpg" alt="The Alchemist" onerror="this.style.background='#ffb703';this.removeAttribute('src')">
+                        <h4>The Alchemist</h4>
+                        <p>Paulo Coelho · 4h 8m</p>
+                    </div>
+                </div>
             </div>
-            <div id="view-live" class="content-view hidden"><h2 class="section-title">Live Events</h2></div>
-            <div id="view-events" class="content-view hidden"><h2 class="section-title">Concerts Near You</h2></div>
+
+            <!-- View: Live -->
+            <div id="view-live" class="content-view hidden">
+                <h2 class="section-title">🔴 Live Now</h2>
+                <div class="card-grid wide-grid">
+                    <div class="media-card clickable live-card" onclick="playCard(this, 'Taylor Swift Live', 'The Eras Tour')">
+                        <img class="card-img" src="https://picsum.photos/seed/taylorswiftlive/300/300" alt="Live Concert" onerror="this.style.background='#f72585';this.removeAttribute('src')">
+                        <div class="live-badge">🔴 LIVE</div>
+                        <h4>Taylor Swift</h4>
+                        <p>The Eras Tour · 34K watching</p>
+                    </div>
+                    <div class="media-card clickable live-card" onclick="playCard(this, 'Coldplay Live', 'Music of the Spheres Tour')">
+                        <img class="card-img" src="https://picsum.photos/seed/coldplaylive/300/300" alt="Coldplay Live" onerror="this.style.background='#0077b6';this.removeAttribute('src')">
+                        <div class="live-badge">🔴 LIVE</div>
+                        <h4>Coldplay</h4>
+                        <p>Music of the Spheres · 21K watching</p>
+                    </div>
+                    <div class="media-card clickable live-card" onclick="playCard(this, 'The Weeknd Live', 'After Hours Tour')">
+                        <img class="card-img" src="https://picsum.photos/seed/weekndlive/300/300" alt="The Weeknd Live" onerror="this.style.background='#e63946';this.removeAttribute('src')">
+                        <div class="live-badge">🔴 LIVE</div>
+                        <h4>The Weeknd</h4>
+                        <p>After Hours Tour · 18K watching</p>
+                    </div>
+                    <div class="media-card clickable live-card" onclick="playCard(this, 'Dua Lipa Live', 'Future Nostalgia Tour')">
+                        <img class="card-img" src="https://picsum.photos/seed/dualipaliive/300/300" alt="Dua Lipa Live" onerror="this.style.background='#7209b7';this.removeAttribute('src')">
+                        <div class="live-badge">🔴 LIVE</div>
+                        <h4>Dua Lipa</h4>
+                        <p>Future Nostalgia Tour · 15K watching</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- View: Events -->
+            <div id="view-events" class="content-view hidden">
+                <h2 class="section-title">🎟️ Upcoming Events Near You</h2>
+                <div class="event-list">
+                    <div class="event-item clickable" onclick="playCard(this, 'Arijit Singh', 'World Tour')">
+                        <img class="event-img" src="https://picsum.photos/seed/arijitsingh/120/120" alt="Arijit Singh" onerror="this.style.background='#f72585';this.removeAttribute('src')">
+                        <div class="event-info">
+                            <h4>Arijit Singh</h4>
+                            <p>World Tour</p>
+                            <span class="event-meta">📍 Mumbai · June 30, 2025 · ₹2,500</span>
+                        </div>
+                        <button class="event-rsvp-btn">Get Tickets</button>
+                    </div>
+                    <div class="event-item clickable" onclick="playCard(this, 'Coldplay', 'Music of the Spheres')">
+                        <img class="event-img" src="https://picsum.photos/seed/coldplayevent/120/120" alt="Coldplay" onerror="this.style.background='#0077b6';this.removeAttribute('src')">
+                        <div class="event-info">
+                            <h4>Coldplay</h4>
+                            <p>Music of the Spheres</p>
+                            <span class="event-meta">📍 Mumbai · Jan 18–21, 2026 · ₹4,000</span>
+                        </div>
+                        <button class="event-rsvp-btn">Get Tickets</button>
+                    </div>
+                    <div class="event-item clickable" onclick="playCard(this, 'Dua Lipa', 'Radical Optimism Tour')">
+                        <img class="event-img" src="https://picsum.photos/seed/dualipaevent/120/120" alt="Dua Lipa" onerror="this.style.background='#7209b7';this.removeAttribute('src')">
+                        <div class="event-info">
+                            <h4>Dua Lipa</h4>
+                            <p>Radical Optimism Tour</p>
+                            <span class="event-meta">📍 Delhi · Mar 5, 2026 · ₹3,500</span>
+                        </div>
+                        <button class="event-rsvp-btn">Get Tickets</button>
+                    </div>
+                    <div class="event-item clickable" onclick="playCard(this, 'AR Rahman', 'Infinite Love Tour')">
+                        <img class="event-img" src="https://picsum.photos/seed/arrahman/120/120" alt="AR Rahman" onerror="this.style.background='#f4a261';this.removeAttribute('src')">
+                        <div class="event-info">
+                            <h4>AR Rahman</h4>
+                            <p>Infinite Love Tour</p>
+                            <span class="event-meta">📍 Bangalore · July 12, 2025 · ₹1,800</span>
+                        </div>
+                        <button class="event-rsvp-btn">Get Tickets</button>
+                    </div>
+                </div>
+            </div>
+
+
 
         </main>
 
