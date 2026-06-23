@@ -5,6 +5,26 @@ window.playCard = function(el, title, artist) {
     document.getElementById('rp-title').textContent = title;
     document.getElementById('rp-artist').textContent = artist;
     document.getElementById('rp-about-artist').textContent = artist;
+    
+    // Update image
+    const imgSrc = el.querySelector('img') ? el.querySelector('img').src : null;
+    const rpImg = document.getElementById('rp-img');
+    const rpIcon = document.querySelector('.rp-icon');
+    const bpImg = document.getElementById('bp-img');
+    const bpIcon = document.querySelector('.bp-icon');
+    
+    if (imgSrc) {
+        if (rpImg) { rpImg.src = imgSrc; rpImg.style.display = 'block'; }
+        if (rpIcon) { rpIcon.style.display = 'none'; }
+        if (bpImg) { bpImg.src = imgSrc; bpImg.style.display = 'block'; }
+        if (bpIcon) { bpIcon.style.display = 'none'; }
+    } else {
+        if (rpImg) { rpImg.style.display = 'none'; }
+        if (rpIcon) { rpIcon.style.display = 'block'; }
+        if (bpImg) { bpImg.style.display = 'none'; }
+        if (bpIcon) { bpIcon.style.display = 'block'; }
+    }
+
     const playBtn = document.querySelector('.control-btn.play-pause i');
     if (playBtn) {
         playBtn.className = 'fa-solid fa-pause';
@@ -311,6 +331,24 @@ document.addEventListener('DOMContentLoaded', () => {
                 rpAboutArtist.textContent = track.artist;
                 bpTitle.textContent = track.title;
                 bpArtist.textContent = track.artist;
+                
+                // Update image
+                const rpImg = document.getElementById('rp-img');
+                const rpIcon = document.querySelector('.rp-icon');
+                const bpImg = document.getElementById('bp-img');
+                const bpIcon = document.querySelector('.bp-icon');
+                
+                if (track.img) {
+                    if (rpImg) { rpImg.src = track.img; rpImg.style.display = 'block'; }
+                    if (rpIcon) { rpIcon.style.display = 'none'; }
+                    if (bpImg) { bpImg.src = track.img; bpImg.style.display = 'block'; }
+                    if (bpIcon) { bpIcon.style.display = 'none'; }
+                } else {
+                    if (rpImg) { rpImg.style.display = 'none'; }
+                    if (rpIcon) { rpIcon.style.display = 'block'; }
+                    if (bpImg) { bpImg.style.display = 'none'; }
+                    if (bpIcon) { bpIcon.style.display = 'block'; }
+                }
                 
                 // Change bottom play button to pause
                 const playBtn = document.querySelector('.control-btn.play-pause i');
