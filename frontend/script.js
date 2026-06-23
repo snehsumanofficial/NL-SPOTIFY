@@ -159,6 +159,18 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Make dropdown items clickable
+    const dropdownItems = document.querySelectorAll('.dropdown-item');
+    dropdownItems.forEach(item => {
+        item.addEventListener('click', () => {
+            const query = item.textContent;
+            searchInput.value = query;
+            searchDropdown.classList.add('hidden');
+            switchToView('view-discovery');
+            showInstantResults('Search', query);
+        });
+    });
+
     // Home button and Spotify logo — both return to the Discovery view
     const homeBtn = document.getElementById('home-btn');
     const spotifyLogo = document.getElementById('spotify-logo');
