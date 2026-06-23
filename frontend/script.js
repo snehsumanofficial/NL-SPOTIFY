@@ -125,6 +125,19 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Home button and Spotify logo — both return to the Discovery view
+    const homeBtn = document.getElementById('home-btn');
+    const spotifyLogo = document.getElementById('spotify-logo');
+    
+    function goHome() {
+        switchToView('view-discovery');
+        // Scroll main view back to top
+        document.querySelector('.main-view').scrollTop = 0;
+    }
+    
+    homeBtn.addEventListener('click', goHome);
+    spotifyLogo.addEventListener('click', (e) => { e.preventDefault(); goHome(); });
+
     // Accordion Toggle Logic
     moodHeader.addEventListener('click', () => {
         moodHeader.classList.toggle('collapsed');

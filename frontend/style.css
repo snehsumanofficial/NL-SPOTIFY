@@ -92,6 +92,31 @@ body {
     border-radius: 50%;
 }
 
+/* Spotify Logo Button */
+.spotify-logo-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+    margin-right: 4px;
+}
+.spotify-logo-btn:hover {
+    transform: scale(1.08);
+    opacity: 0.9;
+}
+
+/* Home Button */
+.home-btn {
+    background: #fff !important;
+    color: #000 !important;
+    font-size: 14px;
+}
+.home-btn:hover {
+    background: #e0e0e0 !important;
+    transform: scale(1.05);
+}
+
 .explore-btn {
     background: var(--text-base);
     color: var(--bg-base);
