@@ -18,77 +18,77 @@ document.addEventListener('DOMContentLoaded', () => {
         ? 'http://127.0.0.1:8000/generate-vibe-playlist'
         : 'https://nl-spotify.onrender.com/generate-vibe-playlist';
 
-    // Mood-based curated fallback tracks for instant response
+    // Mood-based curated fallback tracks with real album art images
     const MOOD_TRACKS = {
         Happy: [
-            {title: "Can't Stop the Feeling", artist: "Justin Timberlake", duration: "3:57", color: "bg-yellow"},
-            {title: "Uptown Funk", artist: "Mark Ronson ft. Bruno Mars", duration: "4:30", color: "bg-orange"},
-            {title: "Happy", artist: "Pharrell Williams", duration: "3:53", color: "bg-pink"},
-            {title: "Good as Hell", artist: "Lizzo", duration: "2:39", color: "bg-green"},
-            {title: "Dancing Queen", artist: "ABBA", duration: "3:51", color: "bg-indigo"},
+            {title: "Can't Stop the Feeling", artist: "Justin Timberlake", duration: "3:57", img: "https://upload.wikimedia.org/wikipedia/en/4/4c/Justin_Timberlake_-_Can%27t_Stop_the_Feeling.png"},
+            {title: "Uptown Funk", artist: "Mark Ronson ft. Bruno Mars", duration: "4:30", img: "https://upload.wikimedia.org/wikipedia/en/c/c8/Mark_Ronson_-_Uptown_Funk_%28feat._Bruno_Mars%29.png"},
+            {title: "Happy", artist: "Pharrell Williams", duration: "3:53", img: "https://upload.wikimedia.org/wikipedia/en/7/79/Pharrell_Williams_-_Happy.png"},
+            {title: "Good as Hell", artist: "Lizzo", duration: "2:39", img: "https://picsum.photos/seed/lizzogoodasHell/60/60"},
+            {title: "Dancing Queen", artist: "ABBA", duration: "3:51", img: "https://upload.wikimedia.org/wikipedia/en/5/5d/Arrival_-_ABBA.jpg"},
         ],
         Relaxed: [
-            {title: "Sunset Lover", artist: "Petit Biscuit", duration: "3:46", color: "bg-teal"},
-            {title: "Chill Wave", artist: "Washed Out", duration: "4:10", color: "bg-blue"},
-            {title: "Coffee", artist: "beabadoobee", duration: "2:38", color: "bg-green"},
-            {title: "Sunday Best", artist: "Surfaces", duration: "3:00", color: "bg-yellow"},
-            {title: "Motion", artist: "Koda", duration: "4:20", color: "bg-indigo"},
+            {title: "Sunset Lover", artist: "Petit Biscuit", duration: "3:46", img: "https://picsum.photos/seed/sunsetlover/60/60"},
+            {title: "Chill Wave", artist: "Washed Out", duration: "4:10", img: "https://picsum.photos/seed/chillwave/60/60"},
+            {title: "Coffee", artist: "beabadoobee", duration: "2:38", img: "https://picsum.photos/seed/beabadoobee/60/60"},
+            {title: "Sunday Best", artist: "Surfaces", duration: "3:00", img: "https://picsum.photos/seed/sundaybest/60/60"},
+            {title: "Motion", artist: "Koda", duration: "4:20", img: "https://picsum.photos/seed/kodamotion/60/60"},
         ],
         Motivate: [
-            {title: "Eye of the Tiger", artist: "Survivor", duration: "4:04", color: "bg-red"},
-            {title: "Stronger", artist: "Kanye West", duration: "5:11", color: "bg-orange"},
-            {title: "Hall of Fame", artist: "The Script ft. will.i.am", duration: "3:23", color: "bg-yellow"},
-            {title: "Till I Collapse", artist: "Eminem", duration: "4:57", color: "bg-gray"},
-            {title: "Power", artist: "Kanye West", duration: "4:52", color: "bg-pink"},
+            {title: "Eye of the Tiger", artist: "Survivor", duration: "4:04", img: "https://upload.wikimedia.org/wikipedia/en/2/2e/Eyeofthetiger.jpg"},
+            {title: "Stronger", artist: "Kanye West", duration: "5:11", img: "https://upload.wikimedia.org/wikipedia/en/9/9e/Kanyewest_graduation.jpg"},
+            {title: "Hall of Fame", artist: "The Script ft. will.i.am", duration: "3:23", img: "https://picsum.photos/seed/halloffame/60/60"},
+            {title: "Till I Collapse", artist: "Eminem", duration: "4:57", img: "https://upload.wikimedia.org/wikipedia/en/3/35/Eminem_-_The_Eminem_Show.jpg"},
+            {title: "POWER", artist: "Kanye West", duration: "4:52", img: "https://upload.wikimedia.org/wikipedia/en/1/12/Mbdtf.jpg"},
         ],
         Sleepy: [
-            {title: "Weightless", artist: "Marconi Union", duration: "8:09", color: "bg-indigo"},
-            {title: "Holocene", artist: "Bon Iver", duration: "5:35", color: "bg-blue"},
-            {title: "River", artist: "Joni Mitchell", duration: "3:54", color: "bg-teal"},
-            {title: "Retrograde", artist: "James Blake", duration: "5:05", color: "bg-purple"},
-            {title: "The Night Will Always Win", artist: "Manchester Orchestra", duration: "4:24", color: "bg-gray"},
+            {title: "Weightless", artist: "Marconi Union", duration: "8:09", img: "https://picsum.photos/seed/weightless/60/60"},
+            {title: "Holocene", artist: "Bon Iver", duration: "5:35", img: "https://upload.wikimedia.org/wikipedia/en/a/a5/Bon_Iver_-_Bon_Iver_%28album_cover%29.jpg"},
+            {title: "River", artist: "Joni Mitchell", duration: "3:54", img: "https://upload.wikimedia.org/wikipedia/en/a/a8/Blue_–_Joni_Mitchell.jpg"},
+            {title: "Retrograde", artist: "James Blake", duration: "5:05", img: "https://picsum.photos/seed/jamesblake/60/60"},
+            {title: "Night Will Always Win", artist: "Manchester Orchestra", duration: "4:24", img: "https://picsum.photos/seed/manchesterorch/60/60"},
         ],
         Party: [
-            {title: "Blinding Lights", artist: "The Weeknd", duration: "3:22", color: "bg-pink"},
-            {title: "Levitating", artist: "Dua Lipa", duration: "3:23", color: "bg-purple"},
-            {title: "Save Your Tears", artist: "The Weeknd", duration: "3:36", color: "bg-red"},
-            {title: "As It Was", artist: "Harry Styles", duration: "2:37", color: "bg-yellow"},
-            {title: "Anti-Hero", artist: "Taylor Swift", duration: "3:21", color: "bg-teal"},
+            {title: "Blinding Lights", artist: "The Weeknd", duration: "3:22", img: "https://upload.wikimedia.org/wikipedia/en/c/c1/The_Weeknd_-_After_Hours.png"},
+            {title: "Levitating", artist: "Dua Lipa", duration: "3:23", img: "https://upload.wikimedia.org/wikipedia/en/f/f5/Dua_Lipa_-_Future_Nostalgia_%28Official_Album_Cover%29.png"},
+            {title: "Save Your Tears", artist: "The Weeknd", duration: "3:36", img: "https://picsum.photos/seed/saveyourtears/60/60"},
+            {title: "As It Was", artist: "Harry Styles", duration: "2:37", img: "https://upload.wikimedia.org/wikipedia/en/b/b5/Harry_Styles_-_Fine_Line.png"},
+            {title: "Anti-Hero", artist: "Taylor Swift", duration: "3:21", img: "https://upload.wikimedia.org/wikipedia/en/9/9f/Midnights_-_Taylor_Swift.png"},
         ],
         Study: [
-            {title: "Experience", artist: "Ludovico Einaudi", duration: "5:13", color: "bg-blue"},
-            {title: "Comptine d'un autre été", artist: "Yann Tiersen", duration: "2:22", color: "bg-indigo"},
-            {title: "River Flows in You", artist: "Yiruma", duration: "3:51", color: "bg-teal"},
-            {title: "Divenire", artist: "Ludovico Einaudi", duration: "6:52", color: "bg-green"},
-            {title: "Nuvole Bianche", artist: "Ludovico Einaudi", duration: "5:54", color: "bg-gray"},
+            {title: "Experience", artist: "Ludovico Einaudi", duration: "5:13", img: "https://picsum.photos/seed/einaudiexp/60/60"},
+            {title: "Comptine d'un autre été", artist: "Yann Tiersen", duration: "2:22", img: "https://picsum.photos/seed/amelie/60/60"},
+            {title: "River Flows in You", artist: "Yiruma", duration: "3:51", img: "https://picsum.photos/seed/yiruma/60/60"},
+            {title: "Divenire", artist: "Ludovico Einaudi", duration: "6:52", img: "https://picsum.photos/seed/divenire/60/60"},
+            {title: "Nuvole Bianche", artist: "Ludovico Einaudi", duration: "5:54", img: "https://picsum.photos/seed/nuvoleb/60/60"},
         ],
         Work: [
-            {title: "Get Lucky", artist: "Daft Punk ft. Pharrell", duration: "6:09", color: "bg-orange"},
-            {title: "Instant Crush", artist: "Daft Punk ft. Julian Casablancas", duration: "5:38", color: "bg-yellow"},
-            {title: "Digital Love", artist: "Daft Punk", duration: "4:58", color: "bg-pink"},
-            {title: "Around the World", artist: "Daft Punk", duration: "7:09", color: "bg-blue"},
-            {title: "One More Time", artist: "Daft Punk", duration: "5:20", color: "bg-red"},
+            {title: "Get Lucky", artist: "Daft Punk ft. Pharrell", duration: "6:09", img: "https://upload.wikimedia.org/wikipedia/en/a/a7/Random_Access_Memories.jpg"},
+            {title: "Instant Crush", artist: "Daft Punk ft. Julian Casablancas", duration: "5:38", img: "https://upload.wikimedia.org/wikipedia/en/a/a7/Random_Access_Memories.jpg"},
+            {title: "Digital Love", artist: "Daft Punk", duration: "4:58", img: "https://picsum.photos/seed/daftdigital/60/60"},
+            {title: "Around the World", artist: "Daft Punk", duration: "7:09", img: "https://picsum.photos/seed/daftaround/60/60"},
+            {title: "One More Time", artist: "Daft Punk", duration: "5:20", img: "https://picsum.photos/seed/daftonetime/60/60"},
         ],
         Workout: [
-            {title: "HUMBLE.", artist: "Kendrick Lamar", duration: "2:57", color: "bg-red"},
-            {title: "Run the World (Girls)", artist: "Beyoncé", duration: "3:56", color: "bg-orange"},
-            {title: "Centuries", artist: "Fall Out Boy", duration: "3:48", color: "bg-gray"},
-            {title: "Jump", artist: "Kris Kross", duration: "3:37", color: "bg-indigo"},
-            {title: "Radioactive", artist: "Imagine Dragons", duration: "3:07", color: "bg-yellow"},
+            {title: "HUMBLE.", artist: "Kendrick Lamar", duration: "2:57", img: "https://upload.wikimedia.org/wikipedia/en/a/a2/Kendrick_Lamar_-_DAMN.png"},
+            {title: "Run the World (Girls)", artist: "Beyoncé", duration: "3:56", img: "https://picsum.photos/seed/beyonce4/60/60"},
+            {title: "Centuries", artist: "Fall Out Boy", duration: "3:48", img: "https://picsum.photos/seed/falloutboy/60/60"},
+            {title: "Jump", artist: "Kris Kross", duration: "3:37", img: "https://picsum.photos/seed/kriskross/60/60"},
+            {title: "Radioactive", artist: "Imagine Dragons", duration: "3:07", img: "https://picsum.photos/seed/imaginedragon/60/60"},
         ],
         Travel: [
-            {title: "On the Road Again", artist: "Willie Nelson", duration: "2:33", color: "bg-teal"},
-            {title: "Life is a Highway", artist: "Tom Cochrane", duration: "4:34", color: "bg-orange"},
-            {title: "Fly Me to the Moon", artist: "Frank Sinatra", duration: "2:28", color: "bg-blue"},
-            {title: "Route 66", artist: "Depeche Mode", duration: "4:26", color: "bg-indigo"},
-            {title: "Africa", artist: "Toto", duration: "4:55", color: "bg-yellow"},
+            {title: "On the Road Again", artist: "Willie Nelson", duration: "2:33", img: "https://picsum.photos/seed/willienelson/60/60"},
+            {title: "Life is a Highway", artist: "Tom Cochrane", duration: "4:34", img: "https://picsum.photos/seed/lifehighway/60/60"},
+            {title: "Fly Me to the Moon", artist: "Frank Sinatra", duration: "2:28", img: "https://picsum.photos/seed/sinatra/60/60"},
+            {title: "Route 66", artist: "Depeche Mode", duration: "4:26", img: "https://picsum.photos/seed/route66/60/60"},
+            {title: "Africa", artist: "Toto", duration: "4:55", img: "https://picsum.photos/seed/totaafrica/60/60"},
         ],
         Meditate: [
-            {title: "Stairway to Heaven", artist: "Led Zeppelin", duration: "8:02", color: "bg-indigo"},
-            {title: "Om Namah Shivaya", artist: "Deva Premal", duration: "7:14", color: "bg-teal"},
-            {title: "Pure Shores", artist: "All Saints", duration: "3:42", color: "bg-blue"},
-            {title: "Nature Sounds", artist: "Healing Earth", duration: "10:00", color: "bg-green"},
-            {title: "Breathe", artist: "Pink Floyd", duration: "2:49", color: "bg-gray"},
+            {title: "Stairway to Heaven", artist: "Led Zeppelin", duration: "8:02", img: "https://upload.wikimedia.org/wikipedia/en/2/26/Led_Zeppelin_-_Led_Zeppelin_IV.jpg"},
+            {title: "Om Namah Shivaya", artist: "Deva Premal", duration: "7:14", img: "https://picsum.photos/seed/devapremal/60/60"},
+            {title: "Pure Shores", artist: "All Saints", duration: "3:42", img: "https://picsum.photos/seed/allsaints/60/60"},
+            {title: "Nature Sounds", artist: "Healing Earth", duration: "10:00", img: "https://picsum.photos/seed/naturesounds/60/60"},
+            {title: "Breathe", artist: "Pink Floyd", duration: "2:49", img: "https://upload.wikimedia.org/wikipedia/en/3/3b/Dark_Side_of_the_Moon.png"},
         ],
     };
 
@@ -291,7 +291,8 @@ document.addEventListener('DOMContentLoaded', () => {
             row.style.animationDelay = `${i * 80}ms`;
             row.innerHTML = `
                 <div class="track-num">${i + 1}</div>
-                <div class="track-art ${track.color}"></div>
+                <img class="track-art-img" src="${track.img}" alt="${track.title}" onerror="this.style.background='#333';this.src=''"
+                    style="width:40px;height:40px;border-radius:4px;object-fit:cover;flex-shrink:0;">
                 <div class="track-details">
                     <h4>${track.title}</h4>
                     <p>${track.artist}</p>
