@@ -136,7 +136,6 @@
                     <button class="category-btn" data-target="view-audiobooks">Audiobooks</button>
                     <button class="category-btn" data-target="view-live">Live</button>
                     <button class="category-btn" data-target="view-events">Events</button>
-                    <button class="category-btn" data-target="view-analyzer" style="background: linear-gradient(135deg, #1db954, #191414); color: white; font-weight: 800; border: 1px solid #1db954;"><i class="fa-solid fa-brain"></i> AI Analyzer</button>
                 </div>
             </div>
             
@@ -407,119 +406,7 @@
                 </div>
             </div>
 
-            <!-- View: AI Review Analyzer -->
-            <div id="view-analyzer" class="content-view hidden">
-                <div class="analyzer-header">
-                    <h2 class="section-title"><i class="fa-solid fa-microchip"></i> Spotify Review Intelligence Engine</h2>
-                    <p style="color: var(--text-subdued); margin-bottom: 24px;">Analyze user reviews and identify pain points, unmet needs, and opportunities for music discovery.</p>
-                </div>
 
-                <!-- Section A: Data Ingestion & Batch Processing -->
-                <div id="analyzer-ingestion" class="analyzer-panel">
-                    <h3><i class="fa-solid fa-database"></i> Data Sources</h3>
-                    <div class="data-sources">
-                        <div class="data-badge"><i class="fa-brands fa-apple"></i> App Store Reviews</div>
-                        <div class="data-badge"><i class="fa-brands fa-google-play"></i> Play Store Reviews</div>
-                        <div class="data-badge"><i class="fa-brands fa-reddit"></i> Reddit Posts</div>
-                        <div class="data-badge"><i class="fa-solid fa-users"></i> Spotify Community</div>
-                    </div>
-                    <div class="upload-area">
-                        <p>Datasets detected: 5 files (~150,000+ reviews)</p>
-                        <button id="run-batch-btn" class="action-btn large green-btn">Run Batch Processing</button>
-                    </div>
-                </div>
-
-                <!-- Processing State (Hidden initially) -->
-                <div id="analyzer-processing" class="analyzer-panel hidden">
-                    <div class="processing-pipeline">
-                        <div class="pipeline-step active">
-                            <i class="fa-solid fa-file-import fa-spin"></i>
-                            <span>Ingesting Reviews...</span>
-                        </div>
-                        <div class="pipeline-step">
-                            <i class="fa-solid fa-brain"></i>
-                            <span>Intelligence Engine (Extracting Sentiment & Goals)...</span>
-                        </div>
-                        <div class="pipeline-step">
-                            <i class="fa-solid fa-chart-network"></i>
-                            <span>Insight Synthesizer (Finding Opportunities)...</span>
-                        </div>
-                    </div>
-                    <div class="progress-bar-container">
-                        <div class="progress-bar-fill" id="analyzer-progress"></div>
-                    </div>
-                </div>
-
-                <!-- Section C: Final Dashboard (Hidden initially) -->
-                <div id="analyzer-dashboard" class="hidden">
-                    <div class="dashboard-grid">
-                        <div class="dashboard-card">
-                            <h3>⚠️ Top Complaints</h3>
-                            <table class="analyzer-table">
-                                <thead>
-                                    <tr>
-                                        <th>Complaint</th>
-                                        <th>Frequency</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>Repetitive recommendations</td>
-                                        <td>34%</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Same artists</td>
-                                        <td>26%</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Discovery fatigue</td>
-                                        <td>19%</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        
-                        <div class="dashboard-card highlight-card">
-                            <h3>💡 Top Opportunities</h3>
-                            <table class="analyzer-table">
-                                <thead>
-                                    <tr>
-                                        <th>Opportunity</th>
-                                        <th>Impact</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>Hidden Gems</td>
-                                        <td><span class="badge high">High</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Discovery Copilot</td>
-                                        <td><span class="badge very-high">Very High</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Context-Aware Discovery</td>
-                                        <td><span class="badge high">High</span></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <div class="dashboard-card full-width">
-                        <h3><i class="fa-solid fa-magnifying-glass-chart"></i> Extracted Sample Analysis</h3>
-                        <div class="sample-review">
-                            <div class="review-text">"Spotify keeps recommending the same artists and playlists. Discovery feels repetitive."</div>
-                            <div class="review-tags">
-                                <span class="tag pain-point">Pain Point: Repetitive</span>
-                                <span class="tag sentiment neg">Sentiment: Negative</span>
-                                <span class="tag root-cause">Root Cause: Overfitting algorithm</span>
-                                <span class="tag opportunity">Opportunity: Discovery Copilot</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
         </main>
 

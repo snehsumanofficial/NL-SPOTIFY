@@ -260,6 +260,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // Surprise Me Button
     surpriseBtn.addEventListener('click', () => {
         switchToView('view-discovery');
+        const moods = Object.keys(MOOD_TRACKS);
+        const randomMood = moods[Math.floor(Math.random() * moods.length)];
+        currentMood = randomMood;
+        currentActivity = null;
+        moodSelectors.forEach(m => m.classList.toggle('active', m.dataset.mood === randomMood));
+        activeMoodTitle.textContent = `✨ ${randomMood} (Surprise!)`;
+        activeActivityTitle.textContent = 'What are you doing?';
+        activeMoodTitle.style.color = '#1ed760';
         activeActivityTitle.style.color = '';
         moodHeader.classList.add('collapsed');
         moodSelectorsContainer.classList.add('collapsed');
@@ -418,50 +426,4 @@ document.addEventListener('DOMContentLoaded', () => {
             // API unavailable — UI already has fallback data shown, so no action needed
         }
     }
-
-    // AI Review Analyzer Logic
-    const runBatchBtn = document.getElementById('run-batch-btn');
-    const analyzerIngestion = document.getElementById('analyzer-ingestion');
-    const analyzerProcessing = document.getElementById('analyzer-processing');
-    const analyzerDashboard = document.getElementById('analyzer-dashboard');
-    const analyzerProgress = document.getElementById('analyzer-progress');
-    const pipelineSteps = document.querySelectorAll('.pipeline-step');
-
-    if (runBatchBtn) {
-        runBatchBtn.addEventListener('click', () => {
-            analyzerIngestion.classList.add('hidden');
-            analyzerProcessing.classList.remove('hidden');
-            
-            // Simulate processing pipeline
-            let progress = 0;
-            
-            const interval = setInterval(() => {
-                progress += 2;
-                analyzerProgress.style.width = `${progress}%`;
-                
-                if (progress === 30) {
-                    pipelineSteps[0].classList.remove('active');
-                    pipelineSteps[0].querySelector('i').classList.remove('fa-spin');
-                    pipelineSteps[1].classList.add('active');
-                    pipelineSteps[1].querySelector('i').classList.add('fa-spin');
-                } else if (progress === 70) {
-                    pipelineSteps[1].classList.remove('active');
-                    pipelineSteps[1].querySelector('i').classList.remove('fa-spin');
-                    pipelineSteps[2].classList.add('active');
-                    pipelineSteps[2].querySelector('i').classList.add('fa-spin');
-                } else if (progress >= 100) {
-                    clearInterval(interval);
-                    pipelineSteps[2].classList.remove('active');
-                    pipelineSteps[2].querySelector('i').classList.remove('fa-spin');
-                    
-                    setTimeout(() => {
-                        analyzerProcessing.classList.add('hidden');
-                        analyzerDashboard.classList.remove('hidden');
-                        analyzerDashboard.style.animation = 'fadeIn 0.5s ease-in-out';
-                    }, 500);
-                }
-            }, 50); // Completes in 2.5 seconds total (100 / 2 = 50 steps * 50ms = 2500ms)
-        });
-    }
-
 });
