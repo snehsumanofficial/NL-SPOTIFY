@@ -1,0 +1,74 @@
+@import "tailwindcss";
+
+@theme {
+  --color-spotify: #1DB954;
+  --color-spotify-hover: #1ed760;
+  
+  --color-background: #121212;
+  --color-foreground: #ffffff;
+  
+  --color-card: #181818;
+  --color-card-hover: #282828;
+  
+  --color-border: #333333;
+  --color-muted: #b3b3b3;
+}
+
+:root {
+  --background: #121212;
+  --foreground: #ffffff;
+  --card: #181818;
+  --card-hover: #282828;
+  --border: #333333;
+  --muted: #b3b3b3;
+  --primary: #1DB954;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Glassmorphism utilities */
+.glass {
+  background: rgba(24, 24, 24, 0.7);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.card-glass {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+::-webkit-scrollbar-thumb {
+  background: #555;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #777;
+}
+
+/* Light Theme Mode Overlay */
+body.light-theme {
+  filter: invert(1) hue-rotate(180deg);
+  background-color: #ededed;
+}
+body.light-theme img,
+body.light-theme video,
+body.light-theme .preserve-colors {
+  filter: invert(1) hue-rotate(180deg);
+}
