@@ -116,7 +116,7 @@ Return:
           type: "evidence_metadata",
           reviews: retrievedReviews,
           confidence: Math.floor(Math.random() * (95 - 75 + 1) + 75), // Simulated confidence since Groq doesn't return vector match scores
-          sources: retrievedReviews.reduce((acc, r) => {
+          sources: retrievedReviews.reduce((acc: any, r: any) => {
             acc[r.source] = (acc[r.source] || 0) + 1;
             return acc;
           }, {})
