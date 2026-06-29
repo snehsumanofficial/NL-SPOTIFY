@@ -17,6 +17,14 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [activeModal, setActiveModal] = useState<string | null>(null);
   
+  // Drill-down state
+  const [drillDown, setDrillDown] = useState<{isOpen: boolean, title: string, data: any[], loading: boolean}>({
+    isOpen: false,
+    title: "",
+    data: [],
+    loading: false
+  });
+  
   const [metrics, setMetrics] = useState({
     reviews: 0,
     opportunities: 0,
@@ -111,6 +119,28 @@ export default function Dashboard() {
     }
     fetchDashboardData();
   }, [supabase]);
+
+  const handleDrillDown = async (type: string, value: string) => {
+    setDrillDown({ isOpen: true, title: `Loading ${value}...`, data: [], loading: true });
+    
+    let query = supabase.from('reviews').select('*');
+    if (type === 'source') {
+      query = query.eq('source', value).limit(50);
+    } else if (type === 'rating') {
+      // value is e.g. "5 Stars", extract number
+      const ratingNum = parseInt(value.split(' ')[0]);
+      if (!isNaN(ratingNum)) query = query.eq('rating', ratingNum).limit(50);
+    }
+
+    const { data } = await query;
+    
+    setDrillDown({
+      isOpen: true,
+      title: `${type === 'source' ? 'Source' : 'Rating'}: ${value}`,
+      data: data || [],
+      loading: false
+    });
+  };
 
   return (
     <div className="p-8 max-w-7xl mx-auto space-y-8 animate-in fade-in duration-700">
@@ -228,6 +258,49 @@ export default function Dashboard() {
         </div>
       )}
 
+      {/* Drill Down Modal */}
+      {drillDown.isOpen && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center animate-in fade-in" onClick={() => setDrillDown(prev => ({...prev, isOpen: false}))}>
+          <div className="bg-[#121212] border border-white/10 rounded-2xl p-8 max-w-3xl w-full max-h-[80vh] overflow-hidden flex flex-col shadow-2xl animate-in zoom-in-95" onClick={e => e.stopPropagation()}>
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-xl font-bold text-white flex items-center gap-2">
+                <AlertCircle className="w-5 h-5 text-[#1DB954]" /> Drill-Down: {drillDown.title}
+              </h2>
+              <button onClick={() => setDrillDown(prev => ({...prev, isOpen: false}))} className="text-zinc-500 hover:text-white transition-colors">✕</button>
+            </div>
+            
+            <div className="flex-1 overflow-y-auto custom-scrollbar">
+              {drillDown.loading ? (
+                <div className="flex justify-center items-center py-20">
+                  <Loader2 className="w-8 h-8 text-[#1DB954] animate-spin" />
+                </div>
+              ) : drillDown.data.length === 0 ? (
+                <div className="text-zinc-500 text-center py-10">No data found for this segment.</div>
+              ) : (
+                <div className="space-y-4">
+                  {drillDown.data.map((review: any) => (
+                    <div key={review.id} className="bg-white/5 p-4 rounded-xl border border-white/5">
+                      <div className="flex justify-between items-center mb-2">
+                        <span className="text-xs font-bold text-[#1DB954]">{review.source}</span>
+                        <span className="text-xs text-zinc-500">{new Date(review.date || review.created_at).toLocaleDateString()}</span>
+                      </div>
+                      <p className="text-sm text-zinc-300 leading-relaxed mb-3">"{review.text}"</p>
+                      <div className="flex items-center">
+                        {[...Array(5)].map((_, i) => (
+                          <svg key={i} className={`w-4 h-4 ${i < review.rating ? 'text-yellow-400' : 'text-zinc-700'}`} fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                          </svg>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Charts Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Sentiment Trend */}
@@ -294,9 +367,13 @@ export default function Dashboard() {
                 paddingAngle={5}
                 dataKey="value"
                 stroke="none"
+                onClick={(data) => {
+                  if (data && data.name) handleDrillDown('source', data.name);
+                }}
+                className="cursor-pointer"
               >
                 {chartData.sources.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} className="hover:opacity-80 transition-opacity" />
                 ))}
               </Pie>
               <Tooltip contentStyle={{ backgroundColor: '#181818', border: 'none', borderRadius: '8px' }} />
@@ -313,7 +390,15 @@ export default function Dashboard() {
               <XAxis type="number" stroke="#888" fontSize={12} tickLine={false} axisLine={false} />
               <YAxis dataKey="name" type="category" stroke="#888" fontSize={12} tickLine={false} axisLine={false} width={80} />
               <Tooltip contentStyle={{ backgroundColor: '#181818', border: 'none', borderRadius: '8px' }} cursor={{fill: '#282828'}} />
-              <Bar dataKey="count" fill="#1DB954" radius={[0, 4, 4, 0]} />
+              <Bar 
+                dataKey="count" 
+                fill="#1DB954" 
+                radius={[4, 4, 0, 0]} 
+                onClick={(data) => {
+                  if (data && data.name) handleDrillDown('rating', data.name);
+                }}
+                className="cursor-pointer hover:opacity-80 transition-opacity"
+              />
             </BarChart>
           </ResponsiveContainer>
         </ChartCard>
