@@ -14,7 +14,8 @@ import {
   Settings,
   Sun,
   Moon,
-  Globe
+  Globe,
+  Bell
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState, useEffect } from "react";
@@ -24,6 +25,7 @@ const routes = [
   { name: "Competitors", path: "/competitors", icon: Globe },
   { name: "Upload Reviews", path: "/upload-reviews", icon: UploadCloud },
   { name: "Analytics", path: "/analytics", icon: BarChart2 },
+  { name: "Monitoring", path: "/monitoring", icon: Bell },
   { name: "AI Product Copilot", path: "/ai-copilot", icon: Bot },
   { name: "Personas", path: "/personas", icon: Users },
   { name: "Opportunity Hub", path: "/opportunity-hub", icon: Lightbulb },
