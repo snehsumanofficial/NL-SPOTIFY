@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useEffect, useState } from "react";
-import { Send, Bot, User, Sparkles, StopCircle, RefreshCw } from "lucide-react";
+import { Send, Bot, User, Sparkles, StopCircle, RefreshCw, Mic } from "lucide-react";
 
 const suggestedPrompts = [
   "Why are users unhappy with Discover Weekly?",
@@ -18,6 +18,7 @@ export default function AICopilot() {
   const [messages, setMessages] = useState<Array<{role: string, content: string, metadata?: any}>>([]);
   const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isListening, setIsListening] = useState(false);
   const abortControllerRef = useRef<AbortController | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -46,6 +47,31 @@ export default function AICopilot() {
     e.preventDefault();
     if (!inputValue.trim() || isLoading) return;
     submitMessage(inputValue);
+  };
+
+  const startListening = () => {
+    // @ts-ignore
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      alert("Your browser does not support Voice Recognition. Try using Chrome.");
+      return;
+    }
+    
+    const recognition = new SpeechRecognition();
+    recognition.lang = 'en-US';
+    recognition.interimResults = false;
+    
+    recognition.onstart = () => setIsListening(true);
+    recognition.onresult = (event: any) => {
+      const text = event.results[0][0].transcript;
+      setInputValue(text);
+      // Optionally auto submit:
+      // setTimeout(() => submitMessage(text), 300);
+    };
+    recognition.onerror = (event: any) => setIsListening(false);
+    recognition.onend = () => setIsListening(false);
+    
+    recognition.start();
   };
 
   const submitMessage = async (text: string) => {
@@ -263,22 +289,36 @@ export default function AICopilot() {
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             placeholder="Ask Copilot about your product data..."
-            disabled={isLoading}
-            className="w-full bg-black/40 border border-white/10 rounded-full pl-6 pr-14 py-4 text-white focus:outline-none focus:border-[#1DB954]/50 focus:ring-1 focus:ring-[#1DB954]/50 transition-all disabled:opacity-50"
+            disabled={isLoading || isListening}
+            className="w-full bg-black/40 border border-white/10 rounded-full pl-6 pr-24 py-4 text-white focus:outline-none focus:border-[#1DB954]/50 focus:ring-1 focus:ring-[#1DB954]/50 transition-all disabled:opacity-50"
           />
-          <button 
-            type="submit"
-            disabled={isLoading || !inputValue.trim()}
-            onClick={(e) => {
-              if (isLoading) {
-                e.preventDefault();
-                stop();
-              }
-            }}
-            className="absolute right-2 p-2.5 bg-[#1DB954] text-black rounded-full hover:bg-[#1ed760] disabled:opacity-50 disabled:hover:bg-[#1DB954] transition-colors"
-          >
-            {isLoading ? <StopCircle className="w-5 h-5" /> : <Send className="w-5 h-5 -ml-0.5" />}
-          </button>
+          <div className="absolute right-2 flex items-center gap-1">
+            <button
+              type="button"
+              onClick={startListening}
+              disabled={isLoading || isListening}
+              className={`p-2.5 rounded-full transition-colors ${
+                isListening 
+                  ? 'bg-red-500/20 text-red-500 animate-pulse' 
+                  : 'bg-white/5 text-zinc-400 hover:bg-white/10 hover:text-white'
+              }`}
+            >
+              <Mic className="w-5 h-5" />
+            </button>
+            <button 
+              type="submit"
+              disabled={isLoading || !inputValue.trim()}
+              onClick={(e) => {
+                if (isLoading) {
+                  e.preventDefault();
+                  stop();
+                }
+              }}
+              className="p-2.5 bg-[#1DB954] text-black rounded-full hover:bg-[#1ed760] disabled:opacity-50 disabled:hover:bg-[#1DB954] transition-colors"
+            >
+              {isLoading ? <StopCircle className="w-5 h-5" /> : <Send className="w-5 h-5 -ml-0.5" />}
+            </button>
+          </div>
         </form>
         <p className="text-center text-xs text-zinc-500 mt-3">
           AI Copilot can make mistakes. Consider verifying important metrics.
