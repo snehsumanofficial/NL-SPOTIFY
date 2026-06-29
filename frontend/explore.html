@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spotify Explore BETA</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="explore-page">
+    <div class="app-layout">
+        
+        <!-- Left Sidebar (Explore Custom) -->
+        <nav class="sidebar explore-sidebar-custom">
+            <div class="sidebar-top-links">
+                <a href="#" class="spotify-logo-btn" style="margin-bottom: 20px; display: inline-block;">
+                    <svg viewBox="0 0 496 512" width="32" height="32" fill="#1ed760" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M248 8C111.1 8 8 111.1 8 248s103.1 240 240 240 240-103.1 240-240S384.9 8 248 8zm110.7 338.1c-4.3 0-6.7-1.4-10.2-3.6-36.3-21.7-80.3-33.3-127-33.3-26.1 0-52.8 3.8-77.3 9.5-4.8 1.2-7.9 2.4-11 2.4-9.5 0-15.5-7.1-15.5-15.5 0-10 5.7-15.2 13.3-17.1 29-7.1 58.5-11.4 90.5-11.4 51 0 100.7 13.3 141.5 38.1 6.7 3.8 10.5 7.9 10.5 17.1.1 8.6-6.7 14.3-15.8 14.3zm29.5-68.1c-5.2 0-8.6-2.4-11.4-4.3-40.4-24-104.7-39-166.4-39-32.8 0-62.3 4.8-84.9 11.4-5.2 1.4-8.1 2.9-11.9 2.9-11.4 0-19.5-9-19.5-20.5 0-11 4.3-17.6 14.8-20.9 27.1-8.6 59.3-13.3 101.4-13.3 64.9 0 134.6 16.2 183.4 44.2 8.1 4.8 12.4 10.2 12.4 21.7-.1 11.6-8.7 18.8-18.9 18.8zm34.3-77.3c-5.7 0-9-1.4-13.3-4.3-45.7-27.6-116.2-43.6-182.4-43.6-37.1 0-73.3 5.2-101.9 13.3-4.3 1.4-8.1 2.9-13.3 2.9-13.8 0-24.3-10.5-24.3-24.3 0-13.3 6.7-21.4 17.6-24.8 33.8-10 73.3-15.5 121.9-15.5 72.9 0 148.7 17.1 203.4 49.3 9.5 5.7 14.3 12.9 14.3 24.3 0 13.8-10.9 22.7-22 22.7z"/>
+                    </svg> <span style="color: white; font-weight: 700; font-size: 20px; margin-left: 8px; vertical-align: super;">Spotify</span>
+                </a>
+                
+                <ul class="nav-links">
+                    <li><a href="index.html"><i class="fa-solid fa-house"></i> Home</a></li>
+                    <li><a href="#"><i class="fa-solid fa-search"></i> Search</a></li>
+                    <li><a href="#"><i class="fa-solid fa-book-open"></i> Your Library</a></li>
+                </ul>
+
+                <ul class="nav-links secondary-links" style="margin-top: 30px;">
+                    <li><a href="#"><div class="icon-box bg-gray"><i class="fa-solid fa-plus"></i></div> Create Playlist</a></li>
+                    <li><a href="#"><div class="icon-box liked-bg"><i class="fa-solid fa-heart"></i></div> Liked Songs</a></li>
+                </ul>
+
+                <hr class="sidebar-divider">
+
+                <div class="your-playlists">
+                    <div class="playlist-header">
+                        <p>Your Playlists</p>
+                        <i class="fa-solid fa-plus"></i>
+                    </div>
+                    <ul class="playlist-list-mini">
+                        <li><img src="https://picsum.photos/seed/chillvibes/30/30"> Chill Vibes</li>
+                        <li><img src="https://picsum.photos/seed/focusflow/30/30"> Focus Flow</li>
+                        <li><img src="https://picsum.photos/seed/roadtrip/30/30"> Roadtrip Hits</li>
+                        <li><img src="https://picsum.photos/seed/workout/30/30"> Workout Mix</li>
+                        <li><img src="https://picsum.photos/seed/bollywood/30/30"> Bollywood Classics</li>
+                    </ul>
+                    <a href="#" class="show-more">Show more <i class="fa-solid fa-chevron-down"></i></a>
+                </div>
+
+                <div class="discovery-progress sidebar-progress">
+                    <h3 class="progress-title">DISCOVERY PROGRESS</h3>
+                    <div class="progress-circle-mini">
+                        <div class="progress-score-mini">
+                            <span class="score-num-mini">72</span>
+                            <span class="score-den-mini">/100</span>
+                        </div>
+                        <svg class="progress-ring-mini" width="70" height="70">
+                            <circle class="progress-ring__circle" stroke="#2a2a2a" stroke-width="4" fill="transparent" r="30" cx="35" cy="35"/>
+                            <circle class="progress-ring__value" stroke="#1ed760" stroke-width="4" fill="transparent" r="30" cx="35" cy="35" stroke-dasharray="188.4" stroke-dashoffset="52"/>
+                        </svg>
+                    </div>
+                    <div class="progress-feedback-mini">
+                        <p><strong>Great job!</strong></p>
+                        <p>You're exploring 28% more music than last month.</p>
+                    </div>
+                    <div class="progress-stats-mini">
+                        <div class="stat-item"><span class="stat-val purple">+18</span> <span class="stat-label">New Artists</span></div>
+                        <div class="stat-item"><span class="stat-val red">+7</span> <span class="stat-label">Genres Explored</span></div>
+                        <div class="stat-item"><span class="stat-val blue">+3</span> <span class="stat-label">Languages</span></div>
+                        <div class="stat-item"><span class="stat-val yellow">+24</span> <span class="stat-label">Hidden Gems Discovered</span></div>
+                    </div>
+                    <a href="#" class="view-progress-link">View progress <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="main-view explore-beta-main">
+            <div class="explore-top-bar">
+                <div class="explore-title">
+                    <h1>Explore <span class="beta-badge">BETA</span></h1>
+                    <p>AI-powered music discovery, built around you.</p>
+                </div>
+                <div class="top-bar-right">
+                    <button class="nav-btn circular"><i class="fa-regular fa-bell"></i></button>
+                    <img src="https://picsum.photos/seed/userprofile/32/32" class="profile-pic" alt="User">
+                </div>
+            </div>
+
+            <div class="explore-content-area">
+                <div class="explore-left-col">
+                    <div class="explore-header-box">
+                        <h2>What do you want to discover today?</h2>
+                        <div class="explore-search-bar">
+                            <i class="fa-solid fa-search"></i>
+                            <input type="text" placeholder="Describe your mood, activity, or type of music...">
+                            <i class="fa-solid fa-microphone"></i>
+                        </div>
+                        <div class="explore-chips">
+                            <button class="explore-chip"><i class="fa-solid fa-cloud-rain" style="color: #4ade80;"></i> Rainy Drive</button>
+                            <button class="explore-chip"><i class="fa-regular fa-gem" style="color: #38bdf8;"></i> Hidden Gems</button>
+                            <button class="explore-chip"><i class="fa-solid fa-guitar" style="color: #fcd34d;"></i> Indie India</button>
+                            <button class="explore-chip"><i class="fa-regular fa-face-smile" style="color: #facc15;"></i> Songs like Arijit but happier</button>
+                            <button class="explore-chip"><i class="fa-solid fa-shuffle" style="color: #c084fc;"></i> Surprise me</button>
+                        </div>
+                    </div>
+
+                    <div class="exploration-level">
+                        <div class="level-header">
+                            <h3>Exploration Level <i class="fa-regular fa-circle-question"></i></h3>
+                            <div class="level-labels">
+                                <span class="level-label">Comfort<br><small>60% Familiar</small></span>
+                                <span class="level-label text-right">Adventure<br><small>40% New</small></span>
+                            </div>
+                        </div>
+                        <input type="range" min="0" max="100" value="40" class="explore-slider" id="explore-slider">
+                    </div>
+
+                    <div class="discovery-journey">
+                        <div class="journey-header">
+                            <h3>Your Discovery Journey</h3>
+                            <a href="#" class="view-full-journey">View full journey <i class="fa-solid fa-arrow-right"></i></a>
+                        </div>
+                        <p class="journey-subtitle">A personalized path to new music, made for you.</p>
+                        
+                        <div class="journey-timeline">
+                            <div class="timeline-line"></div>
+                            
+                            <div class="journey-item">
+                                <span class="journey-step">1</span>
+                                <img src="https://i.scdn.co/image/ab6761610000e5eb0261696c5df3be99da6ed3f3" alt="Arijit Singh" class="journey-img">
+                                <h4>Arijit Singh</h4>
+                                <p>Familiar<br>You love</p>
+                            </div>
+                            <div class="timeline-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+                            
+                            <div class="journey-item">
+                                <span class="journey-step">2</span>
+                                <img src="https://i.scdn.co/image/ab6761610000e5eb21b033d59e37cc60a6cb6e72" alt="Prateek Kuhad" class="journey-img">
+                                <h4>Prateek Kuhad</h4>
+                                <p>Similar vibe<br>Close to your taste</p>
+                            </div>
+                            <div class="timeline-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+                            
+                            <div class="journey-item active">
+                                <span class="journey-step">3</span>
+                                <img src="https://i.scdn.co/image/ab6761610000e5ebc40600e02356f99fbf422594" alt="Anuv Jain" class="journey-img">
+                                <h4>Anuv Jain</h4>
+                                <p>Fresh discovery<br>New for you</p>
+                            </div>
+                            <div class="timeline-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+                            
+                            <div class="journey-item">
+                                <span class="journey-step">4</span>
+                                <img src="https://i.scdn.co/image/ab6761610000e5ebb19af0ea736c6228d6eb539c" alt="Lifafa" class="journey-img">
+                                <h4>Lifafa</h4>
+                                <p>Indie Gems<br>Rising artist</p>
+                            </div>
+                            <div class="timeline-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+
+                            <div class="journey-item">
+                                <span class="journey-step">5</span>
+                                <img src="https://i.scdn.co/image/ab6761610000e5eb98544d640ff1c93a743a14cc" alt="Talha Anjum" class="journey-img">
+                                <h4>Talha Anjum</h4>
+                                <p>Expand your taste<br>New sound</p>
+                            </div>
+                            <div class="timeline-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+
+                            <div class="journey-item">
+                                <span class="journey-step">6</span>
+                                <img src="https://picsum.photos/seed/japaneseindie/90/90" alt="Japanese Indie" class="journey-img">
+                                <h4>Japanese Indie</h4>
+                                <p>Explore more<br>Different culture</p>
+                            </div>
+                            <div class="timeline-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+
+                            <div class="journey-item">
+                                <span class="journey-step">7</span>
+                                <img src="https://picsum.photos/seed/novoamor/90/90" alt="Novo Amor" class="journey-img">
+                                <h4>Novo Amor</h4>
+                                <p>Go global<br>New feel</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="explore-song-details">
+                        <div class="song-details-left">
+                            <div class="song-info-top">
+                                <div class="explore-album-wrapper">
+                                    <img src="https://i.scdn.co/image/ab67616d0000b273b400780212f8674d825f1d7d" alt="Alag Aasman" class="explore-album-art">
+                                    <button class="card-play-btn"><i class="fa-solid fa-play"></i></button>
+                                </div>
+                                <div class="song-meta">
+                                    <h2>Alag Aasman</h2>
+                                    <p>Anuv Jain</p>
+                                    <div class="song-tags">
+                                        <span class="tag tag-match">92% Match</span>
+                                        <span class="tag tag-new">New Artist</span>
+                                    </div>
+                                </div>
+                                <div class="song-actions-top">
+                                    <button class="btn-icon active-green"><i class="fa-solid fa-heart"></i></button>
+                                    <button class="btn-icon"><i class="fa-solid fa-ban"></i></button>
+                                    <button class="btn-icon"><i class="fa-solid fa-ellipsis"></i></button>
+                                </div>
+                            </div>
+                            <div class="song-feedback">
+                                <div class="why-this">
+                                    <h4>Why this song?</h4>
+                                    <ul>
+                                        <li><i class="fa-solid fa-check" style="color: #1ed760;"></i> You enjoy soulful acoustic songs</li>
+                                        <li><i class="fa-solid fa-check" style="color: #1ed760;"></i> Similar vibe to Prateek Kuhad</li>
+                                        <li><i class="fa-solid fa-check" style="color: #1ed760;"></i> You've liked Anuv Jain's style before</li>
+                                        <li><i class="fa-solid fa-check" style="color: #1ed760;"></i> This artist is less mainstream</li>
+                                    </ul>
+                                </div>
+                                <div class="why-not">
+                                    <h4>Why not?</h4>
+                                    <ul>
+                                        <li><i class="fa-regular fa-circle-xmark"></i> Wrong mood</li>
+                                        <li><i class="fa-regular fa-circle-xmark"></i> Too popular</li>
+                                        <li><i class="fa-regular fa-circle-xmark"></i> Already know this</li>
+                                        <li><i class="fa-regular fa-circle-xmark"></i> Not my taste</li>
+                                        <li><i class="fa-regular fa-circle-xmark"></i> Don't recommend artist</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="song-details-right">
+                            <h4>Versions</h4>
+                            <ul class="versions-list">
+                                <li class="active"><span>Original</span> <i class="fa-solid fa-chart-simple" style="color: #1ed760;"></i></li>
+                                <li><span>Acoustic</span> <span>{ }</span></li>
+                                <li><span>Studio</span></li>
+                                <li><span>Live</span></li>
+                                <li><span>Instrumental</span></li>
+                                <li class="spotify-original">Spotify Original <i class="fa-solid fa-plus"></i></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="explore-sidebar-right">
+                    <div class="studio-header">
+                        <h3>Spotify Studio <i class="fa-solid fa-chevron-right"></i></h3>
+                        <p>Exclusive music experiences.</p>
+                    </div>
+                    <div class="studio-items">
+                        <div class="studio-item">
+                            <img src="https://i.scdn.co/image/ab67706c0000da84577889e472cecc2d4ea9e0ab" alt="Live Sessions">
+                            <div class="studio-info">
+                                <h4>Live Sessions</h4>
+                                <p>Exclusive live performances <span class="tag-new-small">New</span></p>
+                            </div>
+                        </div>
+                        <div class="studio-item">
+                            <div class="studio-icon bg-green-dark"><i class="fa-solid fa-wave-square"></i></div>
+                            <div class="studio-info">
+                                <h4>Studio Originals</h4>
+                                <p>Spotify-recorded versions <span class="tag-new-small">New</span></p>
+                            </div>
+                        </div>
+                        <div class="studio-item">
+                            <img src="https://i.scdn.co/image/ab67706c0000da84a95ea81b5fc912304b4c730e" alt="Behind the Song">
+                            <div class="studio-info">
+                                <h4>Behind the Song</h4>
+                                <p>Stories from artists and creators <span class="tag-new-small">New</span></p>
+                            </div>
+                        </div>
+                        <div class="studio-item">
+                            <img src="https://i.scdn.co/image/ab67706c0000da8445163ed037785c4bf2ec7a25" alt="Early Releases">
+                            <div class="studio-info">
+                                <h4>Early Releases</h4>
+                                <p>Hear new music first <span class="tag-new-small">New</span></p>
+                            </div>
+                        </div>
+                        <div class="studio-item">
+                            <img src="https://i.scdn.co/image/ab67706c0000da84e1b8b8d00d234ba443c3327f" alt="Artist Commentary">
+                            <div class="studio-info">
+                                <h4>Artist Commentary</h4>
+                                <p>Hear it from the artist <span class="tag-new-small">New</span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Player Bar -->
+        <footer class="bottom-player">
+            <div class="player-left">
+                <div class="now-playing-mini">
+                    <div class="cover-art-mini">
+                        <img src="https://i.scdn.co/image/ab67616d0000b273b400780212f8674d825f1d7d" alt="Album Art" style="width:100%; height:100%; object-fit:cover; border-radius:4px;">
+                    </div>
+                    <div class="mini-info">
+                        <h4>Alag Aasman</h4>
+                        <p>Anuv Jain</p>
+                    </div>
+                </div>
+                <div class="mini-actions">
+                    <button class="action-btn mini active like-btn"><i class="fa-solid fa-heart" style="color: #1ed760;"></i></button>
+                    <button class="action-btn mini"><i class="fa-solid fa-tv"></i></button>
+                </div>
+            </div>
+            
+            <div class="player-center">
+                <div class="player-controls">
+                    <button class="control-btn"><i class="fa-solid fa-shuffle"></i></button>
+                    <button class="control-btn"><i class="fa-solid fa-backward-step"></i></button>
+                    <button class="control-btn play-pause"><i class="fa-solid fa-play"></i></button>
+                    <button class="control-btn"><i class="fa-solid fa-forward-step"></i></button>
+                    <button class="control-btn"><i class="fa-solid fa-repeat"></i></button>
+                </div>
+                <div class="progress-bar-container">
+                    <span class="time">1:24</span>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 30%;">
+                            <div class="progress-handle"></div>
+                        </div>
+                    </div>
+                    <span class="time">4:28</span>
+                </div>
+            </div>
+            
+            <div class="player-right">
+                <button class="control-btn"><i class="fa-solid fa-microphone"></i></button>
+                <button class="control-btn"><i class="fa-solid fa-list-ul"></i></button>
+                <button class="control-btn"><i class="fa-solid fa-computer"></i></button>
+                <div class="volume-control">
+                    <button class="control-btn"><i class="fa-solid fa-volume-high"></i></button>
+                    <div class="progress-bar volume-bar">
+                        <div class="progress-fill" style="width: 70%;"></div>
+                    </div>
+                </div>
+                <button class="control-btn"><i class="fa-solid fa-up-right-and-down-left-from-center"></i></button>
+            </div>
+        </footer>
+    </div>
+    
+    <script src="script.js"></script>
+    <script>
+        // Specific logic for explore page
+        const whyNotOptions = document.querySelectorAll('.why-not li');
+        whyNotOptions.forEach(option => {
+            option.addEventListener('click', function() {
+                const icon = this.querySelector('i');
+                if (icon.classList.contains('fa-circle-xmark')) {
+                    icon.classList.remove('fa-circle-xmark', 'fa-regular');
+                    icon.classList.add('fa-circle-check', 'fa-solid');
+                    icon.style.color = '#e63946';
+                    this.style.color = '#fff';
+                } else {
+                    icon.classList.add('fa-circle-xmark', 'fa-regular');
+                    icon.classList.remove('fa-circle-check', 'fa-solid');
+                    icon.style.color = '';
+                    this.style.color = '';
+                }
+            });
+        });
+
+        const versionOptions = document.querySelectorAll('.versions-list li:not(.spotify-original)');
+        versionOptions.forEach(option => {
+            option.addEventListener('click', function() {
+                versionOptions.forEach(opt => opt.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>
