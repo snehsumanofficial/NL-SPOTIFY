@@ -67,7 +67,7 @@ export async function POST(req: Request) {
     }
 
     // 4. Format retrieved reviews into a string for the LLM
-    const reviewsContext = retrievedReviews.map((r, i) => 
+    const reviewsContext = retrievedReviews.map((r: any, i: number) => 
       `[${i+1}] Source: ${r.source} | Rating: ${r.rating} | Review: "${r.text}"`
     ).join('\n');
 
