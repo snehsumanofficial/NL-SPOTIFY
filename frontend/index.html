@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,15 +9,17 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
+
 <body>
     <div class="app-layout">
-        
+
         <!-- Top Navigation Bar -->
         <header class="top-bar">
             <div class="top-bar-left">
                 <a href="#" class="spotify-logo-btn" id="spotify-logo" title="Spotify">
                     <svg viewBox="0 0 496 512" width="28" height="28" fill="#1ed760" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M248 8C111.1 8 8 111.1 8 248s103.1 240 240 240 240-103.1 240-240S384.9 8 248 8zm110.7 338.1c-4.3 0-6.7-1.4-10.2-3.6-36.3-21.7-80.3-33.3-127-33.3-26.1 0-52.8 3.8-77.3 9.5-4.8 1.2-7.9 2.4-11 2.4-9.5 0-15.5-7.1-15.5-15.5 0-10 5.7-15.2 13.3-17.1 29-7.1 58.5-11.4 90.5-11.4 51 0 100.7 13.3 141.5 38.1 6.7 3.8 10.5 7.9 10.5 17.1.1 8.6-6.7 14.3-15.8 14.3zm29.5-68.1c-5.2 0-8.6-2.4-11.4-4.3-40.4-24-104.7-39-166.4-39-32.8 0-62.3 4.8-84.9 11.4-5.2 1.4-8.1 2.9-11.9 2.9-11.4 0-19.5-9-19.5-20.5 0-11 4.3-17.6 14.8-20.9 27.1-8.6 59.3-13.3 101.4-13.3 64.9 0 134.6 16.2 183.4 44.2 8.1 4.8 12.4 10.2 12.4 21.7-.1 11.6-8.7 18.8-18.9 18.8zm34.3-77.3c-5.7 0-9-1.4-13.3-4.3-45.7-27.6-116.2-43.6-182.4-43.6-37.1 0-73.3 5.2-101.9 13.3-4.3 1.4-8.1 2.9-13.3 2.9-13.8 0-24.3-10.5-24.3-24.3 0-13.3 6.7-21.4 17.6-24.8 33.8-10 73.3-15.5 121.9-15.5 72.9 0 148.7 17.1 203.4 49.3 9.5 5.7 14.3 12.9 14.3 24.3 0 13.8-10.9 22.7-22 22.7z"/>
+                        <path
+                            d="M248 8C111.1 8 8 111.1 8 248s103.1 240 240 240 240-103.1 240-240S384.9 8 248 8zm110.7 338.1c-4.3 0-6.7-1.4-10.2-3.6-36.3-21.7-80.3-33.3-127-33.3-26.1 0-52.8 3.8-77.3 9.5-4.8 1.2-7.9 2.4-11 2.4-9.5 0-15.5-7.1-15.5-15.5 0-10 5.7-15.2 13.3-17.1 29-7.1 58.5-11.4 90.5-11.4 51 0 100.7 13.3 141.5 38.1 6.7 3.8 10.5 7.9 10.5 17.1.1 8.6-6.7 14.3-15.8 14.3zm29.5-68.1c-5.2 0-8.6-2.4-11.4-4.3-40.4-24-104.7-39-166.4-39-32.8 0-62.3 4.8-84.9 11.4-5.2 1.4-8.1 2.9-11.9 2.9-11.4 0-19.5-9-19.5-20.5 0-11 4.3-17.6 14.8-20.9 27.1-8.6 59.3-13.3 101.4-13.3 64.9 0 134.6 16.2 183.4 44.2 8.1 4.8 12.4 10.2 12.4 21.7-.1 11.6-8.7 18.8-18.9 18.8zm34.3-77.3c-5.7 0-9-1.4-13.3-4.3-45.7-27.6-116.2-43.6-182.4-43.6-37.1 0-73.3 5.2-101.9 13.3-4.3 1.4-8.1 2.9-13.3 2.9-13.8 0-24.3-10.5-24.3-24.3 0-13.3 6.7-21.4 17.6-24.8 33.8-10 73.3-15.5 121.9-15.5 72.9 0 148.7 17.1 203.4 49.3 9.5 5.7 14.3 12.9 14.3 24.3 0 13.8-10.9 22.7-22 22.7z" />
                     </svg>
                 </a>
                 <button class="nav-btn circular home-btn" id="home-btn" title="Home">
@@ -25,13 +28,14 @@
                 <button class="nav-btn circular" title="Go Back"><i class="fa-solid fa-chevron-left"></i></button>
                 <button class="nav-btn circular" title="Go Forward"><i class="fa-solid fa-chevron-right"></i></button>
             </div>
-            
+
             <div class="top-bar-center">
                 <div class="search-container">
                     <i class="fa-solid fa-search search-icon"></i>
                     <input type="text" id="vibe-search" placeholder="What's your vibe rn?" autocomplete="off">
-                    <button class="mic-btn" id="voice-btn" title="Voice Search"><i class="fa-solid fa-microphone"></i></button>
-                    
+                    <button class="mic-btn" id="voice-btn" title="Voice Search"><i
+                            class="fa-solid fa-microphone"></i></button>
+
                     <!-- Search Dropdown -->
                     <div class="search-dropdown hidden" id="search-dropdown">
                         <div class="dropdown-header">SEARCH OPTIONS</div>
@@ -46,7 +50,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="top-bar-right">
                 <button class="explore-btn">Explore Premium</button>
                 <button class="nav-btn circular"><i class="fa-regular fa-bell"></i></button>
@@ -63,14 +67,14 @@
                 </div>
                 <button class="nav-btn circular"><i class="fa-solid fa-plus"></i></button>
             </div>
-            
+
             <div class="filter-pills">
                 <button class="pill-btn">Playlists</button>
                 <button class="pill-btn"><i class="fa-solid fa-wand-magic-sparkles"></i> Blend</button>
                 <button class="pill-btn"><i class="fa-regular fa-folder"></i> Folder</button>
                 <button class="pill-btn active">Discover</button>
             </div>
-            
+
             <div class="surprise-me-container">
                 <button class="surprise-btn" id="surprise-btn">
                     <div class="surprise-icon">
@@ -82,12 +86,12 @@
                     </div>
                 </button>
             </div>
-            
+
             <div class="search-recents">
                 <i class="fa-solid fa-search"></i>
                 <span>Recents <i class="fa-solid fa-caret-down"></i></span>
             </div>
-            
+
             <div class="playlist-list">
                 <div class="playlist-item">
                     <div class="playlist-img liked-img"><i class="fa-solid fa-heart"></i></div>
@@ -124,11 +128,12 @@
         <main class="main-view">
             <div class="main-header">
                 <div id="dynamic-header-content">
-                    <p class="discovery-label"><i class="fa-solid fa-wand-magic-sparkles"></i> DISCOVERY, PERSONALIZED</p>
+                    <p class="discovery-label"><i class="fa-solid fa-wand-magic-sparkles"></i> DISCOVERY, PERSONALIZED
+                    </p>
                     <h1 class="greeting">Good evening, Sneh.</h1>
                     <h2 class="sub-greeting">Pick a mood — or let us pick.</h2>
                 </div>
-                
+
                 <div class="category-pills">
                     <button class="category-btn active" data-target="view-discovery">All</button>
                     <button class="category-btn" data-target="view-music">Music</button>
@@ -136,10 +141,12 @@
                     <button class="category-btn" data-target="view-audiobooks">Audiobooks</button>
                     <button class="category-btn" data-target="view-live">Live</button>
                     <button class="category-btn" data-target="view-events">Events</button>
-                    <button class="category-btn" data-target="view-analyzer" style="background: linear-gradient(135deg, #1db954, #191414); color: white; font-weight: 800; border: 1px solid #1db954;"><i class="fa-solid fa-brain"></i> AI Analyzer</button>
+                    <button class="category-btn" data-target="view-analyzer"
+                        style="background: linear-gradient(135deg, #1db954, #191414); color: white; font-weight: 800; border: 1px solid #1db954;"><i
+                            class="fa-solid fa-brain"></i> AI Analyzer</button>
                 </div>
             </div>
-            
+
             <!-- View: Discovery (AI MVP Features) -->
             <div id="view-discovery" class="content-view active">
                 <div class="interactive-panels">
@@ -173,7 +180,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- Activity Panel (Accordion) -->
                     <div class="panel activity-panel">
                         <div class="panel-header" id="activity-header">
@@ -205,7 +212,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div id="loading-indicator" class="hidden">
                     <div class="loader"></div>
                     <p>AI is generating your context-aware session...</p>
@@ -217,42 +224,58 @@
                 <h2 class="section-title">🎵 New Releases For You</h2>
                 <div class="card-grid">
                     <div class="media-card clickable" onclick="playCard(this, 'Midnights', 'Taylor Swift')">
-                        <img class="card-img" src="https://upload.wikimedia.org/wikipedia/en/9/9f/Midnights_-_Taylor_Swift.png" alt="Midnights" onerror="this.style.background='#3a0ca3';this.removeAttribute('src')">
+                        <img class="card-img"
+                            src="https://upload.wikimedia.org/wikipedia/en/9/9f/Midnights_-_Taylor_Swift.png"
+                            alt="Midnights" onerror="this.style.background='#3a0ca3';this.removeAttribute('src')">
                         <h4>Midnights</h4>
                         <p>Taylor Swift</p>
                     </div>
                     <div class="media-card clickable" onclick="playCard(this, 'After Hours', 'The Weeknd')">
-                        <img class="card-img" src="https://upload.wikimedia.org/wikipedia/en/c/c1/The_Weeknd_-_After_Hours.png" alt="After Hours" onerror="this.style.background='#e63946';this.removeAttribute('src')">
+                        <img class="card-img"
+                            src="https://upload.wikimedia.org/wikipedia/en/c/c1/The_Weeknd_-_After_Hours.png"
+                            alt="After Hours" onerror="this.style.background='#e63946';this.removeAttribute('src')">
                         <h4>After Hours</h4>
                         <p>The Weeknd</p>
                     </div>
                     <div class="media-card clickable" onclick="playCard(this, 'Future Nostalgia', 'Dua Lipa')">
-                        <img class="card-img" src="https://upload.wikimedia.org/wikipedia/en/f/f5/Dua_Lipa_-_Future_Nostalgia_%28Official_Album_Cover%29.png" alt="Future Nostalgia" onerror="this.style.background='#f72585';this.removeAttribute('src')">
+                        <img class="card-img"
+                            src="https://upload.wikimedia.org/wikipedia/en/f/f5/Dua_Lipa_-_Future_Nostalgia_%28Official_Album_Cover%29.png"
+                            alt="Future Nostalgia"
+                            onerror="this.style.background='#f72585';this.removeAttribute('src')">
                         <h4>Future Nostalgia</h4>
                         <p>Dua Lipa</p>
                     </div>
                     <div class="media-card clickable" onclick="playCard(this, 'DAMN.', 'Kendrick Lamar')">
-                        <img class="card-img" src="https://upload.wikimedia.org/wikipedia/en/a/a2/Kendrick_Lamar_-_DAMN.png" alt="DAMN." onerror="this.style.background='#e63946';this.removeAttribute('src')">
+                        <img class="card-img"
+                            src="https://upload.wikimedia.org/wikipedia/en/a/a2/Kendrick_Lamar_-_DAMN.png" alt="DAMN."
+                            onerror="this.style.background='#e63946';this.removeAttribute('src')">
                         <h4>DAMN.</h4>
                         <p>Kendrick Lamar</p>
                     </div>
                     <div class="media-card clickable" onclick="playCard(this, 'Fine Line', 'Harry Styles')">
-                        <img class="card-img" src="https://upload.wikimedia.org/wikipedia/en/b/b5/Harry_Styles_-_Fine_Line.png" alt="Fine Line" onerror="this.style.background='#00b4d8';this.removeAttribute('src')">
+                        <img class="card-img"
+                            src="https://upload.wikimedia.org/wikipedia/en/b/b5/Harry_Styles_-_Fine_Line.png"
+                            alt="Fine Line" onerror="this.style.background='#00b4d8';this.removeAttribute('src')">
                         <h4>Fine Line</h4>
                         <p>Harry Styles</p>
                     </div>
                     <div class="media-card clickable" onclick="playCard(this, 'Random Access Memories', 'Daft Punk')">
-                        <img class="card-img" src="https://upload.wikimedia.org/wikipedia/en/a/a7/Random_Access_Memories.jpg" alt="Random Access Memories" onerror="this.style.background='#f4a261';this.removeAttribute('src')">
+                        <img class="card-img"
+                            src="https://upload.wikimedia.org/wikipedia/en/a/a7/Random_Access_Memories.jpg"
+                            alt="Random Access Memories"
+                            onerror="this.style.background='#f4a261';this.removeAttribute('src')">
                         <h4>Random Access Memories</h4>
                         <p>Daft Punk</p>
                     </div>
                     <div class="media-card clickable" onclick="playCard(this, '30', 'Adele')">
-                        <img class="card-img" src="https://upload.wikimedia.org/wikipedia/en/7/76/Adele_-_30.png" alt="30" onerror="this.style.background='#6c757d';this.removeAttribute('src')">
+                        <img class="card-img" src="https://upload.wikimedia.org/wikipedia/en/7/76/Adele_-_30.png"
+                            alt="30" onerror="this.style.background='#6c757d';this.removeAttribute('src')">
                         <h4>30</h4>
                         <p>Adele</p>
                     </div>
                     <div class="media-card clickable" onclick="playCard(this, 'Divide', 'Ed Sheeran')">
-                        <img class="card-img" src="https://upload.wikimedia.org/wikipedia/en/4/45/Divide_cover.png" alt="Divide" onerror="this.style.background='#2a9d8f';this.removeAttribute('src')">
+                        <img class="card-img" src="https://upload.wikimedia.org/wikipedia/en/4/45/Divide_cover.png"
+                            alt="Divide" onerror="this.style.background='#2a9d8f';this.removeAttribute('src')">
                         <h4>Divide</h4>
                         <p>Ed Sheeran</p>
                     </div>
@@ -264,69 +287,89 @@
                 <h2 class="section-title">🎙️ Top Podcasts</h2>
                 <div class="card-grid">
                     <div class="media-card clickable" onclick="playCard(this, 'The Joe Rogan Experience', 'Joe Rogan')">
-                        <img class="card-img podcast-img" src="https://upload.wikimedia.org/wikipedia/en/thumb/6/6f/The_Joe_Rogan_Experience_logo.jpg/220px-The_Joe_Rogan_Experience_logo.jpg" alt="JRE" onerror="this.style.background='#0077b6';this.removeAttribute('src')">
+                        <img class="card-img podcast-img"
+                            src="https://upload.wikimedia.org/wikipedia/en/thumb/6/6f/The_Joe_Rogan_Experience_logo.jpg/220px-The_Joe_Rogan_Experience_logo.jpg"
+                            alt="JRE" onerror="this.style.background='#0077b6';this.removeAttribute('src')">
                         <h4>The Joe Rogan Experience</h4>
                         <p>Joe Rogan</p>
                     </div>
                     <div class="media-card clickable" onclick="playCard(this, 'Crime Junkie', 'audiochuck')">
-                        <img class="card-img podcast-img" src="https://picsum.photos/seed/crimejunkie/300/300" alt="Crime Junkie" onerror="this.style.background='#e63946';this.removeAttribute('src')">
+                        <img class="card-img podcast-img" src="https://picsum.photos/seed/crimejunkie/300/300"
+                            alt="Crime Junkie" onerror="this.style.background='#e63946';this.removeAttribute('src')">
                         <h4>Crime Junkie</h4>
                         <p>audiochuck</p>
                     </div>
                     <div class="media-card clickable" onclick="playCard(this, 'Huberman Lab', 'Andrew Huberman')">
-                        <img class="card-img podcast-img" src="https://picsum.photos/seed/hubermanlab/300/300" alt="Huberman Lab" onerror="this.style.background='#2a9d8f';this.removeAttribute('src')">
+                        <img class="card-img podcast-img" src="https://picsum.photos/seed/hubermanlab/300/300"
+                            alt="Huberman Lab" onerror="this.style.background='#2a9d8f';this.removeAttribute('src')">
                         <h4>Huberman Lab</h4>
                         <p>Andrew Huberman</p>
                     </div>
                     <div class="media-card clickable" onclick="playCard(this, 'Lex Fridman Podcast', 'Lex Fridman')">
-                        <img class="card-img podcast-img" src="https://picsum.photos/seed/lexfridman/300/300" alt="Lex Fridman" onerror="this.style.background='#3a0ca3';this.removeAttribute('src')">
+                        <img class="card-img podcast-img" src="https://picsum.photos/seed/lexfridman/300/300"
+                            alt="Lex Fridman" onerror="this.style.background='#3a0ca3';this.removeAttribute('src')">
                         <h4>Lex Fridman Podcast</h4>
                         <p>Lex Fridman</p>
                     </div>
                     <div class="media-card clickable" onclick="playCard(this, 'Diary of a CEO', 'Steven Bartlett')">
-                        <img class="card-img podcast-img" src="https://picsum.photos/seed/diaryofaceo/300/300" alt="Diary of CEO" onerror="this.style.background='#f72585';this.removeAttribute('src')">
+                        <img class="card-img podcast-img" src="https://picsum.photos/seed/diaryofaceo/300/300"
+                            alt="Diary of CEO" onerror="this.style.background='#f72585';this.removeAttribute('src')">
                         <h4>Diary of a CEO</h4>
                         <p>Steven Bartlett</p>
                     </div>
                     <div class="media-card clickable" onclick="playCard(this, 'My Favorite Murder', 'Karen & Georgia')">
-                        <img class="card-img podcast-img" src="https://picsum.photos/seed/myfavmurder/300/300" alt="My Favorite Murder" onerror="this.style.background='#6c757d';this.removeAttribute('src')">
+                        <img class="card-img podcast-img" src="https://picsum.photos/seed/myfavmurder/300/300"
+                            alt="My Favorite Murder"
+                            onerror="this.style.background='#6c757d';this.removeAttribute('src')">
                         <h4>My Favorite Murder</h4>
                         <p>Karen & Georgia</p>
                     </div>
                 </div>
             </div>
-            
+
             <!-- View: Audiobooks -->
             <div id="view-audiobooks" class="content-view hidden">
                 <h2 class="section-title">📚 Best Selling Audiobooks</h2>
                 <div class="card-grid">
                     <div class="media-card clickable" onclick="playCard(this, 'Atomic Habits', 'James Clear')">
-                        <img class="card-img podcast-img" src="https://upload.wikimedia.org/wikipedia/en/a/a6/Atomic_Habits.jpg" alt="Atomic Habits" onerror="this.style.background='#f4a261';this.removeAttribute('src')">
+                        <img class="card-img podcast-img"
+                            src="https://upload.wikimedia.org/wikipedia/en/a/a6/Atomic_Habits.jpg" alt="Atomic Habits"
+                            onerror="this.style.background='#f4a261';this.removeAttribute('src')">
                         <h4>Atomic Habits</h4>
                         <p>James Clear · 5h 35m</p>
                     </div>
-                    <div class="media-card clickable" onclick="playCard(this, 'The Psychology of Money', 'Morgan Housel')">
-                        <img class="card-img podcast-img" src="https://upload.wikimedia.org/wikipedia/en/3/32/The_Psychology_of_Money.jpg" alt="Psychology of Money" onerror="this.style.background='#2a9d8f';this.removeAttribute('src')">
+                    <div class="media-card clickable"
+                        onclick="playCard(this, 'The Psychology of Money', 'Morgan Housel')">
+                        <img class="card-img podcast-img"
+                            src="https://upload.wikimedia.org/wikipedia/en/3/32/The_Psychology_of_Money.jpg"
+                            alt="Psychology of Money"
+                            onerror="this.style.background='#2a9d8f';this.removeAttribute('src')">
                         <h4>The Psychology of Money</h4>
                         <p>Morgan Housel · 5h 48m</p>
                     </div>
                     <div class="media-card clickable" onclick="playCard(this, 'Ikigai', 'Héctor García')">
-                        <img class="card-img podcast-img" src="https://picsum.photos/seed/ikigai/300/300" alt="Ikigai" onerror="this.style.background='#f72585';this.removeAttribute('src')">
+                        <img class="card-img podcast-img" src="https://picsum.photos/seed/ikigai/300/300" alt="Ikigai"
+                            onerror="this.style.background='#f72585';this.removeAttribute('src')">
                         <h4>Ikigai</h4>
                         <p>Héctor García · 3h 22m</p>
                     </div>
                     <div class="media-card clickable" onclick="playCard(this, 'Think Like a Monk', 'Jay Shetty')">
-                        <img class="card-img podcast-img" src="https://picsum.photos/seed/thinklikeamonk/300/300" alt="Think Like a Monk" onerror="this.style.background='#3a0ca3';this.removeAttribute('src')">
+                        <img class="card-img podcast-img" src="https://picsum.photos/seed/thinklikeamonk/300/300"
+                            alt="Think Like a Monk"
+                            onerror="this.style.background='#3a0ca3';this.removeAttribute('src')">
                         <h4>Think Like a Monk</h4>
                         <p>Jay Shetty · 9h 9m</p>
                     </div>
                     <div class="media-card clickable" onclick="playCard(this, 'Can\'t Hurt Me', 'David Goggins')">
-                        <img class="card-img podcast-img" src="https://picsum.photos/seed/canthurtme/300/300" alt="Can't Hurt Me" onerror="this.style.background='#e63946';this.removeAttribute('src')">
+                        <img class="card-img podcast-img" src="https://picsum.photos/seed/canthurtme/300/300"
+                            alt="Can't Hurt Me" onerror="this.style.background='#e63946';this.removeAttribute('src')">
                         <h4>Can't Hurt Me</h4>
                         <p>David Goggins · 13h 34m</p>
                     </div>
                     <div class="media-card clickable" onclick="playCard(this, 'The Alchemist', 'Paulo Coelho')">
-                        <img class="card-img podcast-img" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/The_Alchemist.jpg/250px-The_Alchemist.jpg" alt="The Alchemist" onerror="this.style.background='#ffb703';this.removeAttribute('src')">
+                        <img class="card-img podcast-img"
+                            src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/The_Alchemist.jpg/250px-The_Alchemist.jpg"
+                            alt="The Alchemist" onerror="this.style.background='#ffb703';this.removeAttribute('src')">
                         <h4>The Alchemist</h4>
                         <p>Paulo Coelho · 4h 8m</p>
                     </div>
@@ -337,26 +380,34 @@
             <div id="view-live" class="content-view hidden">
                 <h2 class="section-title">🔴 Live Now</h2>
                 <div class="card-grid wide-grid">
-                    <div class="media-card clickable live-card" onclick="playCard(this, 'Taylor Swift Live', 'The Eras Tour')">
-                        <img class="card-img" src="https://picsum.photos/seed/taylorswiftlive/300/300" alt="Live Concert" onerror="this.style.background='#f72585';this.removeAttribute('src')">
+                    <div class="media-card clickable live-card"
+                        onclick="playCard(this, 'Taylor Swift Live', 'The Eras Tour')">
+                        <img class="card-img" src="https://picsum.photos/seed/taylorswiftlive/300/300"
+                            alt="Live Concert" onerror="this.style.background='#f72585';this.removeAttribute('src')">
                         <div class="live-badge">🔴 LIVE</div>
                         <h4>Taylor Swift</h4>
                         <p>The Eras Tour · 34K watching</p>
                     </div>
-                    <div class="media-card clickable live-card" onclick="playCard(this, 'Coldplay Live', 'Music of the Spheres Tour')">
-                        <img class="card-img" src="https://picsum.photos/seed/coldplaylive/300/300" alt="Coldplay Live" onerror="this.style.background='#0077b6';this.removeAttribute('src')">
+                    <div class="media-card clickable live-card"
+                        onclick="playCard(this, 'Coldplay Live', 'Music of the Spheres Tour')">
+                        <img class="card-img" src="https://picsum.photos/seed/coldplaylive/300/300" alt="Coldplay Live"
+                            onerror="this.style.background='#0077b6';this.removeAttribute('src')">
                         <div class="live-badge">🔴 LIVE</div>
                         <h4>Coldplay</h4>
                         <p>Music of the Spheres · 21K watching</p>
                     </div>
-                    <div class="media-card clickable live-card" onclick="playCard(this, 'The Weeknd Live', 'After Hours Tour')">
-                        <img class="card-img" src="https://picsum.photos/seed/weekndlive/300/300" alt="The Weeknd Live" onerror="this.style.background='#e63946';this.removeAttribute('src')">
+                    <div class="media-card clickable live-card"
+                        onclick="playCard(this, 'The Weeknd Live', 'After Hours Tour')">
+                        <img class="card-img" src="https://picsum.photos/seed/weekndlive/300/300" alt="The Weeknd Live"
+                            onerror="this.style.background='#e63946';this.removeAttribute('src')">
                         <div class="live-badge">🔴 LIVE</div>
                         <h4>The Weeknd</h4>
                         <p>After Hours Tour · 18K watching</p>
                     </div>
-                    <div class="media-card clickable live-card" onclick="playCard(this, 'Dua Lipa Live', 'Future Nostalgia Tour')">
-                        <img class="card-img" src="https://picsum.photos/seed/dualipaliive/300/300" alt="Dua Lipa Live" onerror="this.style.background='#7209b7';this.removeAttribute('src')">
+                    <div class="media-card clickable live-card"
+                        onclick="playCard(this, 'Dua Lipa Live', 'Future Nostalgia Tour')">
+                        <img class="card-img" src="https://picsum.photos/seed/dualipaliive/300/300" alt="Dua Lipa Live"
+                            onerror="this.style.background='#7209b7';this.removeAttribute('src')">
                         <div class="live-badge">🔴 LIVE</div>
                         <h4>Dua Lipa</h4>
                         <p>Future Nostalgia Tour · 15K watching</p>
@@ -369,7 +420,8 @@
                 <h2 class="section-title">🎟️ Upcoming Events Near You</h2>
                 <div class="event-list">
                     <div class="event-item clickable" onclick="playCard(this, 'Arijit Singh', 'World Tour')">
-                        <img class="event-img" src="https://picsum.photos/seed/arijitsingh/120/120" alt="Arijit Singh" onerror="this.style.background='#f72585';this.removeAttribute('src')">
+                        <img class="event-img" src="https://picsum.photos/seed/arijitsingh/120/120" alt="Arijit Singh"
+                            onerror="this.style.background='#f72585';this.removeAttribute('src')">
                         <div class="event-info">
                             <h4>Arijit Singh</h4>
                             <p>World Tour</p>
@@ -378,7 +430,8 @@
                         <button class="event-rsvp-btn">Get Tickets</button>
                     </div>
                     <div class="event-item clickable" onclick="playCard(this, 'Coldplay', 'Music of the Spheres')">
-                        <img class="event-img" src="https://picsum.photos/seed/coldplayevent/120/120" alt="Coldplay" onerror="this.style.background='#0077b6';this.removeAttribute('src')">
+                        <img class="event-img" src="https://picsum.photos/seed/coldplayevent/120/120" alt="Coldplay"
+                            onerror="this.style.background='#0077b6';this.removeAttribute('src')">
                         <div class="event-info">
                             <h4>Coldplay</h4>
                             <p>Music of the Spheres</p>
@@ -387,7 +440,8 @@
                         <button class="event-rsvp-btn">Get Tickets</button>
                     </div>
                     <div class="event-item clickable" onclick="playCard(this, 'Dua Lipa', 'Radical Optimism Tour')">
-                        <img class="event-img" src="https://picsum.photos/seed/dualipaevent/120/120" alt="Dua Lipa" onerror="this.style.background='#7209b7';this.removeAttribute('src')">
+                        <img class="event-img" src="https://picsum.photos/seed/dualipaevent/120/120" alt="Dua Lipa"
+                            onerror="this.style.background='#7209b7';this.removeAttribute('src')">
                         <div class="event-info">
                             <h4>Dua Lipa</h4>
                             <p>Radical Optimism Tour</p>
@@ -396,7 +450,8 @@
                         <button class="event-rsvp-btn">Get Tickets</button>
                     </div>
                     <div class="event-item clickable" onclick="playCard(this, 'AR Rahman', 'Infinite Love Tour')">
-                        <img class="event-img" src="https://picsum.photos/seed/arrahman/120/120" alt="AR Rahman" onerror="this.style.background='#f4a261';this.removeAttribute('src')">
+                        <img class="event-img" src="https://picsum.photos/seed/arrahman/120/120" alt="AR Rahman"
+                            onerror="this.style.background='#f4a261';this.removeAttribute('src')">
                         <div class="event-info">
                             <h4>AR Rahman</h4>
                             <p>Infinite Love Tour</p>
@@ -410,8 +465,10 @@
             <!-- View: AI Review Analyzer -->
             <div id="view-analyzer" class="content-view hidden">
                 <div class="analyzer-header">
-                    <h2 class="section-title"><i class="fa-solid fa-microchip"></i> Spotify Review Intelligence Engine</h2>
-                    <p style="color: var(--text-subdued); margin-bottom: 24px;">Analyze user reviews and identify pain points, unmet needs, and opportunities for music discovery.</p>
+                    <h2 class="section-title"><i class="fa-solid fa-microchip"></i> Spotify Review Intelligence Engine
+                    </h2>
+                    <p style="color: var(--text-subdued); margin-bottom: 24px;">Analyze user reviews and identify pain
+                        points, unmet needs, and opportunities for music discovery.</p>
                 </div>
 
                 <!-- Section A: Data Ingestion & Batch Processing -->
@@ -478,7 +535,7 @@
                                 </tbody>
                             </table>
                         </div>
-                        
+
                         <div class="dashboard-card highlight-card">
                             <h3>💡 Top Opportunities</h3>
                             <table class="analyzer-table">
@@ -509,7 +566,8 @@
                     <div class="dashboard-card full-width">
                         <h3><i class="fa-solid fa-magnifying-glass-chart"></i> Extracted Sample Analysis</h3>
                         <div class="sample-review">
-                            <div class="review-text">"Spotify keeps recommending the same artists and playlists. Discovery feels repetitive."</div>
+                            <div class="review-text">"Spotify keeps recommending the same artists and playlists.
+                                Discovery feels repetitive."</div>
                             <div class="review-tags">
                                 <span class="tag pain-point">Pain Point: Repetitive</span>
                                 <span class="tag sentiment neg">Sentiment: Negative</span>
@@ -527,7 +585,8 @@
         <aside class="right-panel" id="right-panel">
             <div class="now-playing-large">
                 <div class="cover-art-large bg-gradient-yellow" id="rp-cover">
-                    <img id="rp-img" src="" alt="Album Art" style="display:none; width:100%; height:100%; object-fit:cover; border-radius:8px;">
+                    <img id="rp-img" src="" alt="Album Art"
+                        style="display:none; width:100%; height:100%; object-fit:cover; border-radius:8px;">
                     <i class="fa-regular fa-face-smile rp-icon" style="font-size: 80px; color: #ffb703;"></i>
                 </div>
                 <div class="track-header">
@@ -535,18 +594,20 @@
                     <p id="rp-artist">Lila & The Bloom</p>
                 </div>
                 <div class="track-actions">
-                    <button class="action-btn active like-btn" title="Save to Liked Songs"><i class="fa-solid fa-heart"></i></button>
+                    <button class="action-btn active like-btn" title="Save to Liked Songs"><i
+                            class="fa-solid fa-heart"></i></button>
                     <!-- Dislike button right next to like button -->
-                    <button class="action-btn dislike-btn" title="Don't play this"><i class="fa-solid fa-thumbs-down"></i></button>
+                    <button class="action-btn dislike-btn" title="Don't play this"><i
+                            class="fa-solid fa-thumbs-down"></i></button>
                     <button class="add-playlist-btn">Add to playlist +</button>
                 </div>
-                
+
                 <div class="about-artist-card">
                     <p class="card-label">ABOUT THE ARTIST</p>
                     <h3 id="rp-about-artist">Lila & The Bloom</h3>
                     <p class="artist-desc">Genre-bending sound shaped for happy moments. 1.2M monthly listeners.</p>
                 </div>
-                
+
                 <div class="up-next-section">
                     <p class="section-label">UP NEXT</p>
                     <div id="up-next-list">
@@ -568,7 +629,8 @@
             <div class="player-left">
                 <div class="now-playing-mini">
                     <div class="cover-art-mini bg-gradient-yellow" id="bp-cover">
-                        <img id="bp-img" src="" alt="Album Art" style="display:none; width:100%; height:100%; object-fit:cover; border-radius:4px;">
+                        <img id="bp-img" src="" alt="Album Art"
+                            style="display:none; width:100%; height:100%; object-fit:cover; border-radius:4px;">
                         <i class="fa-regular fa-face-smile bp-icon"></i>
                     </div>
                     <div class="mini-info">
@@ -580,7 +642,7 @@
                     <button class="action-btn mini dislike-btn"><i class="fa-solid fa-thumbs-down"></i></button>
                 </div>
             </div>
-            
+
             <div class="player-center">
                 <div class="player-controls">
                     <button class="control-btn"><i class="fa-solid fa-shuffle"></i></button>
@@ -597,7 +659,7 @@
                     <span class="time" id="bp-duration">2:26</span>
                 </div>
             </div>
-            
+
             <div class="player-right">
                 <button class="control-btn"><i class="fa-solid fa-microphone"></i></button>
                 <button class="control-btn"><i class="fa-solid fa-list-ul"></i></button>
@@ -611,7 +673,8 @@
             </div>
         </footer>
     </div>
-    
+
     <script src="script.js"></script>
 </body>
+
 </html>

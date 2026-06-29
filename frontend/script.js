@@ -1,18 +1,18 @@
 // Global function for card clicks (Music, Podcasts, Audiobooks, Live, Events)
-window.playCard = function(el, title, artist) {
+window.playCard = function (el, title, artist) {
     document.getElementById('bp-title').textContent = title;
     document.getElementById('bp-artist').textContent = artist;
     document.getElementById('rp-title').textContent = title;
     document.getElementById('rp-artist').textContent = artist;
     document.getElementById('rp-about-artist').textContent = artist;
-    
+
     // Update image
     const imgSrc = el.querySelector('img') ? el.querySelector('img').src : null;
     const rpImg = document.getElementById('rp-img');
     const rpIcon = document.querySelector('.rp-icon');
     const bpImg = document.getElementById('bp-img');
     const bpIcon = document.querySelector('.bp-icon');
-    
+
     if (imgSrc) {
         if (rpImg) { rpImg.src = imgSrc; rpImg.style.display = 'block'; }
         if (rpIcon) { rpIcon.style.display = 'none'; }
@@ -34,81 +34,81 @@ window.playCard = function(el, title, artist) {
 
 document.addEventListener('DOMContentLoaded', () => {
     // API Setup - try backend but always show something instantly
-    const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+    const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
         ? 'http://127.0.0.1:8000/generate-vibe-playlist'
         : 'https://nl-spotify.onrender.com/generate-vibe-playlist';
 
     // Mood-based curated fallback tracks with real album art images
     const MOOD_TRACKS = {
         Happy: [
-            {title: "Can't Stop the Feeling", artist: "Justin Timberlake", duration: "3:57", img: "https://upload.wikimedia.org/wikipedia/en/4/4c/Justin_Timberlake_-_Can%27t_Stop_the_Feeling.png"},
-            {title: "Uptown Funk", artist: "Mark Ronson ft. Bruno Mars", duration: "4:30", img: "https://upload.wikimedia.org/wikipedia/en/c/c8/Mark_Ronson_-_Uptown_Funk_%28feat._Bruno_Mars%29.png"},
-            {title: "Happy", artist: "Pharrell Williams", duration: "3:53", img: "https://upload.wikimedia.org/wikipedia/en/7/79/Pharrell_Williams_-_Happy.png"},
-            {title: "Good as Hell", artist: "Lizzo", duration: "2:39", img: "https://picsum.photos/seed/lizzogoodasHell/60/60"},
-            {title: "Dancing Queen", artist: "ABBA", duration: "3:51", img: "https://upload.wikimedia.org/wikipedia/en/5/5d/Arrival_-_ABBA.jpg"},
+            { title: "Can't Stop the Feeling", artist: "Justin Timberlake", duration: "3:57", img: "https://upload.wikimedia.org/wikipedia/en/4/4c/Justin_Timberlake_-_Can%27t_Stop_the_Feeling.png" },
+            { title: "Uptown Funk", artist: "Mark Ronson ft. Bruno Mars", duration: "4:30", img: "https://upload.wikimedia.org/wikipedia/en/c/c8/Mark_Ronson_-_Uptown_Funk_%28feat._Bruno_Mars%29.png" },
+            { title: "Happy", artist: "Pharrell Williams", duration: "3:53", img: "https://upload.wikimedia.org/wikipedia/en/7/79/Pharrell_Williams_-_Happy.png" },
+            { title: "Good as Hell", artist: "Lizzo", duration: "2:39", img: "https://picsum.photos/seed/lizzogoodasHell/60/60" },
+            { title: "Dancing Queen", artist: "ABBA", duration: "3:51", img: "https://upload.wikimedia.org/wikipedia/en/5/5d/Arrival_-_ABBA.jpg" },
         ],
         Relaxed: [
-            {title: "Sunset Lover", artist: "Petit Biscuit", duration: "3:46", img: "https://picsum.photos/seed/sunsetlover/60/60"},
-            {title: "Chill Wave", artist: "Washed Out", duration: "4:10", img: "https://picsum.photos/seed/chillwave/60/60"},
-            {title: "Coffee", artist: "beabadoobee", duration: "2:38", img: "https://picsum.photos/seed/beabadoobee/60/60"},
-            {title: "Sunday Best", artist: "Surfaces", duration: "3:00", img: "https://picsum.photos/seed/sundaybest/60/60"},
-            {title: "Motion", artist: "Koda", duration: "4:20", img: "https://picsum.photos/seed/kodamotion/60/60"},
+            { title: "Sunset Lover", artist: "Petit Biscuit", duration: "3:46", img: "https://picsum.photos/seed/sunsetlover/60/60" },
+            { title: "Chill Wave", artist: "Washed Out", duration: "4:10", img: "https://picsum.photos/seed/chillwave/60/60" },
+            { title: "Coffee", artist: "beabadoobee", duration: "2:38", img: "https://picsum.photos/seed/beabadoobee/60/60" },
+            { title: "Sunday Best", artist: "Surfaces", duration: "3:00", img: "https://picsum.photos/seed/sundaybest/60/60" },
+            { title: "Motion", artist: "Koda", duration: "4:20", img: "https://picsum.photos/seed/kodamotion/60/60" },
         ],
         Motivate: [
-            {title: "Eye of the Tiger", artist: "Survivor", duration: "4:04", img: "https://upload.wikimedia.org/wikipedia/en/2/2e/Eyeofthetiger.jpg"},
-            {title: "Stronger", artist: "Kanye West", duration: "5:11", img: "https://upload.wikimedia.org/wikipedia/en/9/9e/Kanyewest_graduation.jpg"},
-            {title: "Hall of Fame", artist: "The Script ft. will.i.am", duration: "3:23", img: "https://picsum.photos/seed/halloffame/60/60"},
-            {title: "Till I Collapse", artist: "Eminem", duration: "4:57", img: "https://upload.wikimedia.org/wikipedia/en/3/35/Eminem_-_The_Eminem_Show.jpg"},
-            {title: "POWER", artist: "Kanye West", duration: "4:52", img: "https://upload.wikimedia.org/wikipedia/en/1/12/Mbdtf.jpg"},
+            { title: "Eye of the Tiger", artist: "Survivor", duration: "4:04", img: "https://upload.wikimedia.org/wikipedia/en/2/2e/Eyeofthetiger.jpg" },
+            { title: "Stronger", artist: "Kanye West", duration: "5:11", img: "https://upload.wikimedia.org/wikipedia/en/9/9e/Kanyewest_graduation.jpg" },
+            { title: "Hall of Fame", artist: "The Script ft. will.i.am", duration: "3:23", img: "https://picsum.photos/seed/halloffame/60/60" },
+            { title: "Till I Collapse", artist: "Eminem", duration: "4:57", img: "https://upload.wikimedia.org/wikipedia/en/3/35/Eminem_-_The_Eminem_Show.jpg" },
+            { title: "POWER", artist: "Kanye West", duration: "4:52", img: "https://upload.wikimedia.org/wikipedia/en/1/12/Mbdtf.jpg" },
         ],
         Sleepy: [
-            {title: "Weightless", artist: "Marconi Union", duration: "8:09", img: "https://picsum.photos/seed/weightless/60/60"},
-            {title: "Holocene", artist: "Bon Iver", duration: "5:35", img: "https://upload.wikimedia.org/wikipedia/en/a/a5/Bon_Iver_-_Bon_Iver_%28album_cover%29.jpg"},
-            {title: "River", artist: "Joni Mitchell", duration: "3:54", img: "https://upload.wikimedia.org/wikipedia/en/a/a8/Blue_–_Joni_Mitchell.jpg"},
-            {title: "Retrograde", artist: "James Blake", duration: "5:05", img: "https://picsum.photos/seed/jamesblake/60/60"},
-            {title: "Night Will Always Win", artist: "Manchester Orchestra", duration: "4:24", img: "https://picsum.photos/seed/manchesterorch/60/60"},
+            { title: "Weightless", artist: "Marconi Union", duration: "8:09", img: "https://picsum.photos/seed/weightless/60/60" },
+            { title: "Holocene", artist: "Bon Iver", duration: "5:35", img: "https://upload.wikimedia.org/wikipedia/en/a/a5/Bon_Iver_-_Bon_Iver_%28album_cover%29.jpg" },
+            { title: "River", artist: "Joni Mitchell", duration: "3:54", img: "https://upload.wikimedia.org/wikipedia/en/a/a8/Blue_–_Joni_Mitchell.jpg" },
+            { title: "Retrograde", artist: "James Blake", duration: "5:05", img: "https://picsum.photos/seed/jamesblake/60/60" },
+            { title: "Night Will Always Win", artist: "Manchester Orchestra", duration: "4:24", img: "https://picsum.photos/seed/manchesterorch/60/60" },
         ],
         Party: [
-            {title: "Blinding Lights", artist: "The Weeknd", duration: "3:22", img: "https://upload.wikimedia.org/wikipedia/en/c/c1/The_Weeknd_-_After_Hours.png"},
-            {title: "Levitating", artist: "Dua Lipa", duration: "3:23", img: "https://upload.wikimedia.org/wikipedia/en/f/f5/Dua_Lipa_-_Future_Nostalgia_%28Official_Album_Cover%29.png"},
-            {title: "Save Your Tears", artist: "The Weeknd", duration: "3:36", img: "https://picsum.photos/seed/saveyourtears/60/60"},
-            {title: "As It Was", artist: "Harry Styles", duration: "2:37", img: "https://upload.wikimedia.org/wikipedia/en/b/b5/Harry_Styles_-_Fine_Line.png"},
-            {title: "Anti-Hero", artist: "Taylor Swift", duration: "3:21", img: "https://upload.wikimedia.org/wikipedia/en/9/9f/Midnights_-_Taylor_Swift.png"},
+            { title: "Blinding Lights", artist: "The Weeknd", duration: "3:22", img: "https://upload.wikimedia.org/wikipedia/en/c/c1/The_Weeknd_-_After_Hours.png" },
+            { title: "Levitating", artist: "Dua Lipa", duration: "3:23", img: "https://upload.wikimedia.org/wikipedia/en/f/f5/Dua_Lipa_-_Future_Nostalgia_%28Official_Album_Cover%29.png" },
+            { title: "Save Your Tears", artist: "The Weeknd", duration: "3:36", img: "https://picsum.photos/seed/saveyourtears/60/60" },
+            { title: "As It Was", artist: "Harry Styles", duration: "2:37", img: "https://upload.wikimedia.org/wikipedia/en/b/b5/Harry_Styles_-_Fine_Line.png" },
+            { title: "Anti-Hero", artist: "Taylor Swift", duration: "3:21", img: "https://upload.wikimedia.org/wikipedia/en/9/9f/Midnights_-_Taylor_Swift.png" },
         ],
         Study: [
-            {title: "Experience", artist: "Ludovico Einaudi", duration: "5:13", img: "https://picsum.photos/seed/einaudiexp/60/60"},
-            {title: "Comptine d'un autre été", artist: "Yann Tiersen", duration: "2:22", img: "https://picsum.photos/seed/amelie/60/60"},
-            {title: "River Flows in You", artist: "Yiruma", duration: "3:51", img: "https://picsum.photos/seed/yiruma/60/60"},
-            {title: "Divenire", artist: "Ludovico Einaudi", duration: "6:52", img: "https://picsum.photos/seed/divenire/60/60"},
-            {title: "Nuvole Bianche", artist: "Ludovico Einaudi", duration: "5:54", img: "https://picsum.photos/seed/nuvoleb/60/60"},
+            { title: "Experience", artist: "Ludovico Einaudi", duration: "5:13", img: "https://picsum.photos/seed/einaudiexp/60/60" },
+            { title: "Comptine d'un autre été", artist: "Yann Tiersen", duration: "2:22", img: "https://picsum.photos/seed/amelie/60/60" },
+            { title: "River Flows in You", artist: "Yiruma", duration: "3:51", img: "https://picsum.photos/seed/yiruma/60/60" },
+            { title: "Divenire", artist: "Ludovico Einaudi", duration: "6:52", img: "https://picsum.photos/seed/divenire/60/60" },
+            { title: "Nuvole Bianche", artist: "Ludovico Einaudi", duration: "5:54", img: "https://picsum.photos/seed/nuvoleb/60/60" },
         ],
         Work: [
-            {title: "Get Lucky", artist: "Daft Punk ft. Pharrell", duration: "6:09", img: "https://upload.wikimedia.org/wikipedia/en/a/a7/Random_Access_Memories.jpg"},
-            {title: "Instant Crush", artist: "Daft Punk ft. Julian Casablancas", duration: "5:38", img: "https://upload.wikimedia.org/wikipedia/en/a/a7/Random_Access_Memories.jpg"},
-            {title: "Digital Love", artist: "Daft Punk", duration: "4:58", img: "https://picsum.photos/seed/daftdigital/60/60"},
-            {title: "Around the World", artist: "Daft Punk", duration: "7:09", img: "https://picsum.photos/seed/daftaround/60/60"},
-            {title: "One More Time", artist: "Daft Punk", duration: "5:20", img: "https://picsum.photos/seed/daftonetime/60/60"},
+            { title: "Get Lucky", artist: "Daft Punk ft. Pharrell", duration: "6:09", img: "https://upload.wikimedia.org/wikipedia/en/a/a7/Random_Access_Memories.jpg" },
+            { title: "Instant Crush", artist: "Daft Punk ft. Julian Casablancas", duration: "5:38", img: "https://upload.wikimedia.org/wikipedia/en/a/a7/Random_Access_Memories.jpg" },
+            { title: "Digital Love", artist: "Daft Punk", duration: "4:58", img: "https://picsum.photos/seed/daftdigital/60/60" },
+            { title: "Around the World", artist: "Daft Punk", duration: "7:09", img: "https://picsum.photos/seed/daftaround/60/60" },
+            { title: "One More Time", artist: "Daft Punk", duration: "5:20", img: "https://picsum.photos/seed/daftonetime/60/60" },
         ],
         Workout: [
-            {title: "HUMBLE.", artist: "Kendrick Lamar", duration: "2:57", img: "https://upload.wikimedia.org/wikipedia/en/a/a2/Kendrick_Lamar_-_DAMN.png"},
-            {title: "Run the World (Girls)", artist: "Beyoncé", duration: "3:56", img: "https://picsum.photos/seed/beyonce4/60/60"},
-            {title: "Centuries", artist: "Fall Out Boy", duration: "3:48", img: "https://picsum.photos/seed/falloutboy/60/60"},
-            {title: "Jump", artist: "Kris Kross", duration: "3:37", img: "https://picsum.photos/seed/kriskross/60/60"},
-            {title: "Radioactive", artist: "Imagine Dragons", duration: "3:07", img: "https://picsum.photos/seed/imaginedragon/60/60"},
+            { title: "HUMBLE.", artist: "Kendrick Lamar", duration: "2:57", img: "https://upload.wikimedia.org/wikipedia/en/a/a2/Kendrick_Lamar_-_DAMN.png" },
+            { title: "Run the World (Girls)", artist: "Beyoncé", duration: "3:56", img: "https://picsum.photos/seed/beyonce4/60/60" },
+            { title: "Centuries", artist: "Fall Out Boy", duration: "3:48", img: "https://picsum.photos/seed/falloutboy/60/60" },
+            { title: "Jump", artist: "Kris Kross", duration: "3:37", img: "https://picsum.photos/seed/kriskross/60/60" },
+            { title: "Radioactive", artist: "Imagine Dragons", duration: "3:07", img: "https://picsum.photos/seed/imaginedragon/60/60" },
         ],
         Travel: [
-            {title: "On the Road Again", artist: "Willie Nelson", duration: "2:33", img: "https://picsum.photos/seed/willienelson/60/60"},
-            {title: "Life is a Highway", artist: "Tom Cochrane", duration: "4:34", img: "https://picsum.photos/seed/lifehighway/60/60"},
-            {title: "Fly Me to the Moon", artist: "Frank Sinatra", duration: "2:28", img: "https://picsum.photos/seed/sinatra/60/60"},
-            {title: "Route 66", artist: "Depeche Mode", duration: "4:26", img: "https://picsum.photos/seed/route66/60/60"},
-            {title: "Africa", artist: "Toto", duration: "4:55", img: "https://picsum.photos/seed/totaafrica/60/60"},
+            { title: "On the Road Again", artist: "Willie Nelson", duration: "2:33", img: "https://picsum.photos/seed/willienelson/60/60" },
+            { title: "Life is a Highway", artist: "Tom Cochrane", duration: "4:34", img: "https://picsum.photos/seed/lifehighway/60/60" },
+            { title: "Fly Me to the Moon", artist: "Frank Sinatra", duration: "2:28", img: "https://picsum.photos/seed/sinatra/60/60" },
+            { title: "Route 66", artist: "Depeche Mode", duration: "4:26", img: "https://picsum.photos/seed/route66/60/60" },
+            { title: "Africa", artist: "Toto", duration: "4:55", img: "https://picsum.photos/seed/totaafrica/60/60" },
         ],
         Meditate: [
-            {title: "Stairway to Heaven", artist: "Led Zeppelin", duration: "8:02", img: "https://upload.wikimedia.org/wikipedia/en/2/26/Led_Zeppelin_-_Led_Zeppelin_IV.jpg"},
-            {title: "Om Namah Shivaya", artist: "Deva Premal", duration: "7:14", img: "https://picsum.photos/seed/devapremal/60/60"},
-            {title: "Pure Shores", artist: "All Saints", duration: "3:42", img: "https://picsum.photos/seed/allsaints/60/60"},
-            {title: "Nature Sounds", artist: "Healing Earth", duration: "10:00", img: "https://picsum.photos/seed/naturesounds/60/60"},
-            {title: "Breathe", artist: "Pink Floyd", duration: "2:49", img: "https://upload.wikimedia.org/wikipedia/en/3/3b/Dark_Side_of_the_Moon.png"},
+            { title: "Stairway to Heaven", artist: "Led Zeppelin", duration: "8:02", img: "https://upload.wikimedia.org/wikipedia/en/2/26/Led_Zeppelin_-_Led_Zeppelin_IV.jpg" },
+            { title: "Om Namah Shivaya", artist: "Deva Premal", duration: "7:14", img: "https://picsum.photos/seed/devapremal/60/60" },
+            { title: "Pure Shores", artist: "All Saints", duration: "3:42", img: "https://picsum.photos/seed/allsaints/60/60" },
+            { title: "Nature Sounds", artist: "Healing Earth", duration: "10:00", img: "https://picsum.photos/seed/naturesounds/60/60" },
+            { title: "Breathe", artist: "Pink Floyd", duration: "2:49", img: "https://upload.wikimedia.org/wikipedia/en/3/3b/Dark_Side_of_the_Moon.png" },
         ],
     };
 
@@ -174,13 +174,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // Home button and Spotify logo — both return to the Discovery view
     const homeBtn = document.getElementById('home-btn');
     const spotifyLogo = document.getElementById('spotify-logo');
-    
+
     function goHome() {
         switchToView('view-discovery');
         // Scroll main view back to top
         document.querySelector('.main-view').scrollTop = 0;
     }
-    
+
     homeBtn.addEventListener('click', goHome);
     spotifyLogo.addEventListener('click', (e) => { e.preventDefault(); goHome(); });
 
@@ -274,7 +274,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // 1. Pick best matching track list immediately from local data
         const key = activity || mood;
         let tracks = MOOD_TRACKS[key] || MOOD_TRACKS[mood] || MOOD_TRACKS['Happy'];
-        
+
         // Shuffle tracks for freshness
         tracks = [...tracks].sort(() => Math.random() - 0.5);
 
@@ -291,8 +291,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const existing = document.getElementById('recs-section');
         if (existing) existing.remove();
 
-        const label = activity && mood 
-            ? `🎵 AI Session: ${mood} + ${activity}` 
+        const label = activity && mood
+            ? `🎵 AI Session: ${mood} + ${activity}`
             : `🎵 ${mood || activity} Picks`;
 
         const section = document.createElement('div');
@@ -335,13 +335,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 rpAboutArtist.textContent = track.artist;
                 bpTitle.textContent = track.title;
                 bpArtist.textContent = track.artist;
-                
+
                 // Update image
                 const rpImg = document.getElementById('rp-img');
                 const rpIcon = document.querySelector('.rp-icon');
                 const bpImg = document.getElementById('bp-img');
                 const bpIcon = document.querySelector('.bp-icon');
-                
+
                 if (track.img) {
                     if (rpImg) { rpImg.src = track.img; rpImg.style.display = 'block'; }
                     if (rpIcon) { rpIcon.style.display = 'none'; }
@@ -353,7 +353,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (bpImg) { bpImg.style.display = 'none'; }
                     if (bpIcon) { bpIcon.style.display = 'block'; }
                 }
-                
+
                 // Change bottom play button to pause
                 const playBtn = document.querySelector('.control-btn.play-pause i');
                 if (playBtn) {
@@ -431,14 +431,14 @@ document.addEventListener('DOMContentLoaded', () => {
         runBatchBtn.addEventListener('click', () => {
             analyzerIngestion.classList.add('hidden');
             analyzerProcessing.classList.remove('hidden');
-            
+
             // Simulate processing pipeline
             let progress = 0;
-            
+
             const interval = setInterval(() => {
                 progress += 2;
                 analyzerProgress.style.width = `${progress}%`;
-                
+
                 if (progress === 30) {
                     pipelineSteps[0].classList.remove('active');
                     pipelineSteps[0].querySelector('i').classList.remove('fa-spin');
@@ -453,7 +453,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     clearInterval(interval);
                     pipelineSteps[2].classList.remove('active');
                     pipelineSteps[2].querySelector('i').classList.remove('fa-spin');
-                    
+
                     setTimeout(() => {
                         analyzerProcessing.classList.add('hidden');
                         analyzerDashboard.classList.remove('hidden');
