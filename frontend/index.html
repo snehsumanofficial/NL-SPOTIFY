@@ -1,680 +1,1717 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spotify Vibe Discovery</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Explore BETA — Spotify</title>
+  <meta name="description" content="AI-powered music discovery built around you. Explore new artists, genres, and sounds with Spotify's personalised discovery journey.">
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+  /* ================================================================
+     EXPLORE BETA — INTERACTIVE PROTOTYPE
+     All styles scoped to .explore-page
+  ================================================================ */
+
+  .explore-page *, .explore-page *::before, .explore-page *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  .explore-page { background: #000; font-family: 'Inter', -apple-system, sans-serif; color: #fff; overflow: hidden; }
+  .explore-page ::-webkit-scrollbar { width: 6px; height: 6px; }
+  .explore-page ::-webkit-scrollbar-track { background: transparent; }
+  .explore-page ::-webkit-scrollbar-thumb { background: #535353; border-radius: 3px; }
+  .explore-page ::-webkit-scrollbar-thumb:hover { background: #7a7a7a; }
+
+  /* Utilities */
+  .img-zoom { transition: transform 0.25s ease; }
+  .img-zoom:hover { transform: scale(1.03); }
+  .card-elevate { transition: all 0.25s ease; }
+  .card-elevate:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
+  .ripple-active:active { transform: scale(0.97); opacity: 0.8; }
+
+  /* ── LAYOUT ──────────────────────────────────────────────────── */
+  .ep-layout {
+    display: grid;
+    grid-template-columns: 240px 1fr 280px;
+    grid-template-rows: 1fr 90px;
+    height: 100vh;
+    gap: 8px;
+    padding: 8px;
+    background: #000;
+  }
+
+  /* ── SIDEBAR ─────────────────────────────────────────────────── */
+  .ep-sidebar {
+    grid-column: 1; grid-row: 1;
+    background: #121212;
+    border-radius: 8px;
+    padding: 16px;
+    display: flex; flex-direction: column;
+    overflow-y: auto;
+  }
+
+  .ep-logo {
+    display: flex; align-items: center; gap: 10px;
+    text-decoration: none; margin-bottom: 24px;
+    transition: opacity .15s;
+  }
+  .ep-logo:hover { opacity: .8; }
+  .ep-logo-text { color: #fff; font-size: 18px; font-weight: 700; }
+
+  .ep-nav { list-style: none; }
+  .ep-nav li a {
+    display: flex; align-items: center; gap: 16px;
+    padding: 8px; color: #b3b3b3; text-decoration: none;
+    font-size: 14px; font-weight: 600; border-radius: 4px;
+    transition: color .15s, background .15s;
+  }
+  .ep-nav li a:hover { color: #fff; background: rgba(255,255,255,.04); }
+  .ep-nav li a.ep-active { color: #fff; }
+  .ep-nav li a i { font-size: 20px; width: 24px; text-align: center; }
+
+  .ep-nav-secondary { list-style: none; margin-top: 16px; }
+  .ep-nav-secondary li a {
+    display: flex; align-items: center; gap: 16px;
+    padding: 8px; color: #b3b3b3; text-decoration: none;
+    font-size: 14px; font-weight: 600; border-radius: 4px;
+    transition: color .15s;
+  }
+  .ep-nav-secondary li a:hover { color: #fff; }
+  .ep-icon-box {
+    width: 24px; height: 24px; border-radius: 2px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; flex-shrink: 0;
+  }
+  .ep-icon-gray { background: #6c757d; color: #fff; }
+  .ep-icon-liked { background: linear-gradient(135deg, #450af5, #c4efd9); color: #fff; }
+
+  .ep-hr { border: none; border-top: 1px solid #282828; margin: 16px 0; }
+
+  .ep-playlist-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 8px; cursor: pointer;
+  }
+  .ep-playlist-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 1px;
+    text-transform: uppercase; color: #b3b3b3; transition: color .15s;
+  }
+  .ep-playlist-header:hover .ep-playlist-label { color: #fff; }
+  .ep-playlist-add {
+    background: none; border: none; color: #b3b3b3;
+    font-size: 16px; cursor: pointer; transition: color .15s;
+  }
+  .ep-playlist-add:hover { color: #fff; }
+
+  .ep-playlists { list-style: none; }
+  .ep-playlists li {
+    display: flex; align-items: center; gap: 12px;
+    padding: 6px 4px; color: #b3b3b3; font-size: 14px;
+    cursor: pointer; border-radius: 4px; transition: all .15s;
+  }
+  .ep-playlists li:hover { color: #fff; background: rgba(255,255,255,.05); }
+  .ep-playlists li img { width: 32px; height: 32px; border-radius: 4px; object-fit: cover; flex-shrink: 0; }
+
+  .ep-show-more {
+    display: flex; align-items: center; gap: 4px;
+    color: #b3b3b3; font-size: 12px; font-weight: 600;
+    text-decoration: none; padding: 4px 0; transition: color .15s;
+  }
+  .ep-show-more:hover { color: #fff; }
+
+  /* Discovery Progress Widget */
+  .ep-disc-widget {
+    margin-top: 16px; background: #242424; border-radius: 8px;
+    padding: 14px; cursor: pointer; transition: background .15s;
+    flex-shrink: 0;
+  }
+  .ep-disc-widget:hover { background: #2a2a2a; }
+  .ep-disc-widget-title {
+    font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
+    text-transform: uppercase; color: #b3b3b3; margin-bottom: 10px;
+  }
+  .ep-disc-body { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+  .ep-ring-wrap { position: relative; width: 60px; height: 60px; flex-shrink: 0; }
+  .ep-ring-wrap svg { transform: rotate(-90deg); }
+  .ep-ring-score {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%); text-align: center; line-height: 1;
+  }
+  .ep-ring-score .rn { font-size: 18px; font-weight: 800; display: block; }
+  .ep-ring-score .rd { font-size: 9px; color: #b3b3b3; display: block; }
+  .ep-disc-metrics { flex: 1; display: flex; flex-direction: column; gap: 5px; }
+  .ep-disc-metric { font-size: 11px; color: #b3b3b3; display: flex; align-items: center; gap: 6px; }
+  .ep-disc-metric strong { color: #fff; font-weight: 600; }
+  .ep-disc-link {
+    display: flex; align-items: center; gap: 4px;
+    color: #1ed760; font-size: 11px; font-weight: 600; text-decoration: none;
+    transition: opacity .15s;
+  }
+  .ep-disc-link:hover { opacity: .75; }
+
+  /* ── MAIN ────────────────────────────────────────────────────── */
+  .ep-main {
+    grid-column: 2; grid-row: 1;
+    background: #121212; border-radius: 8px;
+    display: flex; flex-direction: column; overflow-y: auto;
+  }
+
+  .ep-page-header {
+    padding: 24px 24px 0;
+    display: flex; justify-content: space-between; align-items: flex-start;
+    flex-shrink: 0;
+  }
+  .ep-page-header h1 {
+    font-size: 24px; font-weight: 800;
+    display: flex; align-items: center; gap: 10px; margin-bottom: 4px;
+  }
+  .ep-beta {
+    font-size: 9px; font-weight: 700; letter-spacing: 1px;
+    background: rgba(30,215,96,.15); color: #1ed760;
+    border: 1px solid rgba(30,215,96,.4); padding: 2px 7px;
+    border-radius: 4px; text-transform: uppercase;
+  }
+  .ep-page-sub { font-size: 13px; color: #b3b3b3; }
+  .ep-header-right { display: flex; align-items: center; gap: 8px; }
+  .ep-icon-btn {
+    background: transparent; border: none; color: #b3b3b3;
+    width: 32px; height: 32px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; cursor: pointer; transition: color .15s, background .15s;
+  }
+  .ep-icon-btn:hover { color: #fff; background: rgba(255,255,255,.08); }
+  .ep-profile { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; cursor: pointer; }
+
+  .ep-body { padding: 20px 24px 32px; display: flex; flex-direction: column; gap: 24px; }
+
+  /* ── ROUTING PLACEHOLDER ─────────────────────────────────────── */
+  .ep-placeholder-view {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    height: 100%; text-align: center; color: #b3b3b3; padding: 40px;
+  }
+  .ep-placeholder-view i { font-size: 48px; margin-bottom: 16px; color: #535353; }
+  .ep-placeholder-view h2 { font-size: 24px; color: #fff; margin-bottom: 8px; font-weight: 700; }
+  .ep-placeholder-view p { font-size: 14px; max-width: 300px; }
+
+  /* ── SEARCH ──────────────────────────────────────────────────── */
+  .ep-search-wrap { position: relative; }
+
+  .ep-search-bar {
+    display: flex; align-items: center; gap: 12px;
+    background: #fff; border-radius: 500px; padding: 14px 20px;
+    cursor: text; transition: box-shadow .2s;
+    box-shadow: 0 2px 8px rgba(0,0,0,.3);
+  }
+  .ep-search-bar:hover { box-shadow: 0 4px 16px rgba(0,0,0,.4); }
+  .ep-search-bar.focused { box-shadow: 0 0 0 3px rgba(30,215,96,.35), 0 4px 16px rgba(0,0,0,.4); }
+  .ep-search-icon { color: #000; font-size: 18px; flex-shrink: 0; }
+  .ep-search-input {
+    flex: 1; background: transparent; border: none; outline: none;
+    font-size: 16px; font-weight: 500; color: #000;
+    font-family: 'Inter', sans-serif;
+  }
+  .ep-search-input::placeholder { color: #9e9e9e; }
+  .ep-mic-btn {
+    background: transparent; border: none; color: #9e9e9e;
+    font-size: 18px; cursor: pointer; padding: 4px; border-radius: 50%;
+    transition: color .15s, transform .15s; line-height: 1;
+  }
+  .ep-mic-btn:hover { color: #000; }
+  .ep-mic-btn.listening { color: #e63946; animation: micPulse 1s ease infinite; }
+  @keyframes micPulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.25)} }
+
+  /* Suggestions Dropdown */
+  .ep-suggestions {
+    position: absolute; top: calc(100% + 8px); left: 0; right: 0;
+    background: #282828; border-radius: 8px; z-index: 500;
+    box-shadow: 0 8px 32px rgba(0,0,0,.6); overflow: hidden;
+    display: none;
+  }
+  .ep-suggestions.open { display: block; animation: dropDown .15s ease; }
+  @keyframes dropDown { from{opacity:0;transform:translateY(-8px)} to{opacity:1;transform:translateY(0)} }
+
+  .ep-sug-loading {
+    display: none; align-items: center; gap: 12px; padding: 18px 16px;
+  }
+  .ep-sug-loading.show { display: flex; }
+  .ep-sug-dots { display: flex; gap: 4px; }
+  .ep-sug-dots span {
+    width: 6px; height: 6px; background: #1ed760; border-radius: 50%;
+    animation: dotBounce 1.2s ease infinite;
+  }
+  .ep-sug-dots span:nth-child(2){animation-delay:.2s}
+  .ep-sug-dots span:nth-child(3){animation-delay:.4s}
+  @keyframes dotBounce { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-8px)} }
+  .ep-sug-loading-text { font-size: 14px; color: #b3b3b3; }
+
+  /* Rich Search Results */
+  .ep-sug-section { padding: 10px 0; }
+  .ep-sug-group-label {
+    font-size: 10px; font-weight: 700; letter-spacing: 1px;
+    text-transform: uppercase; color: #b3b3b3; padding: 4px 16px 8px;
+  }
+  .ep-rich-sug-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 16px; cursor: pointer; font-size: 14px; color: #fff;
+    transition: background .1s;
+  }
+  .ep-rich-sug-item:hover { background: rgba(255,255,255,.08); }
+  .ep-rich-sug-item img { width: 40px; height: 40px; border-radius: 4px; object-fit: cover; flex-shrink: 0; }
+  .ep-rich-info { flex: 1; min-width: 0; }
+  .ep-rich-title { font-weight: 600; font-size: 14px; margin-bottom: 2px; }
+  .ep-rich-sub { font-size: 12px; color: #b3b3b3; display: flex; align-items: center; gap: 6px; }
+  .ep-rich-meta { background: #333; padding: 1px 6px; border-radius: 4px; font-size: 10px; }
+  .ep-rich-actions { display: flex; align-items: center; gap: 8px; opacity: 0; transition: opacity 0.2s; }
+  .ep-rich-sug-item:hover .ep-rich-actions { opacity: 1; }
+  .ep-rich-btn {
+    background: transparent; border: none; color: #b3b3b3; font-size: 16px;
+    cursor: pointer; padding: 4px; transition: color .15s, transform .15s;
+  }
+  .ep-rich-btn:hover { color: #fff; transform: scale(1.1); }
+  .ep-rich-play { color: #1ed760; }
+  .ep-rich-play:hover { color: #1db954; }
+
+  /* ── CHIPS ───────────────────────────────────────────────────── */
+  .ep-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+  .ep-chip {
+    background: #242424; border: 1px solid rgba(255,255,255,.1);
+    color: #b3b3b3; border-radius: 500px; padding: 7px 16px;
+    font-size: 13px; font-weight: 500; cursor: pointer;
+    font-family: 'Inter', sans-serif; transition: all .2s; position: relative; overflow: hidden;
+  }
+  .ep-chip:hover { background: #2a2a2a; color: #fff; border-color: rgba(255,255,255,.2); transform: translateY(-1px); }
+  .ep-chip.active { background: #fff; color: #000; border-color: transparent; }
+  .ep-chip:active { transform: scale(.97); }
+
+  /* ── SLIDER ──────────────────────────────────────────────────── */
+  .ep-slider-section { display: flex; flex-direction: column; gap: 8px; }
+  .ep-slider-labels { display: flex; justify-content: space-between; align-items: baseline; }
+  .ep-slider-lbl { font-size: 13px; font-weight: 600; }
+  .ep-slider-lbl small { font-size: 11px; font-weight: 400; color: #b3b3b3; margin-left: 4px; }
+  .ep-range {
+    -webkit-appearance: none; width: 100%; height: 4px;
+    background: linear-gradient(to right, #1ed760 40%, #535353 40%);
+    border-radius: 2px; outline: none; cursor: pointer;
+  }
+  .ep-range::-webkit-slider-thumb {
+    -webkit-appearance: none; width: 16px; height: 16px;
+    border-radius: 50%; background: #fff; cursor: pointer;
+    box-shadow: 0 1px 4px rgba(0,0,0,.4); transition: transform .1s;
+  }
+  .ep-range:hover::-webkit-slider-thumb { transform: scale(1.2); }
+  .ep-range::-moz-range-thumb { width: 16px; height: 16px; border-radius: 50%; background: #fff; border: none; }
+
+  /* ── SECTION HEADER ──────────────────────────────────────────── */
+  .ep-sec-hdr { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+  .ep-sec-title { font-size: 16px; font-weight: 700; }
+  .ep-sec-link { color: #b3b3b3; font-size: 12px; font-weight: 600; text-decoration: none; transition: color .15s; }
+  .ep-sec-link:hover { color: #fff; }
+
+  /* ── JOURNEY ─────────────────────────────────────────────────── */
+  .ep-journey-row { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; align-items: center; }
+
+  .ep-jcard {
+    background: #242424; border-radius: 8px; padding: 14px 12px;
+    width: 116px; flex-shrink: 0; display: flex; flex-direction: column;
+    align-items: center; text-align: center; gap: 8px; cursor: pointer;
+    transition: all .2s; border: 2px solid transparent;
+    opacity: 0; transform: translateY(10px);
+  }
+  .ep-jcard.in { opacity: 1; transform: translateY(0); }
+  .ep-jcard:hover { background: #2a2a2a; transform: translateY(-2px) scale(1.02) !important; box-shadow: 0 8px 24px rgba(0,0,0,.4); }
+  .ep-jcard:active { transform: scale(.97) !important; }
+  .ep-jcard.jc-active { border-color: #1ed760; background: rgba(30,215,96,.08); }
+  .ep-jcard img { width: 72px; height: 72px; border-radius: 50%; object-fit: cover; }
+  .jc-name { font-size: 12px; font-weight: 600; line-height: 1.2; }
+  .jc-lbl { font-size: 10px; color: #b3b3b3; line-height: 1.3; }
+  .ep-jcard.jc-active .jc-lbl { color: #1ed760; }
+
+  .ep-journey-arrow { color: #535353; font-size: 10px; flex-shrink: 0; }
+
+  /* Skeleton */
+  .ep-jcard-sk {
+    background: #242424; border-radius: 8px; padding: 14px 12px;
+    width: 116px; flex-shrink: 0; display: flex; flex-direction: column;
+    align-items: center; gap: 8px;
+  }
+  .sk-circle { width: 72px; height: 72px; border-radius: 50%; }
+  .sk-line { height: 10px; border-radius: 4px; }
+  .sk-full { width: 100%; }
+  .sk-70 { width: 70%; }
+  .shimmer {
+    background: linear-gradient(90deg, #2a2a2a 25%, #333 50%, #2a2a2a 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+  }
+  @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+
+  /* ── RECOMMENDATION CARD ─────────────────────────────────────── */
+  .ep-rec-card {
+    background: #242424; border-radius: 8px; padding: 20px;
+    display: flex; gap: 20px; transition: opacity .4s ease;
+  }
+
+  .ep-rec-art-col { flex-shrink: 0; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+  .ep-art-wrap { position: relative; width: 116px; height: 116px; border-radius: 8px; overflow: hidden; }
+  .ep-art-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease; }
+  .ep-art-wrap:hover .ep-art-img { transform: scale(1.05); }
+  .ep-match { position: absolute; top: -8px; right: -8px; background: #1ed760; color: #000; font-size: 10px; font-weight: 800; padding: 3px 7px; border-radius: 500px; white-space: nowrap; z-index: 2; }
+  .ep-rec-play {
+    background: #1ed760; color: #000; border: none; width: 36px; height: 36px;
+    border-radius: 50%; font-size: 13px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,.4); transition: transform .15s, background .15s;
+  }
+  .ep-rec-play:hover { transform: scale(1.1); background: #1db954; }
+  .ep-rec-play:active { transform: scale(.94); }
+
+  .ep-rec-info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 10px; }
+  .ep-rec-title-row { display: flex; justify-content: space-between; align-items: flex-start; }
+  .ep-rec-song { font-size: 18px; font-weight: 700; cursor: pointer; }
+  .ep-rec-song:hover { text-decoration: underline; }
+  .ep-rec-artist { font-size: 13px; color: #b3b3b3; margin-top: 2px; cursor: pointer; }
+  .ep-rec-artist:hover { text-decoration: underline; color: #fff; }
+  .ep-rec-acts { display: flex; align-items: center; gap: 6px; }
+  .ep-act {
+    background: transparent; border: none; color: #b3b3b3; font-size: 18px;
+    cursor: pointer; padding: 4px; transition: color .15s, transform .15s; line-height: 1;
+  }
+  .ep-act:hover { color: #fff; }
+  .ep-act:active { transform: scale(.88); }
+  .ep-act.liked { color: #1ed760; }
+  .ep-act.disliked { color: #e63946; }
+
+  /* Accordion */
+  .ep-accordion { }
+  .ep-acc-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 0; cursor: pointer; user-select: none;
+  }
+  .ep-why-label { font-size: 11px; font-weight: 700; letter-spacing: .8px; text-transform: uppercase; color: #b3b3b3; transition: color 0.15s; }
+  .ep-acc-header:hover .ep-why-label { color: #fff; }
+  .ep-acc-icon { color: #b3b3b3; font-size: 11px; transition: transform .25s ease; }
+  .ep-accordion.open .ep-acc-icon { transform: rotate(180deg); }
+  .ep-acc-body { max-height: 0; overflow: hidden; opacity: 0; transition: max-height .3s ease, opacity .3s ease; }
+  .ep-accordion.open .ep-acc-body { max-height: 200px; opacity: 1; }
+  .ep-reasons { list-style: none; display: flex; flex-direction: column; gap: 6px; padding: 4px 0 8px; }
+  .ep-reasons li { font-size: 13px; color: #b3b3b3; display: flex; align-items: center; gap: 8px; }
+  .ep-reasons li i { color: #1ed760; font-size: 10px; flex-shrink: 0; }
+  .ep-reason-pct { margin-left: auto; font-size: 11px; color: #1ed760; font-weight: 600; }
+
+  /* Versions col */
+  .ep-versions-col {
+    width: 136px; flex-shrink: 0; border-left: 1px solid rgba(255,255,255,.08);
+    padding-left: 18px; display: flex; flex-direction: column;
+  }
+  .ep-ver-label { font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #b3b3b3; margin-bottom: 10px; }
+  .ep-ver-list { list-style: none; }
+  .ep-ver-list li {
+    font-size: 13px; color: #b3b3b3; padding: 9px 0;
+    border-bottom: 1px solid rgba(255,255,255,.05);
+    cursor: pointer; display: flex; justify-content: space-between; align-items: center;
+    transition: all .15s;
+  }
+  .ep-ver-list li:hover { color: #fff; padding-left: 4px; }
+  .ep-ver-list li.v-on { color: #fff; font-weight: 600; }
+  .ep-ver-list li.v-on .v-dot { display: block; }
+  .v-dot { width: 4px; height: 4px; background: #1ed760; border-radius: 50%; display: none; }
+  .ep-ver-list li.v-spotify { color: #1ed760; border-bottom: none; margin-top: 4px; }
+  .ep-ver-list li.v-spotify:hover { color: #1db954; }
+
+  /* ── STUDIO COLUMN ───────────────────────────────────────────── */
+  .ep-studio-col {
+    grid-column: 3; grid-row: 1;
+    background: #121212; border-radius: 8px;
+    padding: 16px; overflow-y: auto; display: flex; flex-direction: column;
+  }
+  .ep-studio-hdr { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+  .ep-studio-title { font-size: 16px; font-weight: 700; }
+  .ep-studio-sub { font-size: 12px; color: #b3b3b3; margin-bottom: 20px; }
+  .ep-studio-items { list-style: none; display: flex; flex-direction: column; gap: 0; }
+  .ep-si {
+    display: flex; align-items: center; gap: 12px; padding: 10px 8px;
+    border-radius: 6px; cursor: pointer; transition: background .15s;
+  }
+  .ep-si:hover { background: rgba(255,255,255,.07); }
+  .ep-si-img-wrap { overflow: hidden; border-radius: 4px; width: 48px; height: 48px; flex-shrink: 0; }
+  .ep-si:hover .ep-si-thumb { transform: scale(1.05); }
+  .ep-si-thumb { width: 100%; height: 100%; object-fit: cover; transition: transform .2s; }
+  .ep-si h4 { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+  .ep-si p { font-size: 11px; color: #b3b3b3; }
+  .ep-snew { color: #1ed760; border: 1px solid rgba(30,215,96,.4); padding: 1px 4px; border-radius: 2px; font-size: 9px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase; margin-left: 4px; }
+  .ep-premium-note { margin-top: auto; background: #242424; border-radius: 8px; padding: 12px; font-size: 11px; color: #b3b3b3; display: flex; align-items: center; gap: 8px; }
+  .ep-premium-note i { color: #1ed760; font-size: 14px; }
+
+  /* ── PLAYER ──────────────────────────────────────────────────── */
+  .ep-player {
+    grid-column: 1 / -1; grid-row: 2;
+    background: #0a0a0a; border-top: 1px solid #282828;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 0 16px;
+  }
+  .pl-left, .pl-right { width: 30%; display: flex; align-items: center; }
+  .pl-right { justify-content: flex-end; gap: 12px; }
+  .pl-center { width: 40%; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  .pl-now-playing { display: flex; align-items: center; gap: 12px; }
+  .pl-cover { width: 56px; height: 56px; border-radius: 4px; overflow: hidden; flex-shrink: 0; cursor: pointer; }
+  .pl-cover img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.2s; }
+  .pl-cover:hover img { transform: scale(1.05); }
+  .pl-info h4 { font-size: 14px; font-weight: 500; margin-bottom: 2px; cursor: pointer; }
+  .pl-info h4:hover { text-decoration: underline; }
+  .pl-info p { font-size: 11px; color: #b3b3b3; cursor: pointer; }
+  .pl-info p:hover { color: #fff; text-decoration: underline; }
+  .pl-actions { display: flex; align-items: center; gap: 2px; margin-left: 12px; }
+  .pl-btn {
+    background: transparent; border: none; color: #b3b3b3; font-size: 16px;
+    cursor: pointer; padding: 4px; transition: color .15s, transform .15s;
+  }
+  .pl-btn:hover { color: #fff; }
+  .pl-btn:active { transform: scale(.87); }
+  .pl-btn.liked { color: #1ed760; }
+  .pl-btn.disliked { color: #e63946; }
+  .ep-controls { display: flex; align-items: center; gap: 16px; }
+  .ctrl {
+    background: transparent; border: none; color: #b3b3b3; font-size: 16px;
+    cursor: pointer; transition: color .15s, transform .15s;
+  }
+  .ctrl:hover { color: #fff; transform: scale(1.08); }
+  .ctrl:active { transform: scale(.92); }
+  .ctrl.active { color: #1ed760; }
+  .ctrl.play-btn {
+    width: 32px; height: 32px; background: #fff; color: #000;
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  }
+  .ctrl.play-btn:hover { transform: scale(1.08) !important; background: #f0f0f0; }
+  .ep-pb-row { width: 100%; display: flex; align-items: center; gap: 8px; }
+  .ep-time { font-size: 11px; color: #b3b3b3; min-width: 34px; }
+  .ep-time.r { text-align: right; }
+  .ep-pb {
+    flex: 1; height: 4px; background: rgba(255,255,255,.3); border-radius: 2px;
+    cursor: pointer; position: relative; transition: height .1s;
+  }
+  .ep-pb:hover { height: 6px; }
+  .ep-pb-fill { height: 100%; background: #b3b3b3; border-radius: 2px; position: relative; transition: background .15s; }
+  .ep-pb:hover .ep-pb-fill { background: #1ed760; }
+  .ep-pb-handle {
+    position: absolute; right: -6px; top: 50%; transform: translateY(-50%);
+    width: 12px; height: 12px; background: #fff; border-radius: 50%;
+    display: none; box-shadow: 0 1px 4px rgba(0,0,0,.4);
+  }
+  .ep-pb:hover .ep-pb-handle { display: block; }
+  .ep-vol { display: flex; align-items: center; gap: 8px; }
+  .ep-vol-bar { width: 80px; height: 4px; background: rgba(255,255,255,.3); border-radius: 2px; cursor: pointer; }
+  .ep-vol-fill { height: 100%; width: 70%; background: #b3b3b3; border-radius: 2px; transition: background .15s; }
+  .ep-vol-bar:hover .ep-vol-fill { background: #1ed760; }
+
+  /* ── OVERLAYS ────────────────────────────────────────────────── */
+  .ep-backdrop {
+    position: fixed; inset: 0; background: rgba(0,0,0,.75);
+    backdrop-filter: blur(4px); z-index: 900; display: none;
+  }
+  .ep-backdrop.open { display: block; animation: fadeIn .2s ease; }
+  @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+
+  /* Artist Modal */
+  .ep-artist-modal {
+    position: fixed; top: 50%; left: 50%; transform: translate(-50%,-52%);
+    background: #1a1a1a; border-radius: 12px; width: 560px; max-width: 92vw;
+    max-height: 85vh; overflow-y: auto; z-index: 1000;
+    box-shadow: 0 24px 64px rgba(0,0,0,.8);
+    display: none; opacity: 0; transition: opacity .25s ease, transform .25s ease;
+  }
+  .ep-artist-modal.open { display: block; opacity: 1; transform: translate(-50%,-50%); animation: modalIn .25s ease; }
+  @keyframes modalIn { from{opacity:0;transform:translate(-50%,-52%)} to{opacity:1;transform:translate(-50%,-50%)} }
+  .ep-modal-hero { height: 200px; position: relative; border-radius: 12px 12px 0 0; overflow: hidden; }
+  .ep-modal-hero img { width: 100%; height: 100%; object-fit: cover; filter: brightness(.65); }
+  .ep-modal-hero::after { content:''; position:absolute; inset:0; background: linear-gradient(to bottom, transparent 40%, #1a1a1a 100%); }
+  .ep-modal-close {
+    position: absolute; top: 12px; right: 12px; z-index: 2;
+    background: rgba(0,0,0,.55); border: none; color: #fff;
+    width: 32px; height: 32px; border-radius: 50%; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; font-size: 14px;
+    transition: background .15s;
+  }
+  .ep-modal-close:hover { background: rgba(0,0,0,.85); }
+  .ep-modal-body { padding: 0 24px 24px; margin-top: -56px; position: relative; z-index: 1; }
+  .ep-modal-avatar { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid #1a1a1a; margin-bottom: 12px; }
+  .ep-modal-name { font-size: 28px; font-weight: 800; margin-bottom: 4px; }
+  .ep-modal-monthly { font-size: 13px; color: #b3b3b3; margin-bottom: 12px; }
+  .ep-modal-genres { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px; }
+  .ep-modal-genre { background: rgba(255,255,255,.1); padding: 4px 12px; border-radius: 500px; font-size: 12px; }
+  .ep-modal-actions { display: flex; gap: 12px; align-items: center; margin-bottom: 20px; }
+  .ep-modal-play-big {
+    background: #1ed760; color: #000; border: none; width: 48px; height: 48px;
+    border-radius: 50%; font-size: 18px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: transform .15s, background .15s;
+  }
+  .ep-modal-play-big:hover { transform: scale(1.08); background: #1db954; }
+  .ep-follow {
+    background: transparent; border: 1.5px solid #fff; color: #fff;
+    padding: 8px 24px; border-radius: 500px; font-size: 14px; font-weight: 700;
+    cursor: pointer; font-family: 'Inter', sans-serif; transition: all .2s;
+  }
+  .ep-follow:hover { background: rgba(255,255,255,.1); }
+  .ep-follow.following { background: #1ed760; border-color: #1ed760; color: #000; }
+  .ep-modal-section { font-size: 14px; font-weight: 700; margin-bottom: 10px; }
+  .ep-modal-tracks { list-style: none; margin-bottom: 20px; }
+  .ep-modal-track {
+    display: flex; align-items: center; gap: 12px; padding: 8px;
+    border-radius: 4px; cursor: pointer; transition: background .15s;
+  }
+  .ep-modal-track:hover { background: rgba(255,255,255,.07); }
+  .ep-modal-track img { width: 40px; height: 40px; border-radius: 4px; object-fit: cover; flex-shrink: 0; }
+  .ep-modal-track-info { flex: 1; }
+  .ep-modal-track-info h4 { font-size: 14px; font-weight: 500; margin-bottom: 2px; }
+  .ep-modal-track-info p { font-size: 12px; color: #b3b3b3; }
+  .ep-modal-track-dur { font-size: 12px; color: #b3b3b3; }
+  .ep-similar-chips { display: flex; gap: 8px; flex-wrap: wrap; }
+  .ep-similar-chip {
+    background: rgba(255,255,255,.1); padding: 6px 14px; border-radius: 500px;
+    font-size: 12px; cursor: pointer; transition: background .15s;
+  }
+  .ep-similar-chip:hover { background: rgba(255,255,255,.2); }
+
+  /* Studio Drawer */
+  .ep-drawer {
+    position: fixed; top: 0; right: -400px; width: 380px; height: 100vh;
+    background: #1a1a1a; z-index: 1000; overflow-y: auto;
+    transition: right .3s ease; box-shadow: -8px 0 32px rgba(0,0,0,.6);
+  }
+  .ep-drawer.open { right: 0; }
+  .ep-drawer-close {
+    position: absolute; top: 16px; right: 16px; z-index: 2;
+    background: rgba(255,255,255,.1); border: none; color: #fff;
+    width: 32px; height: 32px; border-radius: 50%; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; font-size: 14px;
+    transition: background .15s;
+  }
+  .ep-drawer-close:hover { background: rgba(255,255,255,.2); }
+  .ep-drawer-hero { width: 100%; height: 210px; object-fit: cover; }
+  .ep-drawer-body { padding: 24px; }
+  .ep-drawer-tag { font-size: 10px; font-weight: 700; letter-spacing: 1px; color: #1ed760; text-transform: uppercase; margin-bottom: 8px; }
+  .ep-drawer-title { font-size: 22px; font-weight: 800; margin-bottom: 8px; }
+  .ep-drawer-desc { font-size: 14px; color: #b3b3b3; line-height: 1.6; margin-bottom: 24px; }
+  .ep-drawer-cta {
+    background: #1ed760; color: #000; border: none;
+    padding: 14px 32px; border-radius: 500px; font-size: 15px; font-weight: 700;
+    cursor: pointer; display: flex; align-items: center; gap: 10px;
+    transition: all .2s; font-family: 'Inter', sans-serif;
+  }
+  .ep-drawer-cta:hover { background: #1db954; transform: scale(1.02); }
+  .ep-drawer-list { margin-top: 24px; list-style: none; }
+  .ep-drawer-item {
+    display: flex; align-items: center; gap: 12px; padding: 12px 0;
+    border-bottom: 1px solid rgba(255,255,255,.07); cursor: pointer; transition: opacity .15s;
+  }
+  .ep-drawer-item:last-child { border-bottom: none; }
+  .ep-drawer-item:hover { opacity: .7; }
+  .ep-drawer-item img { width: 52px; height: 52px; border-radius: 4px; object-fit: cover; flex-shrink: 0; }
+  .ep-drawer-item h4 { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+  .ep-drawer-item p { font-size: 12px; color: #b3b3b3; }
+
+  /* Progress Modal */
+  .ep-progress-modal {
+    position: fixed; inset: 0; background: #0a0a0a; z-index: 1000;
+    display: none; overflow-y: auto;
+  }
+  .ep-progress-modal.open { display: block; animation: fadeIn .2s ease; }
+  .ep-pm-close {
+    position: fixed; top: 24px; right: 24px; z-index: 1001;
+    background: rgba(255,255,255,.1); border: none; color: #fff;
+    width: 40px; height: 40px; border-radius: 50%; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; font-size: 18px;
+    transition: background .15s;
+  }
+  .ep-pm-close:hover { background: rgba(255,255,255,.2); }
+  .ep-pm-content { max-width: 800px; margin: 0 auto; padding: 80px 40px 60px; }
+  .ep-pm-title { font-size: 36px; font-weight: 800; margin-bottom: 8px; }
+  .ep-pm-sub { font-size: 15px; color: #b3b3b3; margin-bottom: 48px; }
+  .ep-pm-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+  .ep-pm-card { background: #1a1a1a; border-radius: 12px; padding: 24px; }
+  .ep-pm-card.wide { grid-column: 1 / 3; }
+  .ep-pm-card-label { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #b3b3b3; margin-bottom: 12px; }
+  .ep-pm-big { font-size: 48px; font-weight: 800; }
+  .ep-pm-big-sub { font-size: 13px; color: #b3b3b3; margin-top: 4px; }
+  .ep-pm-wide-body { display: flex; align-items: flex-start; gap: 40px; }
+  .ep-pm-ring-wrap { position: relative; width: 120px; height: 120px; flex-shrink: 0; }
+  .ep-pm-ring-wrap svg { transform: rotate(-90deg); }
+  .ep-pm-ring-score { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); text-align: center; }
+  .ep-pm-ring-score .pn { font-size: 36px; font-weight: 800; }
+  .ep-pm-ring-score .pd { font-size: 12px; color: #b3b3b3; }
+  .ep-pm-chart { display: flex; gap: 8px; align-items: flex-end; height: 80px; flex: 1; }
+  .ep-pm-bar-wrap { display: flex; flex-direction: column; align-items: center; gap: 4px; flex: 1; }
+  .ep-pm-bar { width: 100%; background: #333; border-radius: 3px 3px 0 0; min-height: 4px; }
+  .ep-pm-bar.green { background: linear-gradient(to top, #1ed760, #1db954); }
+  .ep-pm-bar-label { font-size: 9px; color: #b3b3b3; }
+  .ep-pm-recent { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 12px; }
+  .ep-pm-recent-a { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+  .ep-pm-recent-a img { width: 56px; height: 56px; border-radius: 50%; object-fit: cover; }
+  .ep-pm-recent-a span { font-size: 11px; color: #b3b3b3; text-align: center; max-width: 64px; }
+
+  /* Dislike Sheet */
+  .ep-dislike-sheet {
+    position: fixed; bottom: -440px; left: 50%; transform: translateX(-50%);
+    width: 480px; max-width: 96vw; background: #282828; border-radius: 16px 16px 0 0;
+    z-index: 1100; padding: 24px; transition: bottom .3s ease;
+    box-shadow: 0 -8px 32px rgba(0,0,0,.6);
+  }
+  .ep-dislike-sheet.open { bottom: 90px; }
+  .ep-sheet-handle { width: 36px; height: 4px; background: #535353; border-radius: 2px; margin: 0 auto 20px; }
+  .ep-sheet-title { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+  .ep-sheet-sub { font-size: 13px; color: #b3b3b3; margin-bottom: 20px; }
+  .ep-sheet-options { list-style: none; display: flex; flex-direction: column; gap: 4px; margin-bottom: 16px; }
+  .ep-sheet-opt {
+    display: flex; align-items: center; gap: 12px; padding: 14px 16px;
+    border-radius: 8px; cursor: pointer; font-size: 15px; transition: background .15s;
+    border: 1px solid transparent;
+  }
+  .ep-sheet-opt:hover { background: rgba(255,255,255,.07); }
+  .ep-sheet-opt.chosen { background: rgba(230,57,70,.14); border-color: rgba(230,57,70,.3); color: #ff8a8a; }
+  .ep-sheet-opt i { width: 20px; text-align: center; color: #b3b3b3; }
+  .ep-sheet-opt.chosen i { color: #e63946; }
+  .ep-sheet-cancel {
+    width: 100%; padding: 14px; background: transparent; border: 1px solid #333;
+    border-radius: 8px; color: #b3b3b3; font-size: 14px; font-weight: 600;
+    cursor: pointer; transition: all .15s; font-family: 'Inter', sans-serif;
+  }
+  .ep-sheet-cancel:hover { border-color: #555; color: #fff; }
+
+  /* Toasts */
+  .ep-toasts { position: fixed; top: 24px; right: 24px; z-index: 2000; display: flex; flex-direction: column; gap: 8px; }
+  .ep-toast {
+    background: #333; color: #fff; padding: 12px 20px; border-radius: 8px;
+    font-size: 14px; font-weight: 500; display: flex; align-items: center; gap: 10px;
+    box-shadow: 0 8px 24px rgba(0,0,0,.4); min-width: 240px; max-width: 360px;
+    animation: toastIn .25s ease;
+  }
+  .ep-toast.success { border-left: 3px solid #1ed760; }
+  .ep-toast.info { border-left: 3px solid #3b82f6; }
+  .ep-toast i { font-size: 15px; }
+  .ep-toast.success i { color: #1ed760; }
+  .ep-toast.info i { color: #3b82f6; }
+  @keyframes toastIn { from{opacity:0;transform:translateX(20px)} to{opacity:1;transform:translateX(0)} }
+  @keyframes toastOut { from{opacity:1;transform:translateX(0)} to{opacity:0;transform:translateX(20px)} }
+
+  /* Demo Mode */
+  .ep-demo-btn {
+    position: fixed; bottom: 110px; right: 20px; z-index: 800;
+    background: #1ed760; color: #000; border: none; padding: 12px 20px;
+    border-radius: 500px; font-size: 13px; font-weight: 800; cursor: pointer;
+    display: flex; align-items: center; gap: 8px;
+    box-shadow: 0 4px 20px rgba(30,215,96,.4); transition: all .2s;
+    font-family: 'Inter', sans-serif; letter-spacing: .5px;
+  }
+  .ep-demo-btn:hover { background: #1db954; transform: translateY(-2px); box-shadow: 0 8px 28px rgba(30,215,96,.5); }
+  .ep-demo-btn:active { transform: translateY(0); }
+
+  .ep-demo-panel {
+    position: fixed; bottom: 170px; right: 20px; z-index: 800;
+    background: #1a1a1a; border-radius: 12px; width: 320px;
+    box-shadow: 0 8px 32px rgba(0,0,0,.6); border: 1px solid #2a2a2a;
+    display: none; overflow: hidden;
+  }
+  .ep-demo-panel.open { display: block; animation: dropDown .2s ease; }
+  .ep-demo-phdr { padding: 16px 20px 12px; border-bottom: 1px solid #242424; }
+  .ep-demo-phdr h3 { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+  .ep-demo-phdr p { font-size: 12px; color: #b3b3b3; }
+  .ep-demo-scenarios { list-style: none; }
+  .ep-demo-sc {
+    display: flex; align-items: flex-start; gap: 12px; padding: 12px 20px;
+    cursor: pointer; transition: background .15s; border-bottom: 1px solid rgba(255,255,255,.04);
+  }
+  .ep-demo-sc:last-child { border-bottom: none; }
+  .ep-demo-sc:hover { background: rgba(255,255,255,.05); }
+  .ep-demo-num {
+    width: 20px; height: 20px; background: rgba(30,215,96,.15); color: #1ed760;
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 700; flex-shrink: 0; margin-top: 1px;
+  }
+  .ep-demo-sc h4 { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
+  .ep-demo-sc p { font-size: 11px; color: #b3b3b3; }
+
+  .ep-demo-progress {
+    position: fixed; top: 16px; left: 50%; transform: translateX(-50%);
+    background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 500px;
+    padding: 10px 20px; z-index: 1500; display: none; align-items: center; gap: 12px;
+    font-size: 13px; box-shadow: 0 4px 16px rgba(0,0,0,.5);
+  }
+  .ep-demo-progress.show { display: flex; }
+  .ep-demo-dot { width: 8px; height: 8px; background: #1ed760; border-radius: 50%; animation: demoPulse 1s ease infinite; }
+  @keyframes demoPulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+  .ep-demo-skip {
+    background: transparent; border: 1px solid #333; color: #b3b3b3;
+    padding: 4px 12px; border-radius: 500px; font-size: 11px; cursor: pointer;
+    transition: all .15s; font-family: 'Inter', sans-serif; margin-left: 4px;
+  }
+  .ep-demo-skip:hover { border-color: #555; color: #fff; }
+
+  .demo-ring { outline: 2px solid #1ed760 !important; outline-offset: 3px !important; transition: outline .3s !important; border-radius: 6px; }
+
+  /* Responsive */
+  @media (max-width: 1100px) {
+    .ep-layout { grid-template-columns: 220px 1fr; }
+    .ep-studio-col { display: none; }
+  }
+  @media (max-width: 768px) {
+    .ep-layout { grid-template-columns: 1fr; grid-template-rows: 1fr 90px; }
+    .ep-sidebar { display: none; }
+    .ep-main { grid-column: 1; }
+    .ep-player { grid-column: 1; }
+    .ep-rec-card { flex-direction: column; }
+    .ep-versions-col { width: 100%; border-left: none; border-top: 1px solid rgba(255,255,255,.08); padding: 14px 0 0; }
+    .ep-demo-btn { bottom: 106px; right: 12px; }
+  }
+  </style>
 </head>
+<body class="explore-page">
+<div class="ep-layout">
 
-<body>
-    <div class="app-layout">
+<!-- ════════════════ SIDEBAR ════════════════ -->
+<nav class="ep-sidebar">
+  <a href="index.html" class="ep-logo">
+    <svg width="28" height="28" viewBox="0 0 496 512" fill="#1ed760"><path d="M248 8C111.1 8 8 111.1 8 248s103.1 240 240 240 240-103.1 240-240S384.9 8 248 8zm110.7 338.1c-4.3 0-6.7-1.4-10.2-3.6-36.3-21.7-80.3-33.3-127-33.3-26.1 0-52.8 3.8-77.3 9.5-4.8 1.2-7.9 2.4-11 2.4-9.5 0-15.5-7.1-15.5-15.5 0-10 5.7-15.2 13.3-17.1 29-7.1 58.5-11.4 90.5-11.4 51 0 100.7 13.3 141.5 38.1 6.7 3.8 10.5 7.9 10.5 17.1.1 8.6-6.7 14.3-15.8 14.3zm29.5-68.1c-5.2 0-8.6-2.4-11.4-4.3-40.4-24-104.7-39-166.4-39-32.8 0-62.3 4.8-84.9 11.4-5.2 1.4-8.1 2.9-11.9 2.9-11.4 0-19.5-9-19.5-20.5 0-11 4.3-17.6 14.8-20.9 27.1-8.6 59.3-13.3 101.4-13.3 64.9 0 134.6 16.2 183.4 44.2 8.1 4.8 12.4 10.2 12.4 21.7-.1 11.6-8.7 18.8-18.9 18.8zm34.3-77.3c-5.7 0-9-1.4-13.3-4.3-45.7-27.6-116.2-43.6-182.4-43.6-37.1 0-73.3 5.2-101.9 13.3-4.3 1.4-8.1 2.9-13.3 2.9-13.8 0-24.3-10.5-24.3-24.3 0-13.3 6.7-21.4 17.6-24.8 33.8-10 73.3-15.5 121.9-15.5 72.9 0 148.7 17.1 203.4 49.3 9.5 5.7 14.3 12.9 14.3 24.3 0 13.8-10.9 22.7-22 22.7z"/></svg>
+    <span class="ep-logo-text">Spotify</span>
+  </a>
 
-        <!-- Top Navigation Bar -->
-        <header class="top-bar">
-            <div class="top-bar-left">
-                <a href="#" class="spotify-logo-btn" id="spotify-logo" title="Spotify">
-                    <svg viewBox="0 0 496 512" width="28" height="28" fill="#1ed760" xmlns="http://www.w3.org/2000/svg">
-                        <path
-                            d="M248 8C111.1 8 8 111.1 8 248s103.1 240 240 240 240-103.1 240-240S384.9 8 248 8zm110.7 338.1c-4.3 0-6.7-1.4-10.2-3.6-36.3-21.7-80.3-33.3-127-33.3-26.1 0-52.8 3.8-77.3 9.5-4.8 1.2-7.9 2.4-11 2.4-9.5 0-15.5-7.1-15.5-15.5 0-10 5.7-15.2 13.3-17.1 29-7.1 58.5-11.4 90.5-11.4 51 0 100.7 13.3 141.5 38.1 6.7 3.8 10.5 7.9 10.5 17.1.1 8.6-6.7 14.3-15.8 14.3zm29.5-68.1c-5.2 0-8.6-2.4-11.4-4.3-40.4-24-104.7-39-166.4-39-32.8 0-62.3 4.8-84.9 11.4-5.2 1.4-8.1 2.9-11.9 2.9-11.4 0-19.5-9-19.5-20.5 0-11 4.3-17.6 14.8-20.9 27.1-8.6 59.3-13.3 101.4-13.3 64.9 0 134.6 16.2 183.4 44.2 8.1 4.8 12.4 10.2 12.4 21.7-.1 11.6-8.7 18.8-18.9 18.8zm34.3-77.3c-5.7 0-9-1.4-13.3-4.3-45.7-27.6-116.2-43.6-182.4-43.6-37.1 0-73.3 5.2-101.9 13.3-4.3 1.4-8.1 2.9-13.3 2.9-13.8 0-24.3-10.5-24.3-24.3 0-13.3 6.7-21.4 17.6-24.8 33.8-10 73.3-15.5 121.9-15.5 72.9 0 148.7 17.1 203.4 49.3 9.5 5.7 14.3 12.9 14.3 24.3 0 13.8-10.9 22.7-22 22.7z" />
-                    </svg>
-                </a>
-                <button class="nav-btn circular home-btn" id="home-btn" title="Home">
-                    <i class="fa-solid fa-house"></i>
-                </button>
-                <button class="nav-btn circular" title="Go Back"><i class="fa-solid fa-chevron-left"></i></button>
-                <button class="nav-btn circular" title="Go Forward"><i class="fa-solid fa-chevron-right"></i></button>
-            </div>
+  <ul class="ep-nav">
+    <li><a href="/" class="nav-link ep-active" data-route="/"><i class="fa-solid fa-house"></i> Home</a></li>
+    <li><a href="/search" class="nav-link" data-route="/search"><i class="fa-solid fa-magnifying-glass"></i> Search</a></li>
+    <li><a href="/library" class="nav-link" data-route="/library"><i class="fa-solid fa-book-open"></i> Your Library</a></li>
+    <li><a href="/explore" class="nav-link" data-route="/explore"><i class="fa-regular fa-compass"></i> Explore</a></li>
+  </ul>
+  <ul class="ep-nav-secondary">
+    <li><a href="/create" class="nav-link" data-route="/create"><span class="ep-icon-box ep-icon-gray"><i class="fa-solid fa-plus"></i></span> Create Playlist</a></li>
+    <li><a href="/liked" class="nav-link" data-route="/liked"><span class="ep-icon-box ep-icon-liked"><i class="fa-solid fa-heart"></i></span> Liked Songs</a></li>
+  </ul>
 
-            <div class="top-bar-center">
-                <div class="search-container">
-                    <i class="fa-solid fa-search search-icon"></i>
-                    <input type="text" id="vibe-search" placeholder="What's your vibe rn?" autocomplete="off">
-                    <button class="mic-btn" id="voice-btn" title="Voice Search"><i
-                            class="fa-solid fa-microphone"></i></button>
+  <hr class="ep-hr">
 
-                    <!-- Search Dropdown -->
-                    <div class="search-dropdown hidden" id="search-dropdown">
-                        <div class="dropdown-header">SEARCH OPTIONS</div>
-                        <div class="dropdown-grid">
-                            <div class="dropdown-item">Songs</div>
-                            <div class="dropdown-item">Artists</div>
-                            <div class="dropdown-item">Albums</div>
-                            <div class="dropdown-item">Podcasts</div>
-                            <div class="dropdown-item">Playlists</div>
-                            <div class="dropdown-item">Voice</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+  <div class="ep-playlist-header">
+    <span class="ep-playlist-label">Your Playlists</span>
+    <button class="ep-playlist-add"><i class="fa-solid fa-plus"></i></button>
+  </div>
+  <ul class="ep-playlists" id="ep-playlists">
+    <li><img src="https://picsum.photos/seed/chillvibespl/60/60" alt="" class="img-zoom">Chill Vibes</li>
+    <li><img src="https://picsum.photos/seed/focusflowpl/60/60" alt="" class="img-zoom">Focus Flow</li>
+    <li><img src="https://picsum.photos/seed/roadtriphits/60/60" alt="" class="img-zoom">Roadtrip Hits</li>
+    <li><img src="https://picsum.photos/seed/workoutmix88/60/60" alt="" class="img-zoom">Workout Mix</li>
+    <li><img src="https://picsum.photos/seed/bollywoodcl/60/60" alt="" class="img-zoom">Bollywood Classics</li>
+  </ul>
+  <a href="#" class="ep-show-more">Show more <i class="fa-solid fa-chevron-down"></i></a>
 
-            <div class="top-bar-right">
-                <button class="explore-btn">Explore Premium</button>
-                <button class="nav-btn circular"><i class="fa-regular fa-bell"></i></button>
-                <button class="nav-btn circular"><i class="fa-solid fa-user-group"></i></button>
-                <div class="profile-icon">S</div>
-            </div>
-        </header>
-
-        <!-- Left Sidebar (Library) -->
-        <nav class="sidebar">
-            <div class="sidebar-header">
-                <div class="library-title">
-                    <i class="fa-solid fa-book-open"></i> Your Library
-                </div>
-                <button class="nav-btn circular"><i class="fa-solid fa-plus"></i></button>
-            </div>
-
-            <div class="filter-pills">
-                <button class="pill-btn">Playlists</button>
-                <button class="pill-btn"><i class="fa-solid fa-wand-magic-sparkles"></i> Blend</button>
-                <button class="pill-btn"><i class="fa-regular fa-folder"></i> Folder</button>
-                <button class="pill-btn active">Discover</button>
-            </div>
-
-            <div class="surprise-me-container">
-                <button class="surprise-btn" id="surprise-btn">
-                    <div class="surprise-icon">
-                        <i class="fa-solid fa-sparkles"></i>
-                    </div>
-                    <div class="surprise-text">
-                        <h4>Surprise Me</h4>
-                        <p>A random pick, tuned to you</p>
-                    </div>
-                </button>
-            </div>
-
-            <div class="search-recents">
-                <i class="fa-solid fa-search"></i>
-                <span>Recents <i class="fa-solid fa-caret-down"></i></span>
-            </div>
-
-            <div class="playlist-list">
-                <div class="playlist-item">
-                    <div class="playlist-img liked-img"><i class="fa-solid fa-heart"></i></div>
-                    <div class="playlist-info">
-                        <h4>Liked Songs</h4>
-                        <p>Playlist • 248 songs</p>
-                    </div>
-                </div>
-                <div class="playlist-item">
-                    <div class="playlist-img blue-img"><i class="fa-solid fa-podcast"></i></div>
-                    <div class="playlist-info">
-                        <h4>Deep Focus</h4>
-                        <p>Playlist • Spotify</p>
-                    </div>
-                </div>
-                <div class="playlist-item">
-                    <div class="playlist-img orange-img"><i class="fa-solid fa-compact-disc"></i></div>
-                    <div class="playlist-info">
-                        <h4>Late Night Drive</h4>
-                        <p>Playlist • You</p>
-                    </div>
-                </div>
-                <div class="playlist-item">
-                    <div class="playlist-img bg-red"><i class="fa-solid fa-dumbbell"></i></div>
-                    <div class="playlist-info">
-                        <h4>Workout Beasts</h4>
-                        <p>Playlist • 92 songs</p>
-                    </div>
-                </div>
-            </div>
-        </nav>
-
-        <!-- Main Content Area -->
-        <main class="main-view">
-            <div class="main-header">
-                <div id="dynamic-header-content">
-                    <p class="discovery-label"><i class="fa-solid fa-wand-magic-sparkles"></i> DISCOVERY, PERSONALIZED
-                    </p>
-                    <h1 class="greeting">Good evening, Sneh.</h1>
-                    <h2 class="sub-greeting">Pick a mood — or let us pick.</h2>
-                </div>
-
-                <div class="category-pills">
-                    <button class="category-btn active" data-target="view-discovery">All</button>
-                    <button class="category-btn" data-target="view-music">Music</button>
-                    <button class="category-btn" data-target="view-podcasts">Podcasts</button>
-                    <button class="category-btn" data-target="view-audiobooks">Audiobooks</button>
-                    <button class="category-btn" data-target="view-live">Live</button>
-                    <button class="category-btn" data-target="view-events">Events</button>
-                    <button class="category-btn" data-target="view-analyzer"
-                        style="background: linear-gradient(135deg, #1db954, #191414); color: white; font-weight: 800; border: 1px solid #1db954;"><i
-                            class="fa-solid fa-brain"></i> AI Analyzer</button>
-                </div>
-            </div>
-
-            <!-- View: Discovery (AI MVP Features) -->
-            <div id="view-discovery" class="content-view active">
-                <div class="interactive-panels">
-                    <!-- Mood Check Panel (Accordion) -->
-                    <div class="panel mood-panel">
-                        <div class="panel-header" id="mood-header">
-                            <span><i class="fa-regular fa-face-smile"></i> MOOD CHECK</span>
-                            <i class="fa-solid fa-chevron-down accordion-icon"></i>
-                        </div>
-                        <h3 class="panel-title" id="active-mood-title">Happy</h3>
-                        <div class="selector-container collapsible collapsed" id="mood-selectors">
-                            <div class="selector-item mood active" data-mood="Happy">
-                                <div class="selector-icon bg-yellow"><i class="fa-regular fa-face-smile"></i></div>
-                                <span>Happy</span>
-                            </div>
-                            <div class="selector-item mood" data-mood="Relaxed">
-                                <div class="selector-icon bg-green"><i class="fa-solid fa-leaf"></i></div>
-                                <span>Relaxed</span>
-                            </div>
-                            <div class="selector-item mood" data-mood="Motivate">
-                                <div class="selector-icon bg-red"><i class="fa-solid fa-fire"></i></div>
-                                <span>Motivate</span>
-                            </div>
-                            <div class="selector-item mood" data-mood="Sleepy">
-                                <div class="selector-icon bg-purple"><i class="fa-solid fa-moon"></i></div>
-                                <span>Sleepy</span>
-                            </div>
-                            <div class="selector-item mood" data-mood="Party">
-                                <div class="selector-icon bg-pink"><i class="fa-solid fa-party-horn"></i></div>
-                                <span>Party</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Activity Panel (Accordion) -->
-                    <div class="panel activity-panel">
-                        <div class="panel-header" id="activity-header">
-                            <span><i class="fa-solid fa-chart-line"></i> ACTIVITY</span>
-                            <i class="fa-solid fa-chevron-down accordion-icon"></i>
-                        </div>
-                        <h3 class="panel-title" id="active-activity-title">What are you doing?</h3>
-                        <div class="selector-container collapsible collapsed" id="activity-selectors">
-                            <div class="selector-item activity" data-activity="Study">
-                                <div class="selector-icon bg-blue"><i class="fa-solid fa-book"></i></div>
-                                <span>Study</span>
-                            </div>
-                            <div class="selector-item activity" data-activity="Work">
-                                <div class="selector-icon bg-gray"><i class="fa-solid fa-briefcase"></i></div>
-                                <span>Work</span>
-                            </div>
-                            <div class="selector-item activity" data-activity="Workout">
-                                <div class="selector-icon bg-orange"><i class="fa-solid fa-dumbbell"></i></div>
-                                <span>Workout</span>
-                            </div>
-                            <div class="selector-item activity" data-activity="Travel">
-                                <div class="selector-icon bg-teal"><i class="fa-solid fa-plane"></i></div>
-                                <span>Travel</span>
-                            </div>
-                            <div class="selector-item activity" data-activity="Meditate">
-                                <div class="selector-icon bg-indigo"><i class="fa-solid fa-spa"></i></div>
-                                <span>Meditate</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="loading-indicator" class="hidden">
-                    <div class="loader"></div>
-                    <p>AI is generating your context-aware session...</p>
-                </div>
-            </div>
-
-            <!-- View: Music -->
-            <div id="view-music" class="content-view hidden">
-                <h2 class="section-title">🎵 New Releases For You</h2>
-                <div class="card-grid">
-                    <div class="media-card clickable" onclick="playCard(this, 'Midnights', 'Taylor Swift')">
-                        <img class="card-img"
-                            src="https://upload.wikimedia.org/wikipedia/en/9/9f/Midnights_-_Taylor_Swift.png"
-                            alt="Midnights" onerror="this.style.background='#3a0ca3';this.removeAttribute('src')">
-                        <h4>Midnights</h4>
-                        <p>Taylor Swift</p>
-                    </div>
-                    <div class="media-card clickable" onclick="playCard(this, 'After Hours', 'The Weeknd')">
-                        <img class="card-img"
-                            src="https://upload.wikimedia.org/wikipedia/en/c/c1/The_Weeknd_-_After_Hours.png"
-                            alt="After Hours" onerror="this.style.background='#e63946';this.removeAttribute('src')">
-                        <h4>After Hours</h4>
-                        <p>The Weeknd</p>
-                    </div>
-                    <div class="media-card clickable" onclick="playCard(this, 'Future Nostalgia', 'Dua Lipa')">
-                        <img class="card-img"
-                            src="https://upload.wikimedia.org/wikipedia/en/f/f5/Dua_Lipa_-_Future_Nostalgia_%28Official_Album_Cover%29.png"
-                            alt="Future Nostalgia"
-                            onerror="this.style.background='#f72585';this.removeAttribute('src')">
-                        <h4>Future Nostalgia</h4>
-                        <p>Dua Lipa</p>
-                    </div>
-                    <div class="media-card clickable" onclick="playCard(this, 'DAMN.', 'Kendrick Lamar')">
-                        <img class="card-img"
-                            src="https://upload.wikimedia.org/wikipedia/en/a/a2/Kendrick_Lamar_-_DAMN.png" alt="DAMN."
-                            onerror="this.style.background='#e63946';this.removeAttribute('src')">
-                        <h4>DAMN.</h4>
-                        <p>Kendrick Lamar</p>
-                    </div>
-                    <div class="media-card clickable" onclick="playCard(this, 'Fine Line', 'Harry Styles')">
-                        <img class="card-img"
-                            src="https://upload.wikimedia.org/wikipedia/en/b/b5/Harry_Styles_-_Fine_Line.png"
-                            alt="Fine Line" onerror="this.style.background='#00b4d8';this.removeAttribute('src')">
-                        <h4>Fine Line</h4>
-                        <p>Harry Styles</p>
-                    </div>
-                    <div class="media-card clickable" onclick="playCard(this, 'Random Access Memories', 'Daft Punk')">
-                        <img class="card-img"
-                            src="https://upload.wikimedia.org/wikipedia/en/a/a7/Random_Access_Memories.jpg"
-                            alt="Random Access Memories"
-                            onerror="this.style.background='#f4a261';this.removeAttribute('src')">
-                        <h4>Random Access Memories</h4>
-                        <p>Daft Punk</p>
-                    </div>
-                    <div class="media-card clickable" onclick="playCard(this, '30', 'Adele')">
-                        <img class="card-img" src="https://upload.wikimedia.org/wikipedia/en/7/76/Adele_-_30.png"
-                            alt="30" onerror="this.style.background='#6c757d';this.removeAttribute('src')">
-                        <h4>30</h4>
-                        <p>Adele</p>
-                    </div>
-                    <div class="media-card clickable" onclick="playCard(this, 'Divide', 'Ed Sheeran')">
-                        <img class="card-img" src="https://upload.wikimedia.org/wikipedia/en/4/45/Divide_cover.png"
-                            alt="Divide" onerror="this.style.background='#2a9d8f';this.removeAttribute('src')">
-                        <h4>Divide</h4>
-                        <p>Ed Sheeran</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- View: Podcasts -->
-            <div id="view-podcasts" class="content-view hidden">
-                <h2 class="section-title">🎙️ Top Podcasts</h2>
-                <div class="card-grid">
-                    <div class="media-card clickable" onclick="playCard(this, 'The Joe Rogan Experience', 'Joe Rogan')">
-                        <img class="card-img podcast-img"
-                            src="https://upload.wikimedia.org/wikipedia/en/thumb/6/6f/The_Joe_Rogan_Experience_logo.jpg/220px-The_Joe_Rogan_Experience_logo.jpg"
-                            alt="JRE" onerror="this.style.background='#0077b6';this.removeAttribute('src')">
-                        <h4>The Joe Rogan Experience</h4>
-                        <p>Joe Rogan</p>
-                    </div>
-                    <div class="media-card clickable" onclick="playCard(this, 'Crime Junkie', 'audiochuck')">
-                        <img class="card-img podcast-img" src="https://picsum.photos/seed/crimejunkie/300/300"
-                            alt="Crime Junkie" onerror="this.style.background='#e63946';this.removeAttribute('src')">
-                        <h4>Crime Junkie</h4>
-                        <p>audiochuck</p>
-                    </div>
-                    <div class="media-card clickable" onclick="playCard(this, 'Huberman Lab', 'Andrew Huberman')">
-                        <img class="card-img podcast-img" src="https://picsum.photos/seed/hubermanlab/300/300"
-                            alt="Huberman Lab" onerror="this.style.background='#2a9d8f';this.removeAttribute('src')">
-                        <h4>Huberman Lab</h4>
-                        <p>Andrew Huberman</p>
-                    </div>
-                    <div class="media-card clickable" onclick="playCard(this, 'Lex Fridman Podcast', 'Lex Fridman')">
-                        <img class="card-img podcast-img" src="https://picsum.photos/seed/lexfridman/300/300"
-                            alt="Lex Fridman" onerror="this.style.background='#3a0ca3';this.removeAttribute('src')">
-                        <h4>Lex Fridman Podcast</h4>
-                        <p>Lex Fridman</p>
-                    </div>
-                    <div class="media-card clickable" onclick="playCard(this, 'Diary of a CEO', 'Steven Bartlett')">
-                        <img class="card-img podcast-img" src="https://picsum.photos/seed/diaryofaceo/300/300"
-                            alt="Diary of CEO" onerror="this.style.background='#f72585';this.removeAttribute('src')">
-                        <h4>Diary of a CEO</h4>
-                        <p>Steven Bartlett</p>
-                    </div>
-                    <div class="media-card clickable" onclick="playCard(this, 'My Favorite Murder', 'Karen & Georgia')">
-                        <img class="card-img podcast-img" src="https://picsum.photos/seed/myfavmurder/300/300"
-                            alt="My Favorite Murder"
-                            onerror="this.style.background='#6c757d';this.removeAttribute('src')">
-                        <h4>My Favorite Murder</h4>
-                        <p>Karen & Georgia</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- View: Audiobooks -->
-            <div id="view-audiobooks" class="content-view hidden">
-                <h2 class="section-title">📚 Best Selling Audiobooks</h2>
-                <div class="card-grid">
-                    <div class="media-card clickable" onclick="playCard(this, 'Atomic Habits', 'James Clear')">
-                        <img class="card-img podcast-img"
-                            src="https://upload.wikimedia.org/wikipedia/en/a/a6/Atomic_Habits.jpg" alt="Atomic Habits"
-                            onerror="this.style.background='#f4a261';this.removeAttribute('src')">
-                        <h4>Atomic Habits</h4>
-                        <p>James Clear · 5h 35m</p>
-                    </div>
-                    <div class="media-card clickable"
-                        onclick="playCard(this, 'The Psychology of Money', 'Morgan Housel')">
-                        <img class="card-img podcast-img"
-                            src="https://upload.wikimedia.org/wikipedia/en/3/32/The_Psychology_of_Money.jpg"
-                            alt="Psychology of Money"
-                            onerror="this.style.background='#2a9d8f';this.removeAttribute('src')">
-                        <h4>The Psychology of Money</h4>
-                        <p>Morgan Housel · 5h 48m</p>
-                    </div>
-                    <div class="media-card clickable" onclick="playCard(this, 'Ikigai', 'Héctor García')">
-                        <img class="card-img podcast-img" src="https://picsum.photos/seed/ikigai/300/300" alt="Ikigai"
-                            onerror="this.style.background='#f72585';this.removeAttribute('src')">
-                        <h4>Ikigai</h4>
-                        <p>Héctor García · 3h 22m</p>
-                    </div>
-                    <div class="media-card clickable" onclick="playCard(this, 'Think Like a Monk', 'Jay Shetty')">
-                        <img class="card-img podcast-img" src="https://picsum.photos/seed/thinklikeamonk/300/300"
-                            alt="Think Like a Monk"
-                            onerror="this.style.background='#3a0ca3';this.removeAttribute('src')">
-                        <h4>Think Like a Monk</h4>
-                        <p>Jay Shetty · 9h 9m</p>
-                    </div>
-                    <div class="media-card clickable" onclick="playCard(this, 'Can\'t Hurt Me', 'David Goggins')">
-                        <img class="card-img podcast-img" src="https://picsum.photos/seed/canthurtme/300/300"
-                            alt="Can't Hurt Me" onerror="this.style.background='#e63946';this.removeAttribute('src')">
-                        <h4>Can't Hurt Me</h4>
-                        <p>David Goggins · 13h 34m</p>
-                    </div>
-                    <div class="media-card clickable" onclick="playCard(this, 'The Alchemist', 'Paulo Coelho')">
-                        <img class="card-img podcast-img"
-                            src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/The_Alchemist.jpg/250px-The_Alchemist.jpg"
-                            alt="The Alchemist" onerror="this.style.background='#ffb703';this.removeAttribute('src')">
-                        <h4>The Alchemist</h4>
-                        <p>Paulo Coelho · 4h 8m</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- View: Live -->
-            <div id="view-live" class="content-view hidden">
-                <h2 class="section-title">🔴 Live Now</h2>
-                <div class="card-grid wide-grid">
-                    <div class="media-card clickable live-card"
-                        onclick="playCard(this, 'Taylor Swift Live', 'The Eras Tour')">
-                        <img class="card-img" src="https://picsum.photos/seed/taylorswiftlive/300/300"
-                            alt="Live Concert" onerror="this.style.background='#f72585';this.removeAttribute('src')">
-                        <div class="live-badge">🔴 LIVE</div>
-                        <h4>Taylor Swift</h4>
-                        <p>The Eras Tour · 34K watching</p>
-                    </div>
-                    <div class="media-card clickable live-card"
-                        onclick="playCard(this, 'Coldplay Live', 'Music of the Spheres Tour')">
-                        <img class="card-img" src="https://picsum.photos/seed/coldplaylive/300/300" alt="Coldplay Live"
-                            onerror="this.style.background='#0077b6';this.removeAttribute('src')">
-                        <div class="live-badge">🔴 LIVE</div>
-                        <h4>Coldplay</h4>
-                        <p>Music of the Spheres · 21K watching</p>
-                    </div>
-                    <div class="media-card clickable live-card"
-                        onclick="playCard(this, 'The Weeknd Live', 'After Hours Tour')">
-                        <img class="card-img" src="https://picsum.photos/seed/weekndlive/300/300" alt="The Weeknd Live"
-                            onerror="this.style.background='#e63946';this.removeAttribute('src')">
-                        <div class="live-badge">🔴 LIVE</div>
-                        <h4>The Weeknd</h4>
-                        <p>After Hours Tour · 18K watching</p>
-                    </div>
-                    <div class="media-card clickable live-card"
-                        onclick="playCard(this, 'Dua Lipa Live', 'Future Nostalgia Tour')">
-                        <img class="card-img" src="https://picsum.photos/seed/dualipaliive/300/300" alt="Dua Lipa Live"
-                            onerror="this.style.background='#7209b7';this.removeAttribute('src')">
-                        <div class="live-badge">🔴 LIVE</div>
-                        <h4>Dua Lipa</h4>
-                        <p>Future Nostalgia Tour · 15K watching</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- View: Events -->
-            <div id="view-events" class="content-view hidden">
-                <h2 class="section-title">🎟️ Upcoming Events Near You</h2>
-                <div class="event-list">
-                    <div class="event-item clickable" onclick="playCard(this, 'Arijit Singh', 'World Tour')">
-                        <img class="event-img" src="https://picsum.photos/seed/arijitsingh/120/120" alt="Arijit Singh"
-                            onerror="this.style.background='#f72585';this.removeAttribute('src')">
-                        <div class="event-info">
-                            <h4>Arijit Singh</h4>
-                            <p>World Tour</p>
-                            <span class="event-meta">📍 Mumbai · June 30, 2025 · ₹2,500</span>
-                        </div>
-                        <button class="event-rsvp-btn">Get Tickets</button>
-                    </div>
-                    <div class="event-item clickable" onclick="playCard(this, 'Coldplay', 'Music of the Spheres')">
-                        <img class="event-img" src="https://picsum.photos/seed/coldplayevent/120/120" alt="Coldplay"
-                            onerror="this.style.background='#0077b6';this.removeAttribute('src')">
-                        <div class="event-info">
-                            <h4>Coldplay</h4>
-                            <p>Music of the Spheres</p>
-                            <span class="event-meta">📍 Mumbai · Jan 18–21, 2026 · ₹4,000</span>
-                        </div>
-                        <button class="event-rsvp-btn">Get Tickets</button>
-                    </div>
-                    <div class="event-item clickable" onclick="playCard(this, 'Dua Lipa', 'Radical Optimism Tour')">
-                        <img class="event-img" src="https://picsum.photos/seed/dualipaevent/120/120" alt="Dua Lipa"
-                            onerror="this.style.background='#7209b7';this.removeAttribute('src')">
-                        <div class="event-info">
-                            <h4>Dua Lipa</h4>
-                            <p>Radical Optimism Tour</p>
-                            <span class="event-meta">📍 Delhi · Mar 5, 2026 · ₹3,500</span>
-                        </div>
-                        <button class="event-rsvp-btn">Get Tickets</button>
-                    </div>
-                    <div class="event-item clickable" onclick="playCard(this, 'AR Rahman', 'Infinite Love Tour')">
-                        <img class="event-img" src="https://picsum.photos/seed/arrahman/120/120" alt="AR Rahman"
-                            onerror="this.style.background='#f4a261';this.removeAttribute('src')">
-                        <div class="event-info">
-                            <h4>AR Rahman</h4>
-                            <p>Infinite Love Tour</p>
-                            <span class="event-meta">📍 Bangalore · July 12, 2025 · ₹1,800</span>
-                        </div>
-                        <button class="event-rsvp-btn">Get Tickets</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- View: AI Review Analyzer -->
-            <div id="view-analyzer" class="content-view hidden">
-                <div class="analyzer-header">
-                    <h2 class="section-title"><i class="fa-solid fa-microchip"></i> Spotify Review Intelligence Engine
-                    </h2>
-                    <p style="color: var(--text-subdued); margin-bottom: 24px;">Analyze user reviews and identify pain
-                        points, unmet needs, and opportunities for music discovery.</p>
-                </div>
-
-                <!-- Section A: Data Ingestion & Batch Processing -->
-                <div id="analyzer-ingestion" class="analyzer-panel">
-                    <h3><i class="fa-solid fa-database"></i> Data Sources</h3>
-                    <div class="data-sources">
-                        <div class="data-badge"><i class="fa-brands fa-apple"></i> App Store Reviews</div>
-                        <div class="data-badge"><i class="fa-brands fa-google-play"></i> Play Store Reviews</div>
-                        <div class="data-badge"><i class="fa-brands fa-reddit"></i> Reddit Posts</div>
-                        <div class="data-badge"><i class="fa-solid fa-users"></i> Spotify Community</div>
-                    </div>
-                    <div class="upload-area">
-                        <p>Datasets detected: 5 files (~150,000+ reviews)</p>
-                        <button id="run-batch-btn" class="action-btn large green-btn">Run Batch Processing</button>
-                    </div>
-                </div>
-
-                <!-- Processing State (Hidden initially) -->
-                <div id="analyzer-processing" class="analyzer-panel hidden">
-                    <div class="processing-pipeline">
-                        <div class="pipeline-step active">
-                            <i class="fa-solid fa-file-import fa-spin"></i>
-                            <span>Ingesting Reviews...</span>
-                        </div>
-                        <div class="pipeline-step">
-                            <i class="fa-solid fa-brain"></i>
-                            <span>Intelligence Engine (Extracting Sentiment & Goals)...</span>
-                        </div>
-                        <div class="pipeline-step">
-                            <i class="fa-solid fa-chart-network"></i>
-                            <span>Insight Synthesizer (Finding Opportunities)...</span>
-                        </div>
-                    </div>
-                    <div class="progress-bar-container">
-                        <div class="progress-bar-fill" id="analyzer-progress"></div>
-                    </div>
-                </div>
-
-                <!-- Section C: Final Dashboard (Hidden initially) -->
-                <div id="analyzer-dashboard" class="hidden">
-                    <div class="dashboard-grid">
-                        <div class="dashboard-card">
-                            <h3>⚠️ Top Complaints</h3>
-                            <table class="analyzer-table">
-                                <thead>
-                                    <tr>
-                                        <th>Complaint</th>
-                                        <th>Frequency</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>Repetitive recommendations</td>
-                                        <td>34%</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Same artists</td>
-                                        <td>26%</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Discovery fatigue</td>
-                                        <td>19%</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <div class="dashboard-card highlight-card">
-                            <h3>💡 Top Opportunities</h3>
-                            <table class="analyzer-table">
-                                <thead>
-                                    <tr>
-                                        <th>Opportunity</th>
-                                        <th>Impact</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>Hidden Gems</td>
-                                        <td><span class="badge high">High</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Discovery Copilot</td>
-                                        <td><span class="badge very-high">Very High</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Context-Aware Discovery</td>
-                                        <td><span class="badge high">High</span></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <div class="dashboard-card full-width">
-                        <h3><i class="fa-solid fa-magnifying-glass-chart"></i> Extracted Sample Analysis</h3>
-                        <div class="sample-review">
-                            <div class="review-text">"Spotify keeps recommending the same artists and playlists.
-                                Discovery feels repetitive."</div>
-                            <div class="review-tags">
-                                <span class="tag pain-point">Pain Point: Repetitive</span>
-                                <span class="tag sentiment neg">Sentiment: Negative</span>
-                                <span class="tag root-cause">Root Cause: Overfitting algorithm</span>
-                                <span class="tag opportunity">Opportunity: Discovery Copilot</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </main>
-
-        <!-- Right Panel (Playing Info / Up Next) -->
-        <aside class="right-panel" id="right-panel">
-            <div class="now-playing-large">
-                <div class="cover-art-large bg-gradient-yellow" id="rp-cover">
-                    <img id="rp-img" src="" alt="Album Art"
-                        style="display:none; width:100%; height:100%; object-fit:cover; border-radius:8px;">
-                    <i class="fa-regular fa-face-smile rp-icon" style="font-size: 80px; color: #ffb703;"></i>
-                </div>
-                <div class="track-header">
-                    <h2 id="rp-title">Sunflower Skies</h2>
-                    <p id="rp-artist">Lila & The Bloom</p>
-                </div>
-                <div class="track-actions">
-                    <button class="action-btn active like-btn" title="Save to Liked Songs"><i
-                            class="fa-solid fa-heart"></i></button>
-                    <!-- Dislike button right next to like button -->
-                    <button class="action-btn dislike-btn" title="Don't play this"><i
-                            class="fa-solid fa-thumbs-down"></i></button>
-                    <button class="add-playlist-btn">Add to playlist +</button>
-                </div>
-
-                <div class="about-artist-card">
-                    <p class="card-label">ABOUT THE ARTIST</p>
-                    <h3 id="rp-about-artist">Lila & The Bloom</h3>
-                    <p class="artist-desc">Genre-bending sound shaped for happy moments. 1.2M monthly listeners.</p>
-                </div>
-
-                <div class="up-next-section">
-                    <p class="section-label">UP NEXT</p>
-                    <div id="up-next-list">
-                        <!-- Up next tracks injected here -->
-                        <div class="up-next-item">
-                            <div class="up-next-icon"><i class="fa-solid fa-music"></i></div>
-                            <div class="up-next-info">
-                                <h4>Waiting for session...</h4>
-                                <p>Select a mood to begin</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </aside>
-
-        <!-- Bottom Player -->
-        <footer class="bottom-player">
-            <div class="player-left">
-                <div class="now-playing-mini">
-                    <div class="cover-art-mini bg-gradient-yellow" id="bp-cover">
-                        <img id="bp-img" src="" alt="Album Art"
-                            style="display:none; width:100%; height:100%; object-fit:cover; border-radius:4px;">
-                        <i class="fa-regular fa-face-smile bp-icon"></i>
-                    </div>
-                    <div class="mini-info">
-                        <h4 id="bp-title">Sunflower Skies</h4>
-                        <p id="bp-artist">Lila & The Bloom</p>
-                    </div>
-                    <button class="action-btn active mini like-btn"><i class="fa-solid fa-heart"></i></button>
-                    <!-- Dislike button in bottom player too -->
-                    <button class="action-btn mini dislike-btn"><i class="fa-solid fa-thumbs-down"></i></button>
-                </div>
-            </div>
-
-            <div class="player-center">
-                <div class="player-controls">
-                    <button class="control-btn"><i class="fa-solid fa-shuffle"></i></button>
-                    <button class="control-btn"><i class="fa-solid fa-backward-step"></i></button>
-                    <button class="control-btn play-pause"><i class="fa-solid fa-play"></i></button>
-                    <button class="control-btn"><i class="fa-solid fa-forward-step"></i></button>
-                    <button class="control-btn"><i class="fa-solid fa-repeat"></i></button>
-                </div>
-                <div class="playback-bar">
-                    <span class="time">0:00</span>
-                    <div class="progress-bar">
-                        <div class="progress-fill"></div>
-                    </div>
-                    <span class="time" id="bp-duration">2:26</span>
-                </div>
-            </div>
-
-            <div class="player-right">
-                <button class="control-btn"><i class="fa-solid fa-microphone"></i></button>
-                <button class="control-btn"><i class="fa-solid fa-list-ul"></i></button>
-                <button class="control-btn"><i class="fa-solid fa-laptop"></i></button>
-                <div class="volume-control">
-                    <button class="control-btn"><i class="fa-solid fa-volume-high"></i></button>
-                    <div class="progress-bar volume-bar">
-                        <div class="progress-fill" style="width: 70%;"></div>
-                    </div>
-                </div>
-            </div>
-        </footer>
+  <!-- Discovery Progress Widget -->
+  <div class="ep-disc-widget card-elevate" id="disc-widget">
+    <div class="ep-disc-widget-title">Discovery Progress</div>
+    <div class="ep-disc-body">
+      <div class="ep-ring-wrap">
+        <svg width="60" height="60" viewBox="0 0 60 60">
+          <circle cx="30" cy="30" r="24" stroke="#333" stroke-width="3" fill="none"/>
+          <circle cx="30" cy="30" r="24" stroke="#1ed760" stroke-width="3" fill="none"
+            stroke-dasharray="150.8" stroke-dashoffset="42.2" stroke-linecap="round" id="disc-ring"/>
+        </svg>
+        <div class="ep-ring-score"><span class="rn">72</span><span class="rd">/100</span></div>
+      </div>
+      <div class="ep-disc-metrics">
+        <div class="ep-disc-metric"><strong>+18</strong> New Artists</div>
+        <div class="ep-disc-metric"><strong>+7</strong> Genres</div>
+        <div class="ep-disc-metric"><strong>+3</strong> Languages</div>
+        <div class="ep-disc-metric"><strong>24</strong> Hidden Gems</div>
+      </div>
     </div>
+    <a href="#" class="ep-disc-link" id="view-progress">View Progress <i class="fa-solid fa-arrow-right"></i></a>
+  </div>
+</nav>
 
-    <script src="script.js"></script>
+<!-- ════════════════ MAIN ════════════════ -->
+<main class="ep-main" id="ep-main">
+  <div id="view-explore">
+  <header class="ep-page-header">
+    <div>
+      <h1>Explore <span class="ep-beta">BETA</span></h1>
+      <p class="ep-page-sub">AI-powered music discovery, built around you.</p>
+    </div>
+    <div class="ep-header-right">
+      <button class="ep-icon-btn ripple-active" id="notify-btn"><i class="fa-regular fa-bell"></i></button>
+      <img src="https://picsum.photos/seed/userprofile42/60/60" alt="Profile" class="ep-profile img-zoom">
+    </div>
+  </header>
+
+  <div class="ep-body">
+
+    <!-- Search -->
+    <section>
+      <div class="ep-search-wrap">
+        <div class="ep-search-bar" id="search-bar">
+          <i class="fa-solid fa-magnifying-glass ep-search-icon"></i>
+          <input type="text" id="search-input" class="ep-search-input"
+            placeholder="What do you want to discover today?" autocomplete="off" spellcheck="false">
+          <button class="ep-mic-btn" id="mic-btn"><i class="fa-solid fa-microphone"></i></button>
+        </div>
+        <div class="ep-suggestions" id="search-suggestions">
+          <div class="ep-sug-loading" id="sug-loading">
+            <div class="ep-sug-dots"><span></span><span></span><span></span></div>
+            <span class="ep-sug-loading-text">Finding your next discovery...</span>
+          </div>
+          <div id="sug-list">
+            <!-- Results populate here via JS -->
+          </div>
+        </div>
+      </div>
+      <!-- Chips -->
+      <div class="ep-chips" id="chips">
+        <button class="ep-chip ripple-active" data-journey="rainy">🌧 Rainy Drive</button>
+        <button class="ep-chip ripple-active" data-journey="gems">💎 Hidden Gems</button>
+        <button class="ep-chip ripple-active" data-journey="indie">🎸 Indie India</button>
+        <button class="ep-chip ripple-active" data-journey="arijit">🎤 Like Arijit</button>
+        <button class="ep-chip ripple-active" data-journey="surprise">✨ Surprise Me</button>
+      </div>
+    </section>
+
+    <!-- Slider -->
+    <section class="ep-slider-section">
+      <div class="ep-slider-labels">
+        <span class="ep-slider-lbl">Comfort <small id="familiar-pct">60% Familiar</small></span>
+        <span class="ep-slider-lbl">Adventure <small id="new-pct">40% New</small></span>
+      </div>
+      <input type="range" min="0" max="100" value="40" class="ep-range" id="disc-slider">
+    </section>
+
+    <!-- Journey -->
+    <section>
+      <div class="ep-sec-hdr">
+        <span class="ep-sec-title">Your Discovery Journey</span>
+        <a href="#" class="ep-sec-link" id="see-all-journey">See all <i class="fa-solid fa-chevron-right"></i></a>
+      </div>
+      <div class="ep-journey-row" id="journey-row"></div>
+    </section>
+
+    <!-- Recommendation Card -->
+    <section>
+      <div class="ep-sec-hdr"><span class="ep-sec-title">Recommended for You</span></div>
+      <div class="ep-rec-card card-elevate" id="rec-card">
+        <div class="ep-rec-art-col">
+          <div class="ep-art-wrap">
+            <img class="ep-art-img" id="rec-img" src="https://i.scdn.co/image/ab67616d0000b273b400780212f8674d825f1d7d" alt="Album art">
+            <span class="ep-match" id="rec-match">92% Match</span>
+          </div>
+          <button class="ep-rec-play ripple-active" id="rec-play"><i class="fa-solid fa-play" id="rec-play-icon"></i></button>
+        </div>
+        <div class="ep-rec-info">
+          <div class="ep-rec-title-row">
+            <div>
+              <div class="ep-rec-song" id="rec-song">Alag Aasman</div>
+              <div class="ep-rec-artist" id="rec-artist">Anuv Jain</div>
+            </div>
+            <div class="ep-rec-acts">
+              <button class="ep-act ripple-active" id="rec-like" title="Like"><i class="fa-regular fa-heart"></i></button>
+              <button class="ep-act ripple-active" id="rec-dislike" title="Dislike"><i class="fa-solid fa-thumbs-down"></i></button>
+              <button class="ep-act ripple-active" id="rec-more" title="More"><i class="fa-solid fa-ellipsis"></i></button>
+            </div>
+          </div>
+          <!-- Why Accordion -->
+          <div class="ep-accordion" id="why-acc">
+            <div class="ep-acc-header" id="why-toggle">
+              <span class="ep-why-label">Why this song?</span>
+              <i class="fa-solid fa-chevron-down ep-acc-icon"></i>
+            </div>
+            <div class="ep-acc-body">
+              <ul class="ep-reasons" id="why-reasons">
+                <!-- Injected via JS -->
+              </ul>
+            </div>
+          </div>
+        </div>
+        <!-- Versions -->
+        <div class="ep-versions-col">
+          <div class="ep-ver-label">Versions</div>
+          <ul class="ep-ver-list" id="versions-list">
+            <li class="v-on" data-ver="Original" data-dur="3:48">Original <span class="v-dot"></span></li>
+            <li data-ver="Acoustic" data-dur="4:02">Acoustic <span class="v-dot"></span></li>
+            <li data-ver="Studio" data-dur="3:45">Studio <span class="v-dot"></span></li>
+            <li data-ver="Live" data-dur="5:17">Live <span class="v-dot"></span></li>
+            <li data-ver="Instrumental" data-dur="3:48">Instrumental <span class="v-dot"></span></li>
+            <li class="v-spotify" data-ver="Spotify Original" data-dur="4:10"><i class="fa-brands fa-spotify"></i> Spotify Original <span class="v-dot"></span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+  </div>
+  </div><!-- /view-explore -->
+  
+  <div id="view-placeholder" class="ep-placeholder-view" style="display: none;">
+    <i class="fa-solid fa-person-digging"></i>
+    <h2 id="placeholder-title">Coming Soon</h2>
+    <p>This page is currently under construction. Check out the <a href="/" class="nav-link ep-disc-link" data-route="/explore" style="display:inline-block; font-size:14px; margin-left:4px;">Explore</a> experience instead!</p>
+  </div>
+</main>
+
+<!-- ════════════════ STUDIO COLUMN ════════════════ -->
+<aside class="ep-studio-col" id="studio-col">
+  <div class="ep-studio-hdr">
+    <span class="ep-studio-title">Spotify Studio</span>
+    <i class="fa-solid fa-chevron-right" style="color:#b3b3b3;font-size:12px;"></i>
+  </div>
+  <p class="ep-studio-sub">Exclusive music experiences</p>
+  <ul class="ep-studio-items">
+    <li class="ep-si" data-studio="live" tabindex="0">
+      <div class="ep-si-img-wrap"><img class="ep-si-thumb" src="https://i.scdn.co/image/ab67706c0000da84577889e472cecc2d4ea9e0ab" alt="Live Sessions"></div>
+      <div><h4>Live Sessions</h4><p>Exclusive live performances <span class="ep-snew">NEW</span></p></div>
+    </li>
+    <li class="ep-si" data-studio="originals" tabindex="0">
+      <div class="ep-si-img-wrap"><img class="ep-si-thumb" src="https://picsum.photos/seed/studioorg88/60/60" alt="Studio Originals"></div>
+      <div><h4>Studio Originals</h4><p>Spotify-recorded versions <span class="ep-snew">NEW</span></p></div>
+    </li>
+    <li class="ep-si" data-studio="behind" tabindex="0">
+      <div class="ep-si-img-wrap"><img class="ep-si-thumb" src="https://i.scdn.co/image/ab67706c0000da84a95ea81b5fc912304b4c730e" alt="Behind the Song"></div>
+      <div><h4>Behind the Song</h4><p>Stories from artists <span class="ep-snew">NEW</span></p></div>
+    </li>
+    <li class="ep-si" data-studio="early" tabindex="0">
+      <div class="ep-si-img-wrap"><img class="ep-si-thumb" src="https://i.scdn.co/image/ab67706c0000da8445163ed037785c4bf2ec7a25" alt="Early Releases"></div>
+      <div><h4>Early Releases</h4><p>Hear new music first <span class="ep-snew">NEW</span></p></div>
+    </li>
+    <li class="ep-si" data-studio="commentary" tabindex="0">
+      <div class="ep-si-img-wrap"><img class="ep-si-thumb" src="https://i.scdn.co/image/ab67706c0000da84e1b8b8d00d234ba443c3327f" alt="Commentary"></div>
+      <div><h4>Artist Commentary</h4><p>Hear it from the artist <span class="ep-snew">NEW</span></p></div>
+    </li>
+  </ul>
+  <div class="ep-premium-note" style="margin-top:16px;">
+    <i class="fa-brands fa-spotify"></i><span>Premium-only exclusive content</span>
+  </div>
+</aside>
+
+<!-- ════════════════ PLAYER ════════════════ -->
+<footer class="ep-player">
+  <div class="pl-left">
+    <div class="pl-now-playing">
+      <div class="pl-cover"><img src="https://i.scdn.co/image/ab67616d0000b273b400780212f8674d825f1d7d" alt="" id="pl-thumb"></div>
+      <div class="pl-info"><h4 id="pl-title">Alag Aasman</h4><p id="pl-artist">Anuv Jain</p></div>
+    </div>
+    <div class="pl-actions">
+      <button class="pl-btn ripple-active" id="pl-like"><i class="fa-regular fa-heart"></i></button>
+      <button class="pl-btn ripple-active" id="pl-dislike"><i class="fa-solid fa-thumbs-down"></i></button>
+    </div>
+  </div>
+  <div class="pl-center">
+    <div class="ep-controls">
+      <button class="ctrl" id="ctrl-shuffle"><i class="fa-solid fa-shuffle"></i></button>
+      <button class="ctrl ripple-active" id="ctrl-prev"><i class="fa-solid fa-backward-step"></i></button>
+      <button class="ctrl play-btn ripple-active" id="ctrl-play"><i class="fa-solid fa-play" id="ctrl-play-icon"></i></button>
+      <button class="ctrl ripple-active" id="ctrl-next"><i class="fa-solid fa-forward-step"></i></button>
+      <button class="ctrl" id="ctrl-repeat"><i class="fa-solid fa-repeat"></i></button>
+    </div>
+    <div class="ep-pb-row">
+      <span class="ep-time" id="pl-cur">0:00</span>
+      <div class="ep-pb" id="pl-pb"><div class="ep-pb-fill" id="pl-fill" style="width:0%"><div class="ep-pb-handle"></div></div></div>
+      <span class="ep-time r" id="pl-tot">3:48</span>
+    </div>
+  </div>
+  <div class="pl-right">
+    <button class="ctrl"><i class="fa-solid fa-microphone"></i></button>
+    <button class="ctrl"><i class="fa-solid fa-list-ul"></i></button>
+    <button class="ctrl"><i class="fa-solid fa-computer"></i></button>
+    <div class="ep-vol">
+      <button class="ctrl" id="vol-btn"><i class="fa-solid fa-volume-high"></i></button>
+      <div class="ep-vol-bar" id="vol-bar"><div class="ep-vol-fill" id="vol-fill"></div></div>
+    </div>
+    <button class="ctrl"><i class="fa-solid fa-up-right-and-down-left-from-center"></i></button>
+  </div>
+</footer>
+
+</div><!-- /ep-layout -->
+
+<!-- ════════════════ OVERLAYS ════════════════ -->
+<div class="ep-backdrop" id="backdrop"></div>
+
+<!-- Artist Modal -->
+<div class="ep-artist-modal" id="artist-modal">
+  <div class="ep-modal-hero">
+    <img src="" alt="" id="modal-hero">
+    <button class="ep-modal-close" id="modal-close"><i class="fa-solid fa-xmark"></i></button>
+  </div>
+  <div class="ep-modal-body">
+    <img src="" alt="" class="ep-modal-avatar" id="modal-avatar">
+    <div class="ep-modal-name" id="modal-name"></div>
+    <div class="ep-modal-monthly" id="modal-monthly"></div>
+    <div class="ep-modal-genres" id="modal-genres"></div>
+    <div class="ep-modal-actions">
+      <button class="ep-modal-play-big ripple-active" id="modal-play"><i class="fa-solid fa-play"></i></button>
+      <button class="ep-follow ripple-active" id="modal-follow">Follow</button>
+      <button class="ep-act ripple-active" style="font-size:20px;" id="modal-save"><i class="fa-regular fa-bookmark"></i></button>
+    </div>
+    <div class="ep-modal-section">Popular Tracks</div>
+    <ul class="ep-modal-tracks" id="modal-tracks"></ul>
+    <div class="ep-modal-section">You might also like</div>
+    <div class="ep-similar-chips" id="modal-similar"></div>
+  </div>
+</div>
+
+<!-- Studio Drawer -->
+<div class="ep-drawer" id="studio-drawer">
+  <button class="ep-drawer-close" id="drawer-close"><i class="fa-solid fa-xmark"></i></button>
+  <img src="" alt="" class="ep-drawer-hero" id="drawer-hero">
+  <div class="ep-drawer-body">
+    <div class="ep-drawer-tag" id="drawer-tag"></div>
+    <div class="ep-drawer-title" id="drawer-title"></div>
+    <div class="ep-drawer-desc" id="drawer-desc"></div>
+    <button class="ep-drawer-cta ripple-active" id="drawer-play"><i class="fa-solid fa-play"></i> Play Now</button>
+    <ul class="ep-drawer-list" id="drawer-list"></ul>
+  </div>
+</div>
+
+<!-- Progress Modal -->
+<div class="ep-progress-modal" id="progress-modal">
+  <button class="ep-pm-close" id="pm-close"><i class="fa-solid fa-xmark"></i></button>
+  <div class="ep-pm-content">
+    <div class="ep-pm-title">Your Discovery Score</div>
+    <div class="ep-pm-sub">You're exploring more music than 84% of listeners in your taste profile.</div>
+    <div class="ep-pm-grid">
+      <div class="ep-pm-card wide ep-pm-wide-body">
+        <div>
+          <div class="ep-pm-card-label">Overall Score</div>
+          <div class="ep-pm-ring-wrap">
+            <svg width="120" height="120" viewBox="0 0 120 120">
+              <circle cx="60" cy="60" r="50" stroke="#2a2a2a" stroke-width="6" fill="none"/>
+              <circle cx="60" cy="60" r="50" stroke="#1ed760" stroke-width="6" fill="none"
+                stroke-dasharray="314" stroke-dashoffset="87.9" stroke-linecap="round" id="pm-ring"/>
+            </svg>
+            <div class="ep-pm-ring-score"><span class="pn">72</span><span class="pd">/100</span></div>
+          </div>
+        </div>
+        <div style="flex:2">
+          <div class="ep-pm-card-label">Weekly Growth</div>
+          <div class="ep-pm-chart" id="pm-chart"></div>
+        </div>
+      </div>
+      <div class="ep-pm-card"><div class="ep-pm-card-label">New Artists</div><div class="ep-pm-big" style="color:#1ed760">+18</div><div class="ep-pm-big-sub">This month</div></div>
+      <div class="ep-pm-card"><div class="ep-pm-card-label">Genres Explored</div><div class="ep-pm-big" style="color:#3b82f6">+7</div><div class="ep-pm-big-sub">New territory</div></div>
+      <div class="ep-pm-card"><div class="ep-pm-card-label">Languages</div><div class="ep-pm-big" style="color:#f59e0b">+3</div><div class="ep-pm-big-sub">Hindi, English, Japanese</div></div>
+      <div class="ep-pm-card"><div class="ep-pm-card-label">Hidden Gems</div><div class="ep-pm-big" style="color:#a78bfa">24</div><div class="ep-pm-big-sub">Under 100K listeners</div></div>
+    </div>
+    <div class="ep-pm-card"><div class="ep-pm-card-label">Recently Discovered</div><div class="ep-pm-recent" id="pm-recent"></div></div>
+  </div>
+</div>
+
+<!-- Dislike Sheet -->
+<div class="ep-dislike-sheet" id="dislike-sheet">
+  <div class="ep-sheet-handle"></div>
+  <div class="ep-sheet-title">Why not this song?</div>
+  <div class="ep-sheet-sub">Help improve your recommendations.</div>
+  <ul class="ep-sheet-options">
+    <li class="ep-sheet-opt" data-reason="wrong-mood"><i class="fa-regular fa-face-meh"></i> Wrong mood right now</li>
+    <li class="ep-sheet-opt" data-reason="too-popular"><i class="fa-solid fa-fire"></i> Too mainstream</li>
+    <li class="ep-sheet-opt" data-reason="know-it"><i class="fa-solid fa-circle-check"></i> Already know this song</li>
+    <li class="ep-sheet-opt" data-reason="dont-like-artist"><i class="fa-solid fa-ban"></i> Don't like this artist</li>
+    <li class="ep-sheet-opt" data-reason="no-genre"><i class="fa-solid fa-guitar"></i> Don't recommend this genre</li>
+    <li class="ep-sheet-opt" data-reason="other"><i class="fa-solid fa-ellipsis"></i> Other</li>
+  </ul>
+  <button class="ep-sheet-cancel ripple-active" id="sheet-cancel">Cancel</button>
+</div>
+
+<!-- Toasts -->
+<div class="ep-toasts" id="toast-container"></div>
+
+<!-- Demo Mode -->
+<button class="ep-demo-btn ripple-active" id="demo-btn"><i class="fa-solid fa-play"></i> Demo</button>
+<div class="ep-demo-panel" id="demo-panel">
+  <div class="ep-demo-phdr">
+    <h3>🎭 Demo Mode</h3>
+    <p>Experience the full product in under 60 seconds</p>
+  </div>
+  <ul class="ep-demo-scenarios">
+    <li class="ep-demo-sc" data-sc="0"><div class="ep-demo-num">1</div><div><h4>Bored with my playlist</h4><p>Discover something completely new</p></div></li>
+    <li class="ep-demo-sc" data-sc="1"><div class="ep-demo-num">2</div><div><h4>Like Arijit, not mainstream</h4><p>Find hidden similar artists</p></div></li>
+    <li class="ep-demo-sc" data-sc="2"><div class="ep-demo-num">3</div><div><h4>Hidden indie artists</h4><p>Explore the underground scene</p></div></li>
+    <li class="ep-demo-sc" data-sc="3"><div class="ep-demo-num">4</div><div><h4>Music for a rainy drive</h4><p>Mood-based discovery</p></div></li>
+    <li class="ep-demo-sc" data-sc="4"><div class="ep-demo-num">5</div><div><h4>Explore Japanese indie</h4><p>Cross-cultural journey</p></div></li>
+  </ul>
+</div>
+<div class="ep-demo-progress" id="demo-bar">
+  <div class="ep-demo-dot"></div>
+  <span id="demo-step-text">Running demo...</span>
+  <button class="ep-demo-skip" id="demo-skip">Skip</button>
+</div>
+
+<!-- ════════════════ JAVASCRIPT ENGINE ════════════════ -->
+<script>
+'use strict';
+/* ================================================================
+   EXPLORE BETA — INTERACTIVE ENGINE
+================================================================ */
+
+// ── ROUTING ────────────────────────────────────────────────────
+function handleRoute(path) {
+  if (window.location.pathname !== path) {
+    window.history.pushState({}, '', path);
+  }
+  
+  document.querySelectorAll('.ep-nav a, .ep-nav-secondary a, .nav-link').forEach(el => {
+    el.classList.remove('ep-active');
+    if (el.getAttribute('data-route') === path) {
+      el.classList.add('ep-active');
+    }
+  });
+  
+  // Special case: if path is '/' activate Home
+  if (path === '/' || path === '/index.html') {
+    const homeLink = document.querySelector('.ep-nav a[data-route="/"]');
+    if (homeLink) homeLink.classList.add('ep-active');
+  }
+
+  const isExplore = path === '/' || path === '/explore' || path === '/index.html';
+  document.getElementById('view-explore').style.display = isExplore ? 'block' : 'none';
+  document.getElementById('view-placeholder').style.display = isExplore ? 'none' : 'flex';
+
+  if (!isExplore) {
+    const titles = {
+      '/search': 'Search',
+      '/library': 'Your Library',
+      '/create': 'Create Playlist',
+      '/liked': 'Liked Songs'
+    };
+    document.getElementById('placeholder-title').textContent = titles[path] || 'Coming Soon';
+  }
+}
+
+window.addEventListener('popstate', () => {
+  handleRoute(window.location.pathname);
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.nav-link').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      handleRoute(link.getAttribute('data-route'));
+    });
+  });
+  handleRoute(window.location.pathname);
+});
+
+// ── UTILS ──────────────────────────────────────────────────────
+const $  = id => document.getElementById(id);
+const $$ = sel => document.querySelectorAll(sel);
+const wait = ms => new Promise(r => setTimeout(r, ms));
+const fmt = sec => { const m=Math.floor(sec/60),s=String(Math.floor(sec%60)).padStart(2,'0'); return `${m}:${s}`; };
+const parseDur = str => { const [m,s]=(str||'0:00').split(':').map(Number); return m*60+(s||0); };
+
+// ── DATA ───────────────────────────────────────────────────────
+const A = {
+  arijit: { id:'arijit', name:'Arijit Singh', photo:'https://i.scdn.co/image/ab6761610000e5eb0261696c5df3be99da6ed3f3', monthly:'45.2M monthly listeners', genres:['Bollywood','Hindi Pop','Romantic Ballad'], tracks:[{ t:'Tum Hi Ho', al:'Aashiqui 2', d:'4:22', img:'https://i.scdn.co/image/ab67616d0000b2735a37e52cf07ca6efcd45baf0'},{ t:'Channa Mereya', al:'Ae Dil Hai Mushkil', d:'4:50', img:'https://picsum.photos/seed/channamereyaalbum/60/60'},{ t:'Ae Dil Hai Mushkil', al:'Ae Dil Hai Mushkil', d:'4:28', img:'https://picsum.photos/seed/aedilalbum/60/60'}], similar:['Prateek Kuhad','Darshan Raval','Jubin Nautiyal'], label:'You love' },
+  prateek: { id:'prateek', name:'Prateek Kuhad', photo:'https://i.scdn.co/image/ab6761610000e5eb21b033d59e37cc60a6cb6e72', monthly:'3.1M monthly listeners', genres:['Indie Pop','Folk','Acoustic'], tracks:[{ t:'Kasoor', al:'cold/mess', d:'4:18', img:'https://picsum.photos/seed/kasooralb55/60/60'},{ t:'cold/mess', al:'cold/mess', d:'3:52', img:'https://picsum.photos/seed/coldmessalb/60/60'},{ t:'With You / For You', al:'with you / for you', d:'3:37', img:'https://picsum.photos/seed/withyoufor/60/60'}], similar:['Anuv Jain','The Local Train','When Chai Met Toast'], label:'Similar vibe' },
+  anuv: { id:'anuv', name:'Anuv Jain', photo:'https://i.scdn.co/image/ab6761610000e5ebc40600e02356f99fbf422594', monthly:'2.4M monthly listeners', genres:['Indie Pop','Acoustic','Soft Pop'], tracks:[{ t:'Alag Aasman', al:'Alag Aasman', d:'3:48', img:'https://i.scdn.co/image/ab67616d0000b273b400780212f8674d825f1d7d'},{ t:'Baarishein', al:'Baarishein', d:'4:02', img:'https://picsum.photos/seed/baarisheinalb/60/60'},{ t:'RIHA', al:'RIHA', d:'3:45', img:'https://picsum.photos/seed/rihaalb/60/60'}], similar:['Prateek Kuhad','The Local Train','Lifafa'], label:'Fresh discovery' },
+  lifafa: { id:'lifafa', name:'Lifafa', photo:'https://i.scdn.co/image/ab6761610000e5ebb19af0ea736c6228d6eb539c', monthly:'412K monthly listeners', genres:['Electronic','Indie Pop','Hindi Psychedelic'], tracks:[{ t:'Akela', al:'Jaana', d:'4:10', img:'https://picsum.photos/seed/akelaalb/60/60'},{ t:'Jaana', al:'Jaana', d:'3:56', img:'https://picsum.photos/seed/jaanaalb/60/60'},{ t:'Kho Gaye Hum', al:'Jaana', d:'4:22', img:'https://picsum.photos/seed/khogayealb/60/60'}], similar:['Easy Wanderlings','When Chai Met Toast','Dhruv'], label:'Hidden Gem' },
+  talha: { id:'talha', name:'Talha Anjum', photo:'https://i.scdn.co/image/ab6761610000e5eb98544d640ff1c93a743a14cc', monthly:'1.8M monthly listeners', genres:['Desi Hip-Hop','Rap','Urdu Pop'], tracks:[{ t:'BAARAT', al:'NAYA SAAL', d:'3:12', img:'https://picsum.photos/seed/baaratalb/60/60'},{ t:'Whisky', al:'Whisky', d:'3:28', img:'https://picsum.photos/seed/whiskyalb/60/60'},{ t:'Foji', al:'Foji', d:'2:55', img:'https://picsum.photos/seed/fojialb/60/60'}], similar:['Seedhe Maut','KRSNA','Shah Rule'], label:'Different culture' },
+  localTrain: { id:'localTrain', name:'The Local Train', photo:'https://picsum.photos/seed/localtrain7474/400/400', monthly:'5.6M monthly listeners', genres:['Indie Rock','Hindi Rock','Alternative'], tracks:[{ t:'Aaoge Tum Kabhi', al:'Aalas Ka Pedha', d:'4:45', img:'https://picsum.photos/seed/aaogealb/60/60'},{ t:'Teri Khair Mangdi', al:'Aalas Ka Pedha', d:'3:52', img:'https://picsum.photos/seed/teri88alb/60/60'},{ t:'Khoya', al:'Khoya', d:'4:18', img:'https://picsum.photos/seed/khoyaalb/60/60'}], similar:['When Chai Met Toast','Prateek Kuhad','Dhruv Visvanath'], label:'Comfort zone' },
+  wCMT: { id:'wCMT', name:'When Chai Met Toast', photo:'https://picsum.photos/seed/whenchaimttoast99/400/400', monthly:'1.2M monthly listeners', genres:['Indie Folk','Malayalam Pop','Acoustic'], tracks:[{ t:'Moana', al:'When Chai Met Toast', d:'4:12', img:'https://picsum.photos/seed/moanawcmtalb/60/60'},{ t:'Khoj', al:'Khoj', d:'3:48', img:'https://picsum.photos/seed/khojwcmtalb/60/60'},{ t:'Anth Nahi', al:'Anth Nahi', d:'4:02', img:'https://picsum.photos/seed/anthnahi99/60/60'}], similar:['Easy Wanderlings','The Local Train','Prateek Kuhad'], label:'Hidden Gem' },
+  seedhe: { id:'seedhe', name:'Seedhe Maut', photo:'https://picsum.photos/seed/seedhemaut88/400/400', monthly:'2.1M monthly listeners', genres:['Desi Hip-Hop','Indian Rap','Delhi Indie'], tracks:[{ t:'Nanchaku', al:'Nayaab', d:'3:15', img:'https://picsum.photos/seed/nanchakualb/60/60'},{ t:'Batti', al:'Nayaab', d:'2:58', img:'https://picsum.photos/seed/battialb/60/60'}], similar:['Talha Anjum','KRSNA','Prabh Deep'], label:'High Energy' },
+  talwiinder: { id:'talwiinder', name:'Talwiinder', photo:'https://picsum.photos/seed/talwiinder99/400/400', monthly:'1.9M monthly listeners', genres:['Punjabi Pop','Indie Punjabi'], tracks:[{ t:'Gallan 4', al:'Gallan', d:'3:22', img:'https://picsum.photos/seed/gallan4alb/60/60'},{ t:'Kamli', al:'Kamli', d:'2:45', img:'https://picsum.photos/seed/kamlialb/60/60'}], similar:['AP Dhillon','Diljit Dosanjh','The Local Train'], label:'Trending' },
+  aurora: { id:'aurora', name:'Aurora', photo:'https://picsum.photos/seed/aurora77/400/400', monthly:'8.4M monthly listeners', genres:['Art Pop','Norwegian Pop'], tracks:[{ t:'Runaway', al:'All My Demons', d:'4:08', img:'https://picsum.photos/seed/runawayalb/60/60'},{ t:'Cure For Me', al:'The Gods We Can Touch', d:'3:18', img:'https://picsum.photos/seed/cureformealb/60/60'}], similar:['Florence + The Machine','Novo Amor','Phoebe Bridgers'], label:'Ethereal' },
+  phoebe: { id:'phoebe', name:'Phoebe Bridgers', photo:'https://picsum.photos/seed/phoebebridgers22/400/400', monthly:'6.5M monthly listeners', genres:['Indie Pop','Folk Pop'], tracks:[{ t:'Motion Sickness', al:'Stranger in the Alps', d:'3:49', img:'https://picsum.photos/seed/motionsicknessalb/60/60'},{ t:'Kyoto', al:'Punisher', d:'3:04', img:'https://picsum.photos/seed/kyotoalb/60/60'}], similar:['Julien Baker','Lucy Dacus','Japanese Breakfast'], label:'Emotional' },
+  lany: { id:'lany', name:'LANY', photo:'https://picsum.photos/seed/lany99/400/400', monthly:'7.2M monthly listeners', genres:['Indie Pop','Synth-Pop'], tracks:[{ t:'ILYSB', al:'LANY', d:'3:31', img:'https://picsum.photos/seed/ilysbalb/60/60'},{ t:'Malibu Nights', al:'Malibu Nights', d:'4:46', img:'https://picsum.photos/seed/malibunightsalb/60/60'}], similar:['The 1975','Lauv','Troye Sivan'], label:'Late Night' },
+  jBreakfast: { id:'jBreakfast', name:'Japanese Breakfast', photo:'https://picsum.photos/seed/japanesebreakfast77/400/400', monthly:'2.9M monthly listeners', genres:['Indie Pop','Art Pop','Dream Pop'], tracks:[{ t:'Paprika', al:'Jubilee', d:'4:41', img:'https://picsum.photos/seed/paprikajbalb/60/60'},{ t:'Be Sweet', al:'Jubilee', d:'3:47', img:'https://picsum.photos/seed/besweetalb/60/60'}], similar:['Phoebe Bridgers','Soccer Mommy','Novo Amor'], label:'Global rec' },
+  novoAmor: { id:'novoAmor', name:'Novo Amor', photo:'https://picsum.photos/seed/novoamorphoto88/400/400', monthly:'1.8M monthly listeners', genres:['Indie Folk','Dream Pop','Acoustic'], tracks:[{ t:'Anchor', al:'Woodgate, NY', d:'3:38', img:'https://picsum.photos/seed/anchoralb/60/60'},{ t:'State Lines', al:'Birthplace', d:'4:05', img:'https://picsum.photos/seed/statelinesalb/60/60'}], similar:['Bon Iver','Aurora'], label:'Global rec' },
+};
+
+const JOURNEYS = {
+  default:  [A.arijit, A.prateek, A.anuv, A.lifafa, A.talha, A.lany, A.aurora],
+  rainy:    [A.prateek, A.anuv, A.phoebe, A.novoAmor, A.lifafa, A.wCMT, A.lany],
+  gems:     [A.wCMT, A.lifafa, A.prateek, A.talwiinder, A.talha, A.novoAmor, A.jBreakfast],
+  indie:    [A.localTrain, A.wCMT, A.prateek, A.anuv, A.lifafa, A.seedhe, A.talwiinder],
+  arijit:   [A.arijit, A.prateek, A.anuv, A.localTrain, A.wCMT, A.lifafa, A.novoAmor],
+  surprise: [A.seedhe, A.talha, A.lifafa, A.aurora, A.jBreakfast, A.phoebe, A.lany],
+  japanese: [A.jBreakfast, A.aurora, A.phoebe, A.novoAmor, A.lany, A.prateek, A.anuv]
+};
+
+const SONGS = {
+  default:  { title:'Alag Aasman', artist:'Anuv Jain', dur:'3:48', img:'https://i.scdn.co/image/ab67616d0000b273b400780212f8674d825f1d7d', match:92, reasons:[['Similar vocals to your favourites','89%'],['You liked Prateek Kuhad','92%'],['Acoustic preference match','85%'],['Less mainstream (28K listeners)','78%']] },
+  rainy:    { title:'Motion Sickness', artist:'Phoebe Bridgers', dur:'3:49', img:'https://picsum.photos/seed/motionsicknessalb/250/250', match:89, reasons:[['Perfect for introspective moods','91%'],['Acoustic-driven sound you prefer','88%'],['Matches rainy-day playlist energy','85%']] },
+  gems:     { title:'Moana', artist:'When Chai Met Toast', dur:'4:12', img:'https://picsum.photos/seed/moanawcmt2024/250/250', match:86, reasons:[['Under 1M listeners — hidden gem','96%'],['Acoustic folk matches your taste','82%'],['Similar to Prateek Kuhad you like','78%'],['Multi-lingual — new territory','71%']] },
+  indie:    { title:'Aaoge Tum Kabhi', artist:'The Local Train', dur:'4:45', img:'https://picsum.photos/seed/aaogenew2024/250/250', match:84, reasons:[['Indie rock in your listening history','87%'],['Hindi alternative you haven\'t tried','83%'],['Matches your acoustic preference','79%'],['Popular in your city right now','75%']] },
+  arijit:   { title:'cold/mess', artist:'Prateek Kuhad', dur:'3:52', img:'https://picsum.photos/seed/coldmessalb2024/250/250', match:94, reasons:[['92% vocal similarity to Arijit Singh','92%'],['Same emotional depth you love','89%'],['Less mainstream — 3M vs 45M listeners','95%'],['Acoustic — your #1 genre preference','88%']] },
+  surprise: { title:'Nanchaku', artist:'Seedhe Maut', dur:'3:15', img:'https://picsum.photos/seed/nanchakualb/250/250', match:71, reasons:[['Completely outside your comfort zone','96%'],['Top Desi Hip-Hop track of 2024','88%'],['High energy — new territory for you','82%'],['Exploration Level 80% — push harder','78%']] },
+  japanese: { title:'Paprika', artist:'Japanese Breakfast', dur:'4:41', img:'https://picsum.photos/seed/paprikacover24/250/250', match:79, reasons:[['Japanese-American indie pop gem','91%'],['Michelle Zauner — critically acclaimed','86%'],['Similar to Novo Amor you saved','80%'],['Opens your global listening journey','75%']] }
+};
+
+const STUDIO = {
+  live:        { tag:'LIVE SESSIONS', title:'Live at Electric Ballroom', desc:'Watch Prateek Kuhad perform his entire cold/mess album live in London. Intimate, raw, and completely unfiltered.', img:'https://i.scdn.co/image/ab67706c0000da84577889e472cecc2d4ea9e0ab', cta:'Watch Now', items:[{ t:'Kasoor (Live)', a:'Prateek Kuhad', img:'https://picsum.photos/seed/kasoorlive24/52/52'},{ t:'cold/mess (Live)', a:'Prateek Kuhad', img:'https://picsum.photos/seed/coldmesslive24/52/52'}] },
+  originals:   { tag:'STUDIO ORIGINALS', title:'Studio Sessions: Anuv Jain', desc:'Exclusive Spotify-recorded acoustic sessions from Anuv Jain. Songs recorded in a single take, exactly as he wrote them.', img:'https://picsum.photos/seed/studioorg88/400/400', cta:'Listen Now', items:[{ t:'Alag Aasman (Spotify Version)', a:'Anuv Jain', img:'https://picsum.photos/seed/anuvspot24/52/52'},{ t:'Baarishein (Stripped)', a:'Anuv Jain', img:'https://picsum.photos/seed/baarisheinstrip24/52/52'}] },
+  behind:      { tag:'BEHIND THE SONG', title:'The Story Behind Kasoor', desc:"Prateek Kuhad opens up about writing Kasoor at 3am after a heartbreak — the song that changed everything.", img:'https://i.scdn.co/image/ab67706c0000da84a95ea81b5fc912304b4c730e', cta:'Watch Story', items:[{ t:'Behind Kasoor — Interview', a:'Prateek Kuhad', img:'https://picsum.photos/seed/kasoorstory24/52/52'}] },
+  early:       { tag:'EARLY RELEASES', title:'Upcoming: Anuv Jain Album 2', desc:"Get first access to Anuv Jain's upcoming second studio album — two weeks before public release.", img:'https://i.scdn.co/image/ab67706c0000da8445163ed037785c4bf2ec7a25', cta:'Unlock Early', items:[{ t:'Track 1 (Unreleased)', a:'Anuv Jain', img:'https://picsum.photos/seed/anuvtrack124/52/52'}] },
+  commentary:  { tag:'ARTIST COMMENTARY', title:'Arijit on His Process', desc:"Arijit Singh walks through how he selects songs, prepares for sessions, and what inspired his most emotional recordings.", img:'https://i.scdn.co/image/ab67706c0000da84e1b8b8d00d234ba443c3327f', cta:'Listen Now', items:[{ t:'On singing Tum Hi Ho', a:'Arijit Singh', img:'https://picsum.photos/seed/arijitcomm124/52/52'}] }
+};
+
+const SEARCH_RESULTS_MOCK = [
+  { img:'https://picsum.photos/seed/tumhiho88/60/60', title:'Tum Hi Ho', artist:'Arijit Singh', dur:'4:22', genre:'Bollywood', pop:'98' },
+  { img:'https://picsum.photos/seed/motionsicknessalb/60/60', title:'Motion Sickness', artist:'Phoebe Bridgers', dur:'3:49', genre:'Indie Pop', pop:'82' },
+  { img:'https://picsum.photos/seed/battialb/60/60', title:'Batti', artist:'Seedhe Maut', dur:'2:58', genre:'Desi Hip-Hop', pop:'75' },
+  { img:'https://picsum.photos/seed/gallan4alb/60/60', title:'Gallan 4', artist:'Talwiinder', dur:'3:22', genre:'Punjabi Pop', pop:'88' },
+];
+
+const DEMO_SCENARIOS = [
+  { query:"I'm bored with my playlist, surprise me",     journey:'surprise', slider:80, song:'surprise', studio:'live' },
+  { query:'Songs like Arijit Singh but not mainstream',   journey:'arijit',   slider:55, song:'arijit',   studio:'behind' },
+  { query:'Find me hidden indie artists from India',      journey:'gems',     slider:70, song:'gems',     studio:'originals' },
+  { query:'I want songs for a rainy drive',               journey:'rainy',    slider:40, song:'rainy',    studio:'live' },
+  { query:'Take me into Japanese indie music',            journey:'japanese', slider:90, song:'japanese', studio:'commentary' },
+];
+
+// ── STATE ──────────────────────────────────────────────────────
+const S = {
+  playing: false, liked: false, disliked: false,
+  progress: 0, duration: 228, playerTick: null,
+  shuffle: false, repeat: false, volume: 0.7,
+  currentSong: SONGS.default, journeyKey: 'default',
+  demoRunning: false, demoCancelled: false,
+};
+
+// ── TOAST ──────────────────────────────────────────────────────
+function toast(msg, type='success') {
+  const icons = { success:'fa-circle-check', info:'fa-circle-info' };
+  const el = document.createElement('div');
+  el.className = `ep-toast ${type}`;
+  el.innerHTML = `<i class="fa-solid ${icons[type]||icons.success}"></i>${msg}`;
+  $('toast-container').appendChild(el);
+  setTimeout(() => { el.style.animation='toastOut .3s ease forwards'; setTimeout(()=>el.remove(),300); }, 2800);
+}
+
+// ── PLAYER ─────────────────────────────────────────────────────
+function loadSong(song, autoplay=false) {
+  S.currentSong = song; S.progress = 0; S.duration = parseDur(song.dur);
+  S.liked = false; S.disliked = false;
+  $('rec-img').src = song.img; $('rec-song').textContent = song.title;
+  $('rec-artist').textContent = song.artist; $('rec-match').textContent = song.match+'% Match';
+  $('pl-thumb').src = song.img; $('pl-title').textContent = song.title;
+  $('pl-artist').textContent = song.artist; $('pl-tot').textContent = song.dur;
+  $('pl-cur').textContent = '0:00'; $('pl-fill').style.width = '0%';
+  const r = $('why-reasons');
+  r.innerHTML = song.reasons.map(([txt,pct])=>`<li><i class="fa-solid fa-check"></i>${txt}<span class="ep-reason-pct">${pct}</span></li>`).join('');
+  syncLikeDislike();
+  if (autoplay) playPause(true);
+}
+
+function playPause(force=null) {
+  S.playing = force !== null ? force : !S.playing;
+  $('ctrl-play-icon').className = S.playing ? 'fa-solid fa-pause' : 'fa-solid fa-play';
+  $('rec-play-icon').className  = S.playing ? 'fa-solid fa-pause' : 'fa-solid fa-play';
+  clearInterval(S.playerTick);
+  if (S.playing) {
+    S.playerTick = setInterval(() => {
+      S.progress = Math.min(S.progress+1, S.duration);
+      const p = (S.progress/S.duration)*100;
+      $('pl-fill').style.width = p+'%';
+      $('pl-cur').textContent = fmt(S.progress);
+      if (S.progress >= S.duration) playPause(false);
+    }, 1000);
+  }
+}
+
+function syncLikeDislike() {
+  $('rec-like').classList.toggle('liked', S.liked);
+  $('pl-like').classList.toggle('liked', S.liked);
+  $('rec-like').innerHTML = S.liked ? '<i class="fa-solid fa-heart"></i>' : '<i class="fa-regular fa-heart"></i>';
+  $('pl-like').innerHTML  = S.liked ? '<i class="fa-solid fa-heart"></i>' : '<i class="fa-regular fa-heart"></i>';
+  $('rec-dislike').classList.toggle('disliked', S.disliked);
+  $('pl-dislike').classList.toggle('disliked', S.disliked);
+}
+
+$('ctrl-play').addEventListener('click', ()=>playPause());
+$('rec-play').addEventListener('click', ()=>{ playPause(); if(S.playing) toast(`Playing: ${S.currentSong.title}`, 'info'); });
+$('rec-song').addEventListener('click', ()=>playPause());
+$('pl-title').addEventListener('click', ()=>playPause());
+
+$('ctrl-shuffle').addEventListener('click',function(){ S.shuffle=!S.shuffle; this.classList.toggle('active',S.shuffle); });
+$('ctrl-repeat').addEventListener('click',function(){ S.repeat=!S.repeat; this.classList.toggle('active',S.repeat); });
+
+$('ctrl-next').addEventListener('click', ()=>{
+  const keys=Object.keys(SONGS); const i=keys.indexOf(S.journeyKey);
+  const n=SONGS[keys[(i+1)%keys.length]]; loadSong(n,S.playing);
+  toast(`Now playing: ${n.title}`,'info');
+});
+$('ctrl-prev').addEventListener('click', ()=>{
+  if(S.progress>5){ S.progress=0; $('pl-fill').style.width='0%'; $('pl-cur').textContent='0:00'; return; }
+  const keys=Object.keys(SONGS); const i=keys.indexOf(S.journeyKey);
+  loadSong(SONGS[keys[(i-1+keys.length)%keys.length]], S.playing);
+});
+
+$('pl-pb').addEventListener('click', e => {
+  const r=e.currentTarget.getBoundingClientRect();
+  const p=((e.clientX-r.left)/r.width)*100;
+  S.progress=(p/100)*S.duration;
+  $('pl-fill').style.width=p+'%'; $('pl-cur').textContent=fmt(S.progress);
+});
+$('vol-bar').addEventListener('click', e => {
+  const r=e.currentTarget.getBoundingClientRect();
+  const p=((e.clientX-r.left)/r.width)*100;
+  $('vol-fill').style.width=p+'%';
+});
+
+// ── LIKE / DISLIKE ─────────────────────────────────────────────
+$('rec-like').addEventListener('click', ()=>{
+  S.liked=!S.liked; if(S.liked){S.disliked=false;} syncLikeDislike();
+  if(S.liked) toast('Added to Liked Songs');
+});
+$('pl-like').addEventListener('click', ()=>{
+  S.liked=!S.liked; if(S.liked){S.disliked=false;} syncLikeDislike();
+  if(S.liked) toast('Added to Liked Songs');
+});
+
+function openDislikeSheet() { $('dislike-sheet').classList.add('open'); openBackdrop(); }
+function closeDislikeSheet(){ $('dislike-sheet').classList.remove('open'); maybeCloseBackdrop(); }
+
+$('rec-dislike').addEventListener('click', ()=>{ S.disliked ? (S.disliked=false,syncLikeDislike()) : openDislikeSheet(); });
+$('pl-dislike').addEventListener('click', openDislikeSheet);
+$('sheet-cancel').addEventListener('click', closeDislikeSheet);
+
+$$('.ep-sheet-opt').forEach(opt=>opt.addEventListener('click',function(){
+  $$('.ep-sheet-opt').forEach(o=>o.classList.remove('chosen')); this.classList.add('chosen');
+  S.disliked=true; syncLikeDislike();
+  
+  // Feedback saved toast immediately
+  toast("Thanks! We'll improve your recommendations.", 'success');
+  
+  // Wait 1 second, then slide down and change song
+  setTimeout(()=>{
+    closeDislikeSheet(); 
+    this.classList.remove('chosen');
+    fadeNewRec();
+  }, 1000);
+}));
+
+function fadeNewRec() {
+  const card=$('rec-card'); card.style.opacity='0'; card.style.transition='opacity .4s ease';
+  setTimeout(()=>{
+    const keys=Object.keys(SONGS).filter(k=>k!==S.journeyKey);
+    const key=keys[Math.floor(Math.random()*keys.length)];
+    S.journeyKey=key; loadSong(SONGS[key]); S.disliked=false; syncLikeDislike();
+    card.style.opacity='1';
+  },400);
+}
+
+// ── ACCORDION ──────────────────────────────────────────────────
+$('why-toggle').addEventListener('click', ()=>$('why-acc').classList.toggle('open'));
+
+// ── VERSIONS ───────────────────────────────────────────────────
+$$('#versions-list li').forEach(li=>{
+  li.addEventListener('click',function(){
+    $$('#versions-list li').forEach(l=>l.classList.remove('v-on'));
+    this.classList.add('v-on');
+    const dur=this.dataset.dur; const ver=this.dataset.ver;
+    if(dur){ S.duration=parseDur(dur); $('pl-tot').textContent=dur; }
+    toast(`Switched to ${ver} version`,'info');
+    if(S.playing){ S.progress=0; $('pl-fill').style.width='0%'; $('pl-cur').textContent='0:00'; }
+  });
+});
+
+// ── SEARCH ─────────────────────────────────────────────────────
+const searchInput=$('search-input');
+const searchBar=$('search-bar');
+const suggestions=$('search-suggestions');
+const sugLoading=$('sug-loading');
+const sugList=$('sug-list');
+
+searchInput.addEventListener('focus',()=>{ searchBar.classList.add('focused'); suggestions.classList.add('open'); renderRichSearch(); });
+document.addEventListener('click',e=>{ if(!e.target.closest('.ep-search-wrap')){ searchBar.classList.remove('focused'); suggestions.classList.remove('open'); } });
+
+searchInput.addEventListener('keydown',e=>{ if(e.key==='Enter'&&searchInput.value.trim()) triggerSearch(searchInput.value.trim()); });
+
+function renderRichSearch() {
+  sugList.innerHTML = SEARCH_RESULTS_MOCK.map(r => `
+    <div class="ep-rich-sug-item" data-query="${r.title}">
+      <img src="${r.img}" alt="${r.title}">
+      <div class="ep-rich-info">
+        <div class="ep-rich-title">${r.title}</div>
+        <div class="ep-rich-sub">
+          <span>${r.artist}</span> • <span class="ep-rich-meta">${r.genre}</span> • <span style="font-size:10px;"><i class="fa-solid fa-fire" style="color:#b3b3b3;"></i> ${r.pop}</span>
+        </div>
+      </div>
+      <div class="ep-rich-actions">
+        <button class="ep-rich-btn ep-rich-play" title="Play"><i class="fa-solid fa-play"></i></button>
+        <button class="ep-rich-btn" title="Add to Queue"><i class="fa-solid fa-plus"></i></button>
+        <button class="ep-rich-btn" title="Save"><i class="fa-regular fa-heart"></i></button>
+      </div>
+    </div>
+  `).join('');
+  
+  $$('.ep-rich-sug-item').forEach(it=>{
+    it.addEventListener('click',(e)=>{ 
+      if(e.target.closest('.ep-rich-btn')){
+        e.stopPropagation();
+        if(e.target.closest('.ep-rich-play')){
+           toast(`Playing ${it.dataset.query}`, 'info');
+           const song={ title:it.dataset.query, artist:it.querySelector('.ep-rich-sub span').textContent, dur:'3:30', img:it.querySelector('img').src, match:99, reasons:[['You searched for this','100%']] };
+           loadSong(song,true);
+        } else {
+           toast(`Action on ${it.dataset.query}`, 'success');
+        }
+        return;
+      }
+      searchInput.value=it.dataset.query; suggestions.classList.remove('open'); triggerSearch(it.dataset.query); 
+    });
+  });
+}
+
+async function triggerSearch(query) {
+  suggestions.classList.remove('open');
+  sugList.style.display='none'; sugLoading.classList.add('show'); suggestions.classList.add('open');
+  await wait(1600);
+  sugLoading.classList.remove('show'); sugList.style.display=''; suggestions.classList.remove('open');
+  const q=query.toLowerCase();
+  let key='default';
+  if(q.includes('rain')) key='rainy';
+  else if(q.includes('hidden')||q.includes('gem')) key='gems';
+  else if(q.includes('indie')||q.includes('india')||q.includes('batti')) key='indie';
+  else if(q.includes('arijit')||q.includes('tum hi ho')) key='arijit';
+  else if(q.includes('surpris')||q.includes('bored')) key='surprise';
+  else if(q.includes('japan')) key='japanese';
+  S.journeyKey=key;
+  loadJourney(key); if(SONGS[key]) loadSong(SONGS[key]);
+  toast('Discovery journey generated!');
+}
+
+// ── VOICE ──────────────────────────────────────────────────────
+$('mic-btn').addEventListener('click', async function(){
+  this.classList.add('listening'); this.innerHTML='<i class="fa-solid fa-stop"></i>';
+  await wait(2000);
+  this.classList.remove('listening'); this.innerHTML='<i class="fa-solid fa-microphone"></i>';
+  const q='Songs for a rainy drive'; searchInput.value=q;
+  await wait(200); triggerSearch(q);
+});
+
+// ── CHIPS ──────────────────────────────────────────────────────
+$$('.ep-chip').forEach(ch=>ch.addEventListener('click',function(){
+  $$('.ep-chip').forEach(c=>c.classList.remove('active')); this.classList.add('active');
+  const key=this.dataset.journey; S.journeyKey=key;
+  loadJourney(key); if(SONGS[key]) loadSong(SONGS[key]);
+}));
+
+// ── SLIDER ─────────────────────────────────────────────────────
+const sliderEl=$('disc-slider');
+let sliderDebounce;
+
+function syncSlider(){
+  const n=parseInt(sliderEl.value);
+  $('familiar-pct').textContent=(100-n)+'% Familiar';
+  $('new-pct').textContent=n+'% New';
+  sliderEl.style.background=`linear-gradient(to right,#1ed760 ${n}%,#535353 ${n}%)`;
+}
+sliderEl.addEventListener('input',()=>{
+  syncSlider();
+  clearTimeout(sliderDebounce);
+  sliderDebounce=setTimeout(()=>{
+    const n=parseInt(sliderEl.value);
+    let key=n<30?'arijit':n<65?S.journeyKey:n<82?'gems':'surprise';
+    if(SONGS[key]&&key!==S.journeyKey){ S.journeyKey=key; loadJourney(key); loadSong(SONGS[key]); }
+  },800);
+});
+syncSlider();
+
+// ── JOURNEY ────────────────────────────────────────────────────
+function loadJourney(key, immediate=false) {
+  S.journeyKey=key;
+  const artists=JOURNEYS[key]||JOURNEYS.default;
+  const row=$('journey-row');
+  if(!immediate){
+    row.innerHTML=artists.flatMap(()=>[
+      `<div class="ep-jcard-sk"><div class="sk-circle shimmer"></div><div class="sk-line sk-full shimmer"></div><div class="sk-line sk-70 shimmer"></div></div>`,
+      `<div class="ep-journey-arrow"><i class="fa-solid fa-chevron-right"></i></div>`
+    ]).slice(0,-1).join('');
+  }
+  setTimeout(()=>{
+    row.innerHTML=artists.flatMap((a,i)=>[
+      `<div class="ep-jcard${i===0?' jc-active':''} card-elevate" data-aid="${a.id}" role="button" tabindex="0" style="transition-delay:${i*55}ms">
+        <img src="${a.photo}" alt="${a.name}" loading="lazy">
+        <span class="jc-name">${a.name}</span>
+        <span class="jc-lbl">${a.label}</span>
+      </div>`,
+      i<artists.length-1?`<div class="ep-journey-arrow"><i class="fa-solid fa-chevron-right"></i></div>`:''
+    ]).join('');
+    requestAnimationFrame(()=>{ $$('.ep-jcard').forEach(c=>{ void c.offsetWidth; c.classList.add('in'); }); });
+    $$('.ep-jcard').forEach(c=>{
+      c.addEventListener('click',()=>openArtistModal(c.dataset.aid));
+      c.addEventListener('keydown',e=>{ if(e.key==='Enter') openArtistModal(c.dataset.aid); });
+    });
+  }, immediate?0:750);
+}
+
+// ── BACKDROP ───────────────────────────────────────────────────
+let backdropCount=0;
+function openBackdrop(){ backdropCount++; $('backdrop').classList.add('open'); }
+function closeBackdrop(){ backdropCount=0; $('backdrop').classList.remove('open'); }
+function maybeCloseBackdrop(){ if(--backdropCount<=0){ backdropCount=0; $('backdrop').classList.remove('open'); } }
+
+$('backdrop').addEventListener('click',()=>{
+  $('artist-modal').classList.remove('open');
+  $('studio-drawer').classList.remove('open');
+  closeDislikeSheet(); closeBackdrop();
+});
+
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){
+    $('artist-modal').classList.remove('open');
+    $('studio-drawer').classList.remove('open');
+    $('progress-modal').classList.remove('open');
+    closeDislikeSheet(); closeBackdrop();
+  }
+});
+
+// ── ARTIST MODAL ───────────────────────────────────────────────
+function openArtistModal(id){
+  const a=A[id]; if(!a) return;
+  $('modal-hero').src=a.photo; $('modal-avatar').src=a.photo;
+  $('modal-name').textContent=a.name; $('modal-monthly').textContent=a.monthly;
+  $('modal-genres').innerHTML=a.genres.map(g=>`<span class="ep-modal-genre">${g}</span>`).join('');
+  $('modal-tracks').innerHTML=a.tracks.map(t=>`<li class="ep-modal-track" data-title="${t.t}" data-artist="${a.name}" data-dur="${t.d}" data-img="${t.img}"><img src="${t.img}" alt="${t.t}"><div class="ep-modal-track-info"><h4>${t.t}</h4><p>${t.al}</p></div><span class="ep-modal-track-dur">${t.d}</span></li>`).join('');
+  $('modal-similar').innerHTML=a.similar.map(s=>`<span class="ep-similar-chip">${s}</span>`).join('');
+  $('modal-follow').textContent='Follow'; $('modal-follow').classList.remove('following');
+  $('artist-modal').classList.add('open'); openBackdrop();
+}
+
+$('modal-close').addEventListener('click',()=>{ $('artist-modal').classList.remove('open'); maybeCloseBackdrop(); });
+$('modal-follow').addEventListener('click',function(){
+  const on=this.classList.toggle('following'); this.textContent=on?'Following':'Follow';
+  if(on) toast('Artist added to your library');
+});
+$('modal-play').addEventListener('click',()=>{ playPause(true); toast(`Playing top tracks`,'info'); });
+document.addEventListener('click',e=>{
+  const tr=e.target.closest('.ep-modal-track');
+  if(!tr) return;
+  const song={ title:tr.dataset.title, artist:tr.dataset.artist, dur:tr.dataset.dur, img:tr.dataset.img, match:Math.floor(75+Math.random()*20), reasons:[['In your liked artist\'s library','91%'],['High play count in your history','84%'],['Acoustic preference match','79%'],['Similar to recent saves','74%']] };
+  loadSong(song,true); $('artist-modal').classList.remove('open'); maybeCloseBackdrop();
+  toast(`Playing: ${song.title}`,'info');
+});
+document.addEventListener('click',e=>{
+  if(e.target.classList.contains('ep-similar-chip')){
+    toast(`Exploring: ${e.target.textContent}`,'info');
+    $('artist-modal').classList.remove('open'); maybeCloseBackdrop();
+  }
+});
+
+// ── STUDIO DRAWER ──────────────────────────────────────────────
+$$('.ep-si').forEach(si=>{
+  si.addEventListener('click',()=>openStudioDrawer(si.dataset.studio));
+  si.addEventListener('keydown',e=>{ if(e.key==='Enter') openStudioDrawer(si.dataset.studio); });
+});
+
+function openStudioDrawer(id){
+  const d=STUDIO[id]; if(!d) return;
+  $('drawer-tag').textContent=d.tag; $('drawer-title').textContent=d.title;
+  $('drawer-desc').textContent=d.desc; $('drawer-hero').src=d.img;
+  $('drawer-play').innerHTML=`<i class="fa-solid fa-play"></i> ${d.cta}`;
+  $('drawer-list').innerHTML=d.items.map(it=>`<li class="ep-drawer-item"><img src="${it.img}" alt="${it.t}"><div><h4>${it.t}</h4><p>${it.a}</p></div></li>`).join('');
+  $('studio-drawer').classList.add('open'); openBackdrop();
+}
+
+$('drawer-close').addEventListener('click',()=>{ $('studio-drawer').classList.remove('open'); maybeCloseBackdrop(); });
+$('drawer-play').addEventListener('click',()=>{
+  playPause(true); toast($('drawer-title').textContent+' — Now Playing');
+  $('studio-drawer').classList.remove('open'); maybeCloseBackdrop();
+});
+
+// ── PROGRESS MODAL ─────────────────────────────────────────────
+function openProgressModal(){
+  buildChart(); buildRecent();
+  $('progress-modal').classList.add('open');
+}
+['disc-widget','view-progress'].forEach(id=>$(id).addEventListener('click',e=>{ e.preventDefault(); openProgressModal(); }));
+$('pm-close').addEventListener('click',()=>$('progress-modal').classList.remove('open'));
+
+function buildChart(){
+  const labels=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  const vals=[30,45,60,52,75,88,72]; const max=Math.max(...vals);
+  $('pm-chart').innerHTML=labels.map((l,i)=>`<div class="ep-pm-bar-wrap"><div class="ep-pm-bar${i===6?' green':''}" style="height:${Math.round((vals[i]/max)*76)+4}px"></div><span class="ep-pm-bar-label">${l}</span></div>`).join('');
+}
+function buildRecent(){
+  const r=[A.anuv,A.prateek,A.seedhe,A.talwiinder,A.novoAmor];
+  $('pm-recent').innerHTML=r.map(a=>`<div class="ep-pm-recent-a"><img src="${a.photo}" alt="${a.name}"><span>${a.name}</span></div>`).join('');
+}
+
+// ── SIDEBAR PLAYLISTS ──────────────────────────────────────────
+$$('#ep-playlists li').forEach(li=>li.addEventListener('click',()=>toast(`Opening ${li.textContent.trim()}`,'info')));
+$('see-all-journey').addEventListener('click',e=>{ e.preventDefault(); toast('Showing full discovery map','info'); });
+
+// ── DEMO MODE ──────────────────────────────────────────────────
+const demoBtn=$('demo-btn'); const demoPanel=$('demo-panel');
+
+demoBtn.addEventListener('click',()=>{ if(!S.demoRunning) demoPanel.classList.toggle('open'); });
+document.addEventListener('click',e=>{ if(!e.target.closest('#demo-panel')&&!e.target.closest('#demo-btn')) demoPanel.classList.remove('open'); });
+$('demo-skip').addEventListener('click',()=>{ S.demoCancelled=true; S.demoRunning=false; $('demo-bar').classList.remove('show'); $$('.demo-ring').forEach(el=>el.classList.remove('demo-ring')); });
+
+$$('.ep-demo-sc').forEach(sc=>sc.addEventListener('click',()=>{
+  demoPanel.classList.remove('open');
+  runDemo(DEMO_SCENARIOS[parseInt(sc.dataset.sc)]);
+}));
+
+function setStep(txt){ $('demo-step-text').textContent=txt; $('demo-bar').classList.add('show'); }
+function ring(el){ $$('.demo-ring').forEach(e=>e.classList.remove('demo-ring')); if(el){ el.classList.add('demo-ring'); el.scrollIntoView({behavior:'smooth',block:'nearest'}); } }
+
+async function typeText(el, text){
+  el.value=''; el.focus();
+  for(const ch of text){
+    if(S.demoCancelled) return;
+    el.value+=ch; el.dispatchEvent(new Event('input')); await wait(38+Math.random()*25);
+  }
+}
+async function animSlider(target){
+  const start=parseInt(sliderEl.value);
+  for(let i=0;i<=20;i++){
+    if(S.demoCancelled) return;
+    sliderEl.value=Math.round(start+(target-start)*(i/20)); syncSlider(); await wait(28);
+  }
+}
+
+async function runDemo(sc){
+  if(S.demoRunning) return;
+  S.demoRunning=true; S.demoCancelled=false;
+  try{
+    setStep('Step 1 — Typing your search query...');
+    ring($('search-bar')); searchBar.classList.add('focused'); suggestions.classList.add('open');
+    renderRichSearch();
+    await wait(500); if(S.demoCancelled) return;
+    await typeText(searchInput, sc.query); await wait(500); if(S.demoCancelled) return;
+
+    setStep('Step 2 — Generating discovery journey...');
+    ring(null); suggestions.classList.remove('open');
+    sugList.style.display='none'; sugLoading.classList.add('show'); suggestions.classList.add('open');
+    await wait(1600); if(S.demoCancelled) return;
+    sugLoading.classList.remove('show'); sugList.style.display=''; suggestions.classList.remove('open');
+
+    setStep('Step 3 — Building your artist journey...');
+    S.journeyKey=sc.journey; loadJourney(sc.journey);
+    await wait(1200); if(S.demoCancelled) return;
+
+    setStep('Step 4 — Calibrating exploration level...');
+    ring(sliderEl); await animSlider(sc.slider); await wait(500); if(S.demoCancelled) return;
+
+    setStep('Step 5 — Loading your recommended song...');
+    ring($('rec-card')); loadSong(SONGS[sc.song]||SONGS.default); await wait(700); if(S.demoCancelled) return;
+
+    setStep('Step 6 — Playing recommendation...');
+    playPause(true); toast(`Playing: ${SONGS[sc.song].title}`,'info'); await wait(1000); if(S.demoCancelled) return;
+
+    setStep('Step 7 — Showing why this was picked...');
+    ring($('why-acc')); $('why-acc').classList.add('open'); await wait(1200); if(S.demoCancelled) return;
+
+    setStep('Step 8 — Adding to Liked Songs...');
+    ring($('rec-like')); S.liked=true; syncLikeDislike(); toast('Added to Liked Songs'); await wait(1000); if(S.demoCancelled) return;
+
+    setStep('Step 9 — Exploring Spotify Studio...');
+    const stEl=document.querySelector(`[data-studio="${sc.studio}"]`); ring(stEl);
+    await wait(700); if(S.demoCancelled) return;
+    openStudioDrawer(sc.studio); await wait(2200); if(S.demoCancelled) return;
+    $('studio-drawer').classList.remove('open'); maybeCloseBackdrop();
+
+    setStep('✓ Demo complete — explore on your own!');
+    ring(null); toast('Demo finished! Now try it yourself.');
+    await wait(2500);
+  } finally {
+    $('demo-bar').classList.remove('show');
+    $$('.demo-ring').forEach(el=>el.classList.remove('demo-ring'));
+    S.demoRunning=false;
+  }
+}
+
+// ── INIT ───────────────────────────────────────────────────────
+loadJourney('default', true);
+loadSong(SONGS.default);
+</script>
 </body>
-
 </html>
