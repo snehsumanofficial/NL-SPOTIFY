@@ -501,11 +501,51 @@
   .ep-vol-fill { height: 100%; width: 70%; background: #b3b3b3; border-radius: 2px; transition: background .15s; }
   .ep-vol-bar:hover .ep-vol-fill { background: #1ed760; }
 
-  /* ── OVERLAYS ────────────────────────────────────────────────── */
+  /* ── OVERLAYS & BOTTOM SHEETS ────────────────────────────────── */
   .ep-backdrop {
-    position: fixed; inset: 0; background: rgba(0,0,0,.75);
-    backdrop-filter: blur(4px); z-index: 900; display: none;
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.6); z-index: 1000;
+    opacity: 0; pointer-events: none; transition: opacity .3s ease;
   }
+  .ep-backdrop.show { opacity: 1; pointer-events: auto; }
+
+  /* Bottom Sheets */
+  .ep-bottom-sheet {
+    position: fixed; bottom: -100%; left: 50%; transform: translateX(-50%);
+    width: 100%; max-width: 500px; background: #282828;
+    border-radius: 16px 16px 0 0; padding: 24px;
+    z-index: 1001; transition: bottom .3s cubic-bezier(0.175, 0.885, 0.32, 1.15);
+    box-shadow: 0 -10px 40px rgba(0,0,0,0.5);
+  }
+  .ep-bottom-sheet.open { bottom: 0; }
+  .ep-listen-sheet { max-width: 800px; max-height: 80vh; overflow-y: auto; }
+  
+  .ep-bs-handle {
+    width: 48px; height: 4px; background: #535353; border-radius: 2px;
+    margin: 0 auto 20px;
+  }
+  .ep-bs-title { font-size: 20px; font-weight: 700; text-align: center; margin-bottom: 4px; }
+  .ep-bs-sub { font-size: 14px; color: #b3b3b3; text-align: center; margin-bottom: 24px; }
+  
+  .ep-bs-options { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+  .ep-bs-options li {
+    padding: 16px; background: rgba(255,255,255,.05); border-radius: 8px;
+    font-size: 15px; font-weight: 600; text-align: center; cursor: pointer;
+    transition: background .15s;
+  }
+  .ep-bs-options li:hover { background: rgba(255,255,255,.1); }
+
+  /* Listen Your Way Grid */
+  .ep-ls-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+  .ep-ls-section-title { font-size: 14px; text-transform: uppercase; letter-spacing: 1px; color: #b3b3b3; margin-bottom: 16px; border-bottom: 1px solid #333; padding-bottom: 8px; }
+  
+  .ep-listen-way-btn {
+    background: transparent; border: 1px solid #535353; border-radius: 500px;
+    color: #fff; font-size: 12px; font-weight: 700; padding: 6px 12px;
+    cursor: pointer; display: flex; align-items: center; gap: 6px;
+    margin-right: 12px; transition: border-color .15s, transform .1s;
+  }
+  .ep-listen-way-btn:hover { border-color: #fff; }
   .ep-backdrop.open { display: block; animation: fadeIn .2s ease; }
   @keyframes fadeIn { from{opacity:0} to{opacity:1} }
 
@@ -608,36 +648,22 @@
   .ep-drawer-item h4 { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
   .ep-drawer-item p { font-size: 12px; color: #b3b3b3; }
 
-  /* Progress Modal */
-  .ep-progress-modal {
-    position: fixed; inset: 0; background: #0a0a0a; z-index: 1000;
-    display: none; overflow-y: auto;
-  }
-  .ep-progress-modal.open { display: block; animation: fadeIn .2s ease; }
-  .ep-pm-close {
-    position: fixed; top: 24px; right: 24px; z-index: 1001;
-    background: rgba(255,255,255,.1); border: none; color: #fff;
-    width: 40px; height: 40px; border-radius: 50%; cursor: pointer;
-    display: flex; align-items: center; justify-content: center; font-size: 18px;
-    transition: background .15s;
-  }
-  .ep-pm-close:hover { background: rgba(255,255,255,.2); }
-  .ep-pm-content { max-width: 800px; margin: 0 auto; padding: 80px 40px 60px; }
-  .ep-pm-title { font-size: 36px; font-weight: 800; margin-bottom: 8px; }
-  .ep-pm-sub { font-size: 15px; color: #b3b3b3; margin-bottom: 48px; }
-  .ep-pm-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
-  .ep-pm-card { background: #1a1a1a; border-radius: 12px; padding: 24px; }
-  .ep-pm-card.wide { grid-column: 1 / 3; }
+  /* Progress Drawer */
+  .ep-pm-content { padding: 48px 24px 24px; }
+  .ep-pm-title { font-size: 24px; font-weight: 800; margin-bottom: 8px; }
+  .ep-pm-sub { font-size: 14px; color: #b3b3b3; margin-bottom: 32px; }
+  .ep-pm-grid { display: flex; flex-direction: column; gap: 16px; margin-bottom: 20px; }
+  .ep-pm-card { background: #242424; border-radius: 12px; padding: 20px; }
   .ep-pm-card-label { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #b3b3b3; margin-bottom: 12px; }
-  .ep-pm-big { font-size: 48px; font-weight: 800; }
+  .ep-pm-big { font-size: 36px; font-weight: 800; }
   .ep-pm-big-sub { font-size: 13px; color: #b3b3b3; margin-top: 4px; }
-  .ep-pm-wide-body { display: flex; align-items: flex-start; gap: 40px; }
+  .ep-pm-wide-body { display: flex; flex-direction: column; gap: 24px; align-items: center; }
   .ep-pm-ring-wrap { position: relative; width: 120px; height: 120px; flex-shrink: 0; }
   .ep-pm-ring-wrap svg { transform: rotate(-90deg); }
   .ep-pm-ring-score { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); text-align: center; }
   .ep-pm-ring-score .pn { font-size: 36px; font-weight: 800; }
   .ep-pm-ring-score .pd { font-size: 12px; color: #b3b3b3; }
-  .ep-pm-chart { display: flex; gap: 8px; align-items: flex-end; height: 80px; flex: 1; }
+  .ep-pm-chart { display: flex; gap: 8px; align-items: flex-end; height: 80px; width: 100%; justify-content: center; }
   .ep-pm-bar-wrap { display: flex; flex-direction: column; align-items: center; gap: 4px; flex: 1; }
   .ep-pm-bar { width: 100%; background: #333; border-radius: 3px 3px 0 0; min-height: 4px; }
   .ep-pm-bar.green { background: linear-gradient(to top, #1ed760, #1db954); }
@@ -647,33 +673,6 @@
   .ep-pm-recent-a img { width: 56px; height: 56px; border-radius: 50%; object-fit: cover; }
   .ep-pm-recent-a span { font-size: 11px; color: #b3b3b3; text-align: center; max-width: 64px; }
 
-  /* Dislike Sheet */
-  .ep-dislike-sheet {
-    position: fixed; bottom: -440px; left: 50%; transform: translateX(-50%);
-    width: 480px; max-width: 96vw; background: #282828; border-radius: 16px 16px 0 0;
-    z-index: 1100; padding: 24px; transition: bottom .3s ease;
-    box-shadow: 0 -8px 32px rgba(0,0,0,.6);
-  }
-  .ep-dislike-sheet.open { bottom: 90px; }
-  .ep-sheet-handle { width: 36px; height: 4px; background: #535353; border-radius: 2px; margin: 0 auto 20px; }
-  .ep-sheet-title { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
-  .ep-sheet-sub { font-size: 13px; color: #b3b3b3; margin-bottom: 20px; }
-  .ep-sheet-options { list-style: none; display: flex; flex-direction: column; gap: 4px; margin-bottom: 16px; }
-  .ep-sheet-opt {
-    display: flex; align-items: center; gap: 12px; padding: 14px 16px;
-    border-radius: 8px; cursor: pointer; font-size: 15px; transition: background .15s;
-    border: 1px solid transparent;
-  }
-  .ep-sheet-opt:hover { background: rgba(255,255,255,.07); }
-  .ep-sheet-opt.chosen { background: rgba(230,57,70,.14); border-color: rgba(230,57,70,.3); color: #ff8a8a; }
-  .ep-sheet-opt i { width: 20px; text-align: center; color: #b3b3b3; }
-  .ep-sheet-opt.chosen i { color: #e63946; }
-  .ep-sheet-cancel {
-    width: 100%; padding: 14px; background: transparent; border: 1px solid #333;
-    border-radius: 8px; color: #b3b3b3; font-size: 14px; font-weight: 600;
-    cursor: pointer; transition: all .15s; font-family: 'Inter', sans-serif;
-  }
-  .ep-sheet-cancel:hover { border-color: #555; color: #fff; }
 
   /* Toasts */
   .ep-toasts { position: fixed; top: 24px; right: 24px; z-index: 2000; display: flex; flex-direction: column; gap: 8px; }
@@ -790,11 +789,11 @@
     <button class="ep-playlist-add"><i class="fa-solid fa-plus"></i></button>
   </div>
   <ul class="ep-playlists" id="ep-playlists">
-    <li><img src="https://picsum.photos/seed/chillvibespl/60/60" alt="" class="img-zoom">Chill Vibes</li>
-    <li><img src="https://picsum.photos/seed/focusflowpl/60/60" alt="" class="img-zoom">Focus Flow</li>
-    <li><img src="https://picsum.photos/seed/roadtriphits/60/60" alt="" class="img-zoom">Roadtrip Hits</li>
-    <li><img src="https://picsum.photos/seed/workoutmix88/60/60" alt="" class="img-zoom">Workout Mix</li>
-    <li><img src="https://picsum.photos/seed/bollywoodcl/60/60" alt="" class="img-zoom">Bollywood Classics</li>
+    <li><img src="https://picsum.photos/seed/roadtrippl/60/60" alt="" class="img-zoom">Road Trip</li>
+    <li><img src="https://picsum.photos/seed/workoutpl/60/60" alt="" class="img-zoom">Workout</li>
+    <li><img src="https://picsum.photos/seed/chillpl/60/60" alt="" class="img-zoom">Chill</li>
+    <li><img src="https://picsum.photos/seed/bollywoodpl/60/60" alt="" class="img-zoom">Bollywood</li>
+    <li><img src="https://picsum.photos/seed/focuspl/60/60" alt="" class="img-zoom">Focus</li>
   </ul>
   <a href="#" class="ep-show-more">Show more <i class="fa-solid fa-chevron-down"></i></a>
 
@@ -811,7 +810,7 @@
         <div class="ep-ring-score"><span class="rn">72</span><span class="rd">/100</span></div>
       </div>
       <div class="ep-disc-metrics">
-        <div class="ep-disc-metric"><strong>+18</strong> New Artists</div>
+        <div class="ep-disc-metric"><strong>+18</strong> Artists</div>
         <div class="ep-disc-metric"><strong>+7</strong> Genres</div>
         <div class="ep-disc-metric"><strong>+3</strong> Languages</div>
         <div class="ep-disc-metric"><strong>24</strong> Hidden Gems</div>
@@ -827,7 +826,7 @@
   <header class="ep-page-header">
     <div>
       <h1>Explore <span class="ep-beta">BETA</span></h1>
-      <p class="ep-page-sub">AI-powered music discovery, built around you.</p>
+      <p class="ep-page-sub">Discover music beyond your comfort zone.</p>
     </div>
     <div class="ep-header-right">
       <button class="ep-icon-btn ripple-active" id="notify-btn"><i class="fa-regular fa-bell"></i></button>
@@ -849,7 +848,7 @@
         <div class="ep-suggestions" id="search-suggestions">
           <div class="ep-sug-loading" id="sug-loading">
             <div class="ep-sug-dots"><span></span><span></span><span></span></div>
-            <span class="ep-sug-loading-text">Finding your next discovery...</span>
+            <span class="ep-sug-loading-text">Building your Discovery Journey...</span>
           </div>
           <div id="sug-list">
             <!-- Results populate here via JS -->
@@ -858,11 +857,13 @@
       </div>
       <!-- Chips -->
       <div class="ep-chips" id="chips">
-        <button class="ep-chip ripple-active" data-journey="rainy">🌧 Rainy Drive</button>
-        <button class="ep-chip ripple-active" data-journey="gems">💎 Hidden Gems</button>
-        <button class="ep-chip ripple-active" data-journey="indie">🎸 Indie India</button>
-        <button class="ep-chip ripple-active" data-journey="arijit">🎤 Like Arijit</button>
-        <button class="ep-chip ripple-active" data-journey="surprise">✨ Surprise Me</button>
+        <button class="ep-chip ripple-active" data-journey="rainy">Rainy Drive</button>
+        <button class="ep-chip ripple-active" data-journey="gems">Hidden Gems</button>
+        <button class="ep-chip ripple-active" data-journey="arijit">Songs like Arijit Singh</button>
+        <button class="ep-chip ripple-active" data-journey="indie">Japanese Indie</button>
+        <button class="ep-chip ripple-active" data-journey="roadtrip">Roadtrip</button>
+        <button class="ep-chip ripple-active" data-journey="study">Study Music</button>
+        <button class="ep-chip ripple-active" data-journey="workout">Workout</button>
       </div>
     </section>
 
@@ -910,7 +911,7 @@
           <!-- Why Accordion -->
           <div class="ep-accordion" id="why-acc">
             <div class="ep-acc-header" id="why-toggle">
-              <span class="ep-why-label">Why this song?</span>
+              <span class="ep-why-label">ⓘ Why This Song</span>
               <i class="fa-solid fa-chevron-down ep-acc-icon"></i>
             </div>
             <div class="ep-acc-body">
@@ -919,19 +920,6 @@
               </ul>
             </div>
           </div>
-        </div>
-        <!-- Versions -->
-        <div class="ep-versions-col">
-          <div class="ep-ver-label">Versions</div>
-          <ul class="ep-ver-list" id="versions-list">
-            <li class="v-on" data-ver="Original" data-dur="3:48">Original <span class="v-dot"></span></li>
-            <li data-ver="Acoustic" data-dur="4:02">Acoustic <span class="v-dot"></span></li>
-            <li data-ver="Studio" data-dur="3:45">Studio <span class="v-dot"></span></li>
-            <li data-ver="Live" data-dur="5:17">Live <span class="v-dot"></span></li>
-            <li data-ver="Instrumental" data-dur="3:48">Instrumental <span class="v-dot"></span></li>
-            <li class="v-spotify" data-ver="Spotify Original" data-dur="4:10"><i class="fa-brands fa-spotify"></i> Spotify Original <span class="v-dot"></span></li>
-          </ul>
-        </div>
       </div>
     </section>
 
@@ -1006,9 +994,10 @@
     </div>
   </div>
   <div class="pl-right">
-    <button class="ctrl"><i class="fa-solid fa-microphone"></i></button>
-    <button class="ctrl"><i class="fa-solid fa-list-ul"></i></button>
-    <button class="ctrl"><i class="fa-solid fa-computer"></i></button>
+    <button class="ep-listen-way-btn ripple-active" id="listen-way-btn"><i class="fa-solid fa-sliders"></i> Listen Your Way</button>
+    <button class="ctrl" title="Queue"><i class="fa-solid fa-list-ul"></i></button>
+    <button class="ctrl" title="Share"><i class="fa-solid fa-arrow-up-from-bracket"></i></button>
+    <button class="ctrl" title="Connect to a device"><i class="fa-solid fa-computer"></i></button>
     <div class="ep-vol">
       <button class="ctrl" id="vol-btn"><i class="fa-solid fa-volume-high"></i></button>
       <div class="ep-vol-bar" id="vol-bar"><div class="ep-vol-fill" id="vol-fill"></div></div>
@@ -1022,7 +1011,68 @@
 <!-- ════════════════ OVERLAYS ════════════════ -->
 <div class="ep-backdrop" id="backdrop"></div>
 
-<!-- Artist Modal -->
+<!-- Dislike Bottom Sheet -->
+<div class="ep-bottom-sheet" id="dislike-sheet">
+  <div class="ep-bs-handle"></div>
+  <h3 class="ep-bs-title">Why not this song?</h3>
+  <p class="ep-bs-sub">Help improve recommendations.</p>
+  <ul class="ep-bs-options" id="dislike-options">
+    <li>Wrong Mood</li>
+    <li>Too Popular</li>
+    <li>Already Know This Song</li>
+    <li>Don't Like Artist</li>
+    <li>Wrong Genre</li>
+    <li>Too Slow</li>
+    <li>Other</li>
+  </ul>
+</div>
+
+<!-- Listen Your Way Bottom Sheet -->
+<div class="ep-bottom-sheet ep-listen-sheet" id="listen-sheet">
+  <div class="ep-bs-handle"></div>
+  <h3 class="ep-bs-title">Listen Your Way</h3>
+  
+  <div class="ep-ls-grid">
+    <div class="ep-ls-section">
+      <h4 class="ep-ls-section-title">Versions</h4>
+      <ul class="ep-ver-list" id="ls-versions">
+        <li class="v-on">Original</li>
+        <li>Live</li>
+        <li>Acoustic</li>
+        <li>Studio Version</li>
+        <li>Remastered</li>
+        <li>Demo</li>
+        <li>Cover</li>
+        <li>Lo-fi</li>
+        <li>Instrumental</li>
+        <li>Regional Version</li>
+        <li>Language Version</li>
+        <li>Festival Version</li>
+        <li class="v-spotify"><i class="fa-brands fa-spotify"></i> Spotify Original</li>
+      </ul>
+    </div>
+    <div class="ep-ls-section">
+      <h4 class="ep-ls-section-title">AI Audio Modes</h4>
+      <ul class="ep-ver-list" id="ls-modes">
+        <li>Vocals Only</li>
+        <li>Beats Only</li>
+        <li>Bass Only</li>
+        <li>Drums Only</li>
+        <li>Piano Only</li>
+        <li>Strings Only</li>
+        <li>Guitar Only</li>
+        <li>Instrumental Only</li>
+        <li>Karaoke Mode</li>
+        <li>Studio Mix</li>
+        <li>Live Mix</li>
+        <li>Ambient Mix</li>
+        <li>Spatial Audio</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- Artist Drawer (Right Drawer) -->
 <div class="ep-artist-modal" id="artist-modal">
   <div class="ep-modal-hero">
     <img src="" alt="" id="modal-hero">
@@ -1058,15 +1108,15 @@
   </div>
 </div>
 
-<!-- Progress Modal -->
-<div class="ep-progress-modal" id="progress-modal">
-  <button class="ep-pm-close" id="pm-close"><i class="fa-solid fa-xmark"></i></button>
+<!-- Progress Drawer -->
+<div class="ep-drawer" id="progress-drawer">
+  <button class="ep-drawer-close" id="pm-close"><i class="fa-solid fa-xmark"></i></button>
   <div class="ep-pm-content">
     <div class="ep-pm-title">Your Discovery Score</div>
     <div class="ep-pm-sub">You're exploring more music than 84% of listeners in your taste profile.</div>
     <div class="ep-pm-grid">
-      <div class="ep-pm-card wide ep-pm-wide-body">
-        <div>
+      <div class="ep-pm-card ep-pm-wide-body">
+        <div style="text-align: center;">
           <div class="ep-pm-card-label">Overall Score</div>
           <div class="ep-pm-ring-wrap">
             <svg width="120" height="120" viewBox="0 0 120 120">
@@ -1077,8 +1127,8 @@
             <div class="ep-pm-ring-score"><span class="pn">72</span><span class="pd">/100</span></div>
           </div>
         </div>
-        <div style="flex:2">
-          <div class="ep-pm-card-label">Weekly Growth</div>
+        <div style="width: 100%;">
+          <div class="ep-pm-card-label" style="text-align:center;">Weekly Growth</div>
           <div class="ep-pm-chart" id="pm-chart"></div>
         </div>
       </div>
@@ -1091,21 +1141,6 @@
   </div>
 </div>
 
-<!-- Dislike Sheet -->
-<div class="ep-dislike-sheet" id="dislike-sheet">
-  <div class="ep-sheet-handle"></div>
-  <div class="ep-sheet-title">Why not this song?</div>
-  <div class="ep-sheet-sub">Help improve your recommendations.</div>
-  <ul class="ep-sheet-options">
-    <li class="ep-sheet-opt" data-reason="wrong-mood"><i class="fa-regular fa-face-meh"></i> Wrong mood right now</li>
-    <li class="ep-sheet-opt" data-reason="too-popular"><i class="fa-solid fa-fire"></i> Too mainstream</li>
-    <li class="ep-sheet-opt" data-reason="know-it"><i class="fa-solid fa-circle-check"></i> Already know this song</li>
-    <li class="ep-sheet-opt" data-reason="dont-like-artist"><i class="fa-solid fa-ban"></i> Don't like this artist</li>
-    <li class="ep-sheet-opt" data-reason="no-genre"><i class="fa-solid fa-guitar"></i> Don't recommend this genre</li>
-    <li class="ep-sheet-opt" data-reason="other"><i class="fa-solid fa-ellipsis"></i> Other</li>
-  </ul>
-  <button class="ep-sheet-cancel ripple-active" id="sheet-cancel">Cancel</button>
-</div>
 
 <!-- Toasts -->
 <div class="ep-toasts" id="toast-container"></div>
@@ -1118,11 +1153,11 @@
     <p>Experience the full product in under 60 seconds</p>
   </div>
   <ul class="ep-demo-scenarios">
-    <li class="ep-demo-sc" data-sc="0"><div class="ep-demo-num">1</div><div><h4>Bored with my playlist</h4><p>Discover something completely new</p></div></li>
-    <li class="ep-demo-sc" data-sc="1"><div class="ep-demo-num">2</div><div><h4>Like Arijit, not mainstream</h4><p>Find hidden similar artists</p></div></li>
-    <li class="ep-demo-sc" data-sc="2"><div class="ep-demo-num">3</div><div><h4>Hidden indie artists</h4><p>Explore the underground scene</p></div></li>
-    <li class="ep-demo-sc" data-sc="3"><div class="ep-demo-num">4</div><div><h4>Music for a rainy drive</h4><p>Mood-based discovery</p></div></li>
-    <li class="ep-demo-sc" data-sc="4"><div class="ep-demo-num">5</div><div><h4>Explore Japanese indie</h4><p>Cross-cultural journey</p></div></li>
+    <li class="ep-demo-sc" data-sc="0"><div class="ep-demo-num">1</div><div><h4>Search & Play</h4><p>Search "Rainy Drive" & Play</p></div></li>
+    <li class="ep-demo-sc" data-sc="1"><div class="ep-demo-num">2</div><div><h4>Dislike Flow</h4><p>Provide feedback on recs</p></div></li>
+    <li class="ep-demo-sc" data-sc="2"><div class="ep-demo-num">3</div><div><h4>Why This Song?</h4><p>View AI reasoning</p></div></li>
+    <li class="ep-demo-sc" data-sc="3"><div class="ep-demo-num">4</div><div><h4>Listen Your Way</h4><p>Switch to Vocals Only</p></div></li>
+    <li class="ep-demo-sc" data-sc="4"><div class="ep-demo-num">5</div><div><h4>Spotify Studio</h4><p>Explore exclusive content</p></div></li>
   </ul>
 </div>
 <div class="ep-demo-progress" id="demo-bar">
@@ -1212,7 +1247,7 @@ const A = {
 };
 
 const JOURNEYS = {
-  default:  [A.arijit, A.prateek, A.anuv, A.lifafa, A.talha, A.lany, A.aurora],
+  default:  [A.arijit, A.prateek, A.anuv, A.talwiinder, A.talha, A.jBreakfast, A.novoAmor, A.aurora],
   rainy:    [A.prateek, A.anuv, A.phoebe, A.novoAmor, A.lifafa, A.wCMT, A.lany],
   gems:     [A.wCMT, A.lifafa, A.prateek, A.talwiinder, A.talha, A.novoAmor, A.jBreakfast],
   indie:    [A.localTrain, A.wCMT, A.prateek, A.anuv, A.lifafa, A.seedhe, A.talwiinder],
@@ -1247,11 +1282,11 @@ const SEARCH_RESULTS_MOCK = [
 ];
 
 const DEMO_SCENARIOS = [
-  { query:"I'm bored with my playlist, surprise me",     journey:'surprise', slider:80, song:'surprise', studio:'live' },
-  { query:'Songs like Arijit Singh but not mainstream',   journey:'arijit',   slider:55, song:'arijit',   studio:'behind' },
-  { query:'Find me hidden indie artists from India',      journey:'gems',     slider:70, song:'gems',     studio:'originals' },
-  { query:'I want songs for a rainy drive',               journey:'rainy',    slider:40, song:'rainy',    studio:'live' },
-  { query:'Take me into Japanese indie music',            journey:'japanese', slider:90, song:'japanese', studio:'commentary' },
+  { id: 1 },
+  { id: 2 },
+  { id: 3 },
+  { id: 4 },
+  { id: 5 },
 ];
 
 // ── STATE ──────────────────────────────────────────────────────
@@ -1359,21 +1394,26 @@ function closeDislikeSheet(){ $('dislike-sheet').classList.remove('open'); maybe
 
 $('rec-dislike').addEventListener('click', ()=>{ S.disliked ? (S.disliked=false,syncLikeDislike()) : openDislikeSheet(); });
 $('pl-dislike').addEventListener('click', openDislikeSheet);
-$('sheet-cancel').addEventListener('click', closeDislikeSheet);
 
-$$('.ep-sheet-opt').forEach(opt=>opt.addEventListener('click',function(){
-  $$('.ep-sheet-opt').forEach(o=>o.classList.remove('chosen')); this.classList.add('chosen');
+$$('#dislike-options li').forEach(opt=>opt.addEventListener('click',function(){
   S.disliked=true; syncLikeDislike();
-  
-  // Feedback saved toast immediately
   toast("Thanks! We'll improve your recommendations.", 'success');
   
-  // Wait 1 second, then slide down and change song
   setTimeout(()=>{
     closeDislikeSheet(); 
-    this.classList.remove('chosen');
     fadeNewRec();
   }, 1000);
+}));
+
+function openListenSheet() { $('listen-sheet').classList.add('open'); openBackdrop(); }
+function closeListenSheet(){ $('listen-sheet').classList.remove('open'); maybeCloseBackdrop(); }
+
+$('listen-way-btn').addEventListener('click', openListenSheet);
+
+$$('#ls-versions li, #ls-modes li').forEach(opt=>opt.addEventListener('click',function(){
+  $$('#ls-versions li, #ls-modes li').forEach(o=>o.classList.remove('v-on'));
+  this.classList.add('v-on');
+  toast(`Audio mode switched to: ${this.textContent}`, 'info');
 }));
 
 function fadeNewRec() {
@@ -1637,7 +1677,7 @@ $('demo-skip').addEventListener('click',()=>{ S.demoCancelled=true; S.demoRunnin
 
 $$('.ep-demo-sc').forEach(sc=>sc.addEventListener('click',()=>{
   demoPanel.classList.remove('open');
-  runDemo(DEMO_SCENARIOS[parseInt(sc.dataset.sc)]);
+  runDemo(DEMO_SCENARIOS[parseInt(sc.dataset.sc)-1]);
 }));
 
 function setStep(txt){ $('demo-step-text').textContent=txt; $('demo-bar').classList.add('show'); }
@@ -1662,47 +1702,60 @@ async function runDemo(sc){
   if(S.demoRunning) return;
   S.demoRunning=true; S.demoCancelled=false;
   try{
-    setStep('Step 1 — Typing your search query...');
-    ring($('search-bar')); searchBar.classList.add('focused'); suggestions.classList.add('open');
-    renderRichSearch();
-    await wait(500); if(S.demoCancelled) return;
-    await typeText(searchInput, sc.query); await wait(500); if(S.demoCancelled) return;
+    if(sc.id === 1) {
+      setStep('Simulating Search -> Rainy Drive -> Play...');
+      ring($('search-bar')); searchBar.classList.add('focused'); suggestions.classList.add('open');
+      await wait(500); if(S.demoCancelled) return;
+      await typeText(searchInput, "Rainy Drive"); await wait(500); if(S.demoCancelled) return;
+      ring(null); suggestions.classList.remove('open');
+      sugList.style.display='none'; sugLoading.classList.add('show'); suggestions.classList.add('open');
+      await wait(1200); if(S.demoCancelled) return;
+      sugLoading.classList.remove('show'); sugList.style.display=''; suggestions.classList.remove('open');
+      S.journeyKey='rainy'; loadJourney('rainy'); loadSong(SONGS.rainy||SONGS.default);
+      await wait(500); if(S.demoCancelled) return;
+      playPause(true); toast('Playing: Rainy Drive Mix','info');
+      await wait(1000); if(S.demoCancelled) return;
+    }
+    else if(sc.id === 2) {
+      setStep('Simulating Dislike Flow...');
+      ring($('rec-dislike')); await wait(800); if(S.demoCancelled) return;
+      openDislikeSheet(); await wait(1200); if(S.demoCancelled) return;
+      const opts = $$('#dislike-options li');
+      if(opts.length) {
+        ring(opts[0]); await wait(800); if(S.demoCancelled) return;
+        opts[0].click(); await wait(1200); if(S.demoCancelled) return;
+      }
+    }
+    else if(sc.id === 3) {
+      setStep('Simulating ⓘ Why This Song...');
+      ring($('why-toggle')); await wait(800); if(S.demoCancelled) return;
+      $('why-acc').classList.add('open'); await wait(2500); if(S.demoCancelled) return;
+      $('why-acc').classList.remove('open'); await wait(500); if(S.demoCancelled) return;
+    }
+    else if(sc.id === 4) {
+      setStep('Simulating Listen Your Way...');
+      ring($('listen-way-btn')); await wait(800); if(S.demoCancelled) return;
+      openListenSheet(); await wait(1200); if(S.demoCancelled) return;
+      const opts = $$('#ls-modes li');
+      if(opts.length) {
+        ring(opts[0]); await wait(800); if(S.demoCancelled) return;
+        opts[0].click(); await wait(1500); if(S.demoCancelled) return;
+      }
+      closeListenSheet(); await wait(500); if(S.demoCancelled) return;
+    }
+    else if(sc.id === 5) {
+      setStep('Simulating Spotify Studio...');
+      const stEl=document.querySelector(`[data-studio="live"]`); 
+      if(stEl) { ring(stEl); await wait(800); if(S.demoCancelled) return; }
+      openStudioDrawer('live'); await wait(2500); if(S.demoCancelled) return;
+      $('studio-drawer').classList.remove('open'); maybeCloseBackdrop();
+      await wait(500); if(S.demoCancelled) return;
+    }
 
-    setStep('Step 2 — Generating discovery journey...');
-    ring(null); suggestions.classList.remove('open');
-    sugList.style.display='none'; sugLoading.classList.add('show'); suggestions.classList.add('open');
-    await wait(1600); if(S.demoCancelled) return;
-    sugLoading.classList.remove('show'); sugList.style.display=''; suggestions.classList.remove('open');
-
-    setStep('Step 3 — Building your artist journey...');
-    S.journeyKey=sc.journey; loadJourney(sc.journey);
-    await wait(1200); if(S.demoCancelled) return;
-
-    setStep('Step 4 — Calibrating exploration level...');
-    ring(sliderEl); await animSlider(sc.slider); await wait(500); if(S.demoCancelled) return;
-
-    setStep('Step 5 — Loading your recommended song...');
-    ring($('rec-card')); loadSong(SONGS[sc.song]||SONGS.default); await wait(700); if(S.demoCancelled) return;
-
-    setStep('Step 6 — Playing recommendation...');
-    playPause(true); toast(`Playing: ${SONGS[sc.song].title}`,'info'); await wait(1000); if(S.demoCancelled) return;
-
-    setStep('Step 7 — Showing why this was picked...');
-    ring($('why-acc')); $('why-acc').classList.add('open'); await wait(1200); if(S.demoCancelled) return;
-
-    setStep('Step 8 — Adding to Liked Songs...');
-    ring($('rec-like')); S.liked=true; syncLikeDislike(); toast('Added to Liked Songs'); await wait(1000); if(S.demoCancelled) return;
-
-    setStep('Step 9 — Exploring Spotify Studio...');
-    const stEl=document.querySelector(`[data-studio="${sc.studio}"]`); ring(stEl);
-    await wait(700); if(S.demoCancelled) return;
-    openStudioDrawer(sc.studio); await wait(2200); if(S.demoCancelled) return;
-    $('studio-drawer').classList.remove('open'); maybeCloseBackdrop();
-
-    setStep('✓ Demo complete — explore on your own!');
-    ring(null); toast('Demo finished! Now try it yourself.');
-    await wait(2500);
-  } finally {
+    setStep('Demo complete!');
+    ring(null); toast('Demo finished!');
+  }catch(e){console.error(e);}finally{
+    await wait(1500);
     $('demo-bar').classList.remove('show');
     $$('.demo-ring').forEach(el=>el.classList.remove('demo-ring'));
     S.demoRunning=false;
