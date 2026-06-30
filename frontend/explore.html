@@ -3,370 +3,1504 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spotify Explore BETA</title>
+    <title>Explore BETA — Spotify</title>
+    <meta name="description" content="AI-powered music discovery built around you. Explore new artists, genres, and sounds with Spotify's personalized discovery journey.">
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ================================================================
+           EXPLORE PAGE — SCOPED LAYOUT + COMPONENT OVERRIDES
+           Follows Spotify 8px grid, existing card radius (8px), dark theme
+        ================================================================ */
+
+        /* Three-column grid: sidebar | main | studio */
+        .explore-page .app-layout {
+            display: grid;
+            grid-template-columns: 240px 1fr 272px;
+            grid-template-rows: 1fr 90px;
+            height: 100vh;
+            gap: 8px;
+            padding: 8px;
+            background: #000;
+        }
+
+        /* ── LEFT SIDEBAR ─────────────────────────────────────────── */
+        .ex-sidebar {
+            grid-column: 1;
+            grid-row: 1;
+            background: var(--bg-panel);
+            border-radius: 8px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .ex-logo-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 24px;
+            text-decoration: none;
+        }
+        .ex-logo-row span {
+            color: #fff;
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        .ex-nav-list {
+            list-style: none;
+        }
+        .ex-nav-list li a {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 8px 0;
+            color: var(--text-subdued);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            transition: color 0.15s;
+        }
+        .ex-nav-list li a:hover { color: #fff; }
+        .ex-nav-list li a i {
+            font-size: 20px;
+            width: 24px;
+            text-align: center;
+        }
+
+        .ex-nav-secondary {
+            list-style: none;
+            margin-top: 16px;
+        }
+        .ex-nav-secondary li a {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 8px 0;
+            color: var(--text-subdued);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            transition: color 0.15s;
+        }
+        .ex-nav-secondary li a:hover { color: #fff; }
+        .ex-icon-box {
+            width: 24px;
+            height: 24px;
+            border-radius: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            color: #fff;
+            flex-shrink: 0;
+        }
+        .ex-icon-gray   { background: var(--c-gray); }
+        .ex-icon-liked  { background: linear-gradient(135deg, #450af5, #c4efd9); }
+
+        .ex-divider {
+            border: none;
+            border-top: 1px solid #282828;
+            margin: 16px 0;
+        }
+
+        /* Playlists */
+        .ex-playlist-hdr {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--text-subdued);
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            cursor: pointer;
+            padding: 4px 0;
+            transition: color 0.15s;
+        }
+        .ex-playlist-hdr:hover { color: #fff; }
+
+        .ex-playlist-list {
+            list-style: none;
+            margin-bottom: 4px;
+        }
+        .ex-playlist-list li {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 6px 4px;
+            font-size: 14px;
+            color: var(--text-subdued);
+            cursor: pointer;
+            border-radius: 4px;
+            transition: color 0.15s;
+        }
+        .ex-playlist-list li:hover { color: #fff; }
+        .ex-playlist-list li img {
+            width: 32px;
+            height: 32px;
+            border-radius: 4px;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+
+        .ex-show-more {
+            color: var(--text-subdued);
+            font-size: 12px;
+            font-weight: 600;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-top: 4px;
+            padding: 4px 0;
+            transition: color 0.15s;
+        }
+        .ex-show-more:hover { color: #fff; }
+
+        /* Discovery Progress Widget */
+        .ex-disc-widget {
+            margin-top: 16px;
+            background: var(--bg-elevated);
+            border-radius: 8px;
+            padding: 14px;
+            flex-shrink: 0;
+        }
+        .ex-disc-title {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--text-subdued);
+            margin-bottom: 10px;
+        }
+        .ex-disc-body {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+        .ex-ring-wrap {
+            position: relative;
+            width: 60px;
+            height: 60px;
+            flex-shrink: 0;
+        }
+        .ex-ring-wrap svg { transform: rotate(-90deg); }
+        .ex-ring-bg  { stroke: #333; }
+        .ex-ring-val { stroke: var(--brand-green); stroke-linecap: round; }
+        .ex-ring-score {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            line-height: 1;
+        }
+        .ex-ring-score .num { font-size: 18px; font-weight: 700; color: #fff; display: block; }
+        .ex-ring-score .den { font-size: 9px; color: var(--text-subdued); display: block; }
+        .ex-disc-metrics {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .ex-disc-metric {
+            font-size: 11px;
+            color: var(--text-subdued);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .ex-disc-metric strong { color: #fff; font-weight: 600; }
+        .ex-disc-link {
+            color: var(--brand-green);
+            font-size: 11px;
+            font-weight: 600;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: opacity 0.15s;
+        }
+        .ex-disc-link:hover { opacity: 0.75; }
+
+        /* ── MAIN CONTENT ─────────────────────────────────────────── */
+        .ex-main {
+            grid-column: 2;
+            grid-row: 1;
+            background: var(--bg-panel);
+            border-radius: 8px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .ex-page-hdr {
+            padding: 24px 24px 0 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-shrink: 0;
+        }
+        .ex-page-hdr h1 {
+            font-size: 24px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 4px;
+        }
+        .ex-beta {
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            background: rgba(30,215,96,0.15);
+            color: var(--brand-green);
+            border: 1px solid rgba(30,215,96,0.4);
+            padding: 2px 6px;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+        .ex-page-hdr-sub {
+            font-size: 13px;
+            color: var(--text-subdued);
+        }
+        .ex-hdr-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .ex-hdr-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-subdued);
+            cursor: pointer;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            transition: color 0.15s, background 0.15s;
+        }
+        .ex-hdr-btn:hover { color: #fff; background: rgba(255,255,255,0.08); }
+        .ex-profile-pic {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        /* Body scroll container */
+        .ex-body {
+            padding: 20px 24px 32px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        /* ── HERO SEARCH ──────────────────────────────────────────── */
+        .ex-hero-search {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: #fff;
+            border-radius: 500px;
+            padding: 12px 20px;
+        }
+        .ex-hero-search .si { color: #000; font-size: 16px; }
+        .ex-hero-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            font-size: 15px;
+            font-weight: 500;
+            color: #000;
+            font-family: 'Inter', sans-serif;
+        }
+        .ex-hero-input::placeholder { color: #757575; }
+        .ex-mic-btn {
+            background: transparent;
+            border: none;
+            color: #757575;
+            font-size: 16px;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 50%;
+            transition: color 0.15s;
+            line-height: 1;
+        }
+        .ex-mic-btn:hover { color: #000; }
+        .ex-mic-btn.recording { color: #e63946; }
+
+        /* Chips */
+        .ex-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 12px;
+        }
+        .ex-chip {
+            background: var(--bg-elevated);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: var(--text-subdued);
+            border-radius: 500px;
+            padding: 6px 14px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.15s, color 0.15s, border-color 0.15s;
+            font-family: 'Inter', sans-serif;
+        }
+        .ex-chip:hover {
+            background: var(--bg-highlight);
+            color: #fff;
+            border-color: rgba(255,255,255,0.2);
+        }
+        .ex-chip.active {
+            background: #fff;
+            color: #000;
+            border-color: transparent;
+        }
+
+        /* ── DISCOVERY SLIDER ─────────────────────────────────────── */
+        .ex-slider-wrap { display: flex; flex-direction: column; gap: 8px; }
+        .ex-slider-labels {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+        }
+        .ex-slider-lbl {
+            font-size: 13px;
+            font-weight: 600;
+            color: #fff;
+        }
+        .ex-slider-lbl small {
+            font-size: 11px;
+            font-weight: 400;
+            color: var(--text-subdued);
+            margin-left: 4px;
+        }
+        .ex-range {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(to right, var(--brand-green) 40%, #535353 40%);
+            border-radius: 2px;
+            outline: none;
+            cursor: pointer;
+        }
+        .ex-range::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #fff;
+            cursor: pointer;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.4);
+            transition: transform 0.1s;
+        }
+        .ex-range:hover::-webkit-slider-thumb { transform: scale(1.2); }
+        .ex-range::-moz-range-thumb {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #fff;
+            border: none;
+            cursor: pointer;
+        }
+
+        /* ── SECTION HEADER ───────────────────────────────────────── */
+        .ex-sec-hdr {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+        .ex-sec-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #fff;
+        }
+        .ex-sec-link {
+            color: var(--text-subdued);
+            font-size: 12px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: color 0.15s;
+        }
+        .ex-sec-link:hover { color: #fff; }
+
+        /* ── JOURNEY SCROLL ───────────────────────────────────────── */
+        .ex-journey-row {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 4px;
+            align-items: center;
+        }
+        .ex-jcard {
+            background: var(--bg-elevated);
+            border-radius: 8px;
+            padding: 14px 12px;
+            width: 120px;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+            border: 2px solid transparent;
+        }
+        .ex-jcard:hover { background: var(--bg-highlight); }
+        .ex-jcard.jc-active {
+            border-color: var(--brand-green);
+            background: rgba(30,215,96,0.06);
+        }
+        .ex-jcard img {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .jc-name {
+            font-size: 12px;
+            font-weight: 600;
+            color: #fff;
+            line-height: 1.2;
+        }
+        .jc-lbl {
+            font-size: 10px;
+            color: var(--text-subdued);
+            line-height: 1.3;
+        }
+        .ex-jcard.jc-active .jc-lbl { color: var(--brand-green); }
+
+        .ex-journey-arrow {
+            color: #535353;
+            font-size: 11px;
+            flex-shrink: 0;
+        }
+
+        /* ── RECOMMENDATION CARD ──────────────────────────────────── */
+        .ex-rec-card {
+            background: var(--bg-elevated);
+            border-radius: 8px;
+            padding: 20px;
+            display: flex;
+            gap: 20px;
+        }
+
+        /* Art column */
+        .ex-rec-art {
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        .ex-art-wrap {
+            position: relative;
+            width: 116px;
+            height: 116px;
+        }
+        .ex-art-img {
+            width: 100%;
+            height: 100%;
+            border-radius: 8px;
+            object-fit: cover;
+            display: block;
+        }
+        .ex-match-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: var(--brand-green);
+            color: #000;
+            font-size: 10px;
+            font-weight: 800;
+            padding: 3px 7px;
+            border-radius: 500px;
+            white-space: nowrap;
+        }
+        .ex-rec-play {
+            background: var(--brand-green);
+            color: #000;
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            font-size: 13px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            transition: transform 0.15s;
+        }
+        .ex-rec-play:hover { transform: scale(1.06); }
+
+        /* Info column */
+        .ex-rec-info {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .ex-rec-title-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+        .ex-rec-song { font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 2px; }
+        .ex-rec-artist { font-size: 13px; color: var(--text-subdued); }
+        .ex-rec-actions { display: flex; align-items: center; gap: 8px; }
+        .ex-act-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-subdued);
+            font-size: 18px;
+            cursor: pointer;
+            padding: 4px;
+            transition: color 0.15s;
+            line-height: 1;
+        }
+        .ex-act-btn:hover { color: #fff; }
+        .ex-act-btn.liked    { color: var(--brand-green); }
+        .ex-act-btn.disliked { color: #e63946; }
+
+        /* Why this song */
+        .ex-why-lbl {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--text-subdued);
+            margin-bottom: 6px;
+        }
+        .ex-reasons {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .ex-reasons li {
+            font-size: 12px;
+            color: var(--text-subdued);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .ex-reasons li i { color: var(--brand-green); font-size: 11px; flex-shrink: 0; }
+
+        /* Inline dislike feedback */
+        .ex-dislike-panel {
+            display: none;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .ex-dislike-panel.open { display: flex; }
+        .ex-dislike-lbl {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--text-subdued);
+            margin-bottom: 4px;
+        }
+        .ex-df-opt {
+            background: var(--bg-highlight);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 4px;
+            padding: 7px 12px;
+            font-size: 12px;
+            color: var(--text-subdued);
+            cursor: pointer;
+            text-align: left;
+            transition: background 0.15s, color 0.15s, border-color 0.15s;
+            font-family: 'Inter', sans-serif;
+        }
+        .ex-df-opt:hover { background: #333; color: #fff; border-color: rgba(255,255,255,0.15); }
+        .ex-df-opt.chosen {
+            background: rgba(230,57,70,0.14);
+            border-color: rgba(230,57,70,0.4);
+            color: #ff8a8a;
+        }
+
+        /* Versions panel */
+        .ex-versions-col {
+            width: 136px;
+            flex-shrink: 0;
+            border-left: 1px solid rgba(255,255,255,0.08);
+            padding-left: 18px;
+            display: flex;
+            flex-direction: column;
+        }
+        .ex-ver-lbl {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--text-subdued);
+            margin-bottom: 10px;
+        }
+        .ex-ver-list { list-style: none; }
+        .ex-ver-list li {
+            font-size: 13px;
+            color: var(--text-subdued);
+            padding: 9px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: color 0.15s;
+        }
+        .ex-ver-list li:hover { color: #fff; }
+        .ex-ver-list li.v-on { color: #fff; font-weight: 600; }
+        .ex-ver-list li.v-on i { color: var(--brand-green); font-size: 10px; }
+        .ex-ver-list li.v-spotify { color: var(--brand-green); border-bottom: none; margin-top: 4px; }
+        .ex-ver-list li.v-spotify:hover { color: #1db954; }
+
+        /* ── STUDIO RIGHT COLUMN ──────────────────────────────────── */
+        .ex-studio {
+            grid-column: 3;
+            grid-row: 1;
+            background: var(--bg-panel);
+            border-radius: 8px;
+            padding: 16px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+        .ex-studio-hdr {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+        .ex-studio-title { font-size: 16px; font-weight: 700; color: #fff; }
+        .ex-studio-chev  { color: var(--text-subdued); font-size: 12px; }
+        .ex-studio-sub   { font-size: 12px; color: var(--text-subdued); margin-bottom: 20px; }
+
+        .ex-studio-list { list-style: none; display: flex; flex-direction: column; }
+        .ex-studio-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+        .ex-studio-item:hover { background: rgba(255,255,255,0.08); }
+        .ex-studio-thumb {
+            width: 48px;
+            height: 48px;
+            border-radius: 4px;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+        .ex-studio-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+        .ex-studio-item h4 { font-size: 14px; font-weight: 600; color: #fff; margin-bottom: 2px; }
+        .ex-studio-item p  { font-size: 11px; color: var(--text-subdued); }
+        .ex-studio-item .snew {
+            color: var(--brand-green);
+            border: 1px solid rgba(30,215,96,0.4);
+            padding: 1px 4px;
+            border-radius: 2px;
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            margin-left: 4px;
+        }
+        .ex-premium-note {
+            margin-top: 16px;
+            background: var(--bg-elevated);
+            border-radius: 8px;
+            padding: 12px;
+            font-size: 11px;
+            color: var(--text-subdued);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .ex-premium-note i { color: var(--brand-green); font-size: 14px; }
+
+        /* ── PLAYER ───────────────────────────────────────────────── */
+        .ex-player {
+            grid-column: 1 / -1;
+            grid-row: 2;
+            background: #0a0a0a;
+            border-top: 1px solid #282828;
+            border-radius: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 16px;
+        }
+        .player-left, .player-right { width: 30%; display: flex; align-items: center; }
+        .player-right { justify-content: flex-end; gap: 12px; }
+        .player-center {
+            width: 40%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        .ex-now-playing { display: flex; align-items: center; gap: 12px; }
+        .ex-cover-mini {
+            width: 56px;
+            height: 56px;
+            border-radius: 4px;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        .ex-cover-mini img { width: 100%; height: 100%; object-fit: cover; }
+        .ex-mini-info h4 { font-size: 14px; font-weight: 500; margin-bottom: 2px; }
+        .ex-mini-info p  { font-size: 11px; color: var(--text-subdued); }
+
+        .ex-player-fb {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            margin-left: 12px;
+        }
+        .ex-fb-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-subdued);
+            font-size: 16px;
+            cursor: pointer;
+            padding: 4px;
+            transition: color 0.15s;
+        }
+        .ex-fb-btn:hover  { color: #fff; }
+        .ex-fb-btn.liked  { color: var(--brand-green); }
+        .ex-fb-btn.unliked { color: #e63946; }
+
+        .ex-controls { display: flex; align-items: center; gap: 16px; }
+        .ctrl {
+            background: transparent;
+            border: none;
+            color: var(--text-subdued);
+            font-size: 16px;
+            cursor: pointer;
+            transition: color 0.15s;
+        }
+        .ctrl:hover { color: #fff; }
+        .ctrl-play {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #fff;
+            color: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            transition: transform 0.1s;
+        }
+        .ctrl-play:hover { transform: scale(1.05); background: #f0f0f0; }
+
+        .ex-pb-container {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .ex-time { font-size: 11px; color: var(--text-subdued); }
+        .ex-pb {
+            flex: 1;
+            height: 4px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 2px;
+            cursor: pointer;
+            position: relative;
+        }
+        .ex-pb-fill {
+            height: 100%;
+            background: #fff;
+            border-radius: 2px;
+            position: relative;
+        }
+        .ex-pb:hover .ex-pb-fill { background: var(--brand-green); }
+        .ex-pb-handle {
+            position: absolute;
+            right: -6px;
+            top: -4px;
+            width: 12px;
+            height: 12px;
+            background: #fff;
+            border-radius: 50%;
+            display: none;
+        }
+        .ex-pb:hover .ex-pb-handle { display: block; }
+
+        .ex-vol { display: flex; align-items: center; gap: 8px; }
+        .ex-vol-bar {
+            width: 80px;
+            height: 4px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 2px;
+            cursor: pointer;
+        }
+        .ex-vol-fill { height: 100%; width: 70%; background: #fff; border-radius: 2px; }
+        .ex-vol-bar:hover .ex-vol-fill { background: var(--brand-green); }
+
+        /* ── RESPONSIVE ───────────────────────────────────────────── */
+        @media (max-width: 1100px) {
+            .explore-page .app-layout { grid-template-columns: 200px 1fr; }
+            .ex-studio { display: none; }
+        }
+        @media (max-width: 768px) {
+            .explore-page .app-layout {
+                grid-template-columns: 1fr;
+                grid-template-rows: 1fr 90px;
+            }
+            .ex-sidebar { display: none; }
+            .ex-main { grid-column: 1; grid-row: 1; }
+            .ex-player { grid-column: 1; grid-row: 2; }
+            .ex-rec-card { flex-direction: column; }
+            .ex-versions-col {
+                width: 100%;
+                border-left: none;
+                padding-left: 0;
+                border-top: 1px solid rgba(255,255,255,0.08);
+                padding-top: 14px;
+                margin-top: 8px;
+            }
+        }
+    </style>
 </head>
 <body class="explore-page">
-    <div class="app-layout">
-        
-        <!-- Left Sidebar (Explore Custom) -->
-        <nav class="sidebar explore-sidebar-custom">
-            <div class="sidebar-top-links">
-                <a href="#" class="spotify-logo-btn" style="margin-bottom: 20px; display: inline-block;">
-                    <svg viewBox="0 0 496 512" width="32" height="32" fill="#1ed760" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M248 8C111.1 8 8 111.1 8 248s103.1 240 240 240 240-103.1 240-240S384.9 8 248 8zm110.7 338.1c-4.3 0-6.7-1.4-10.2-3.6-36.3-21.7-80.3-33.3-127-33.3-26.1 0-52.8 3.8-77.3 9.5-4.8 1.2-7.9 2.4-11 2.4-9.5 0-15.5-7.1-15.5-15.5 0-10 5.7-15.2 13.3-17.1 29-7.1 58.5-11.4 90.5-11.4 51 0 100.7 13.3 141.5 38.1 6.7 3.8 10.5 7.9 10.5 17.1.1 8.6-6.7 14.3-15.8 14.3zm29.5-68.1c-5.2 0-8.6-2.4-11.4-4.3-40.4-24-104.7-39-166.4-39-32.8 0-62.3 4.8-84.9 11.4-5.2 1.4-8.1 2.9-11.9 2.9-11.4 0-19.5-9-19.5-20.5 0-11 4.3-17.6 14.8-20.9 27.1-8.6 59.3-13.3 101.4-13.3 64.9 0 134.6 16.2 183.4 44.2 8.1 4.8 12.4 10.2 12.4 21.7-.1 11.6-8.7 18.8-18.9 18.8zm34.3-77.3c-5.7 0-9-1.4-13.3-4.3-45.7-27.6-116.2-43.6-182.4-43.6-37.1 0-73.3 5.2-101.9 13.3-4.3 1.4-8.1 2.9-13.3 2.9-13.8 0-24.3-10.5-24.3-24.3 0-13.3 6.7-21.4 17.6-24.8 33.8-10 73.3-15.5 121.9-15.5 72.9 0 148.7 17.1 203.4 49.3 9.5 5.7 14.3 12.9 14.3 24.3 0 13.8-10.9 22.7-22 22.7z"/>
-                    </svg> <span style="color: white; font-weight: 700; font-size: 20px; margin-left: 8px; vertical-align: super;">Spotify</span>
+<div class="app-layout">
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         LEFT SIDEBAR
+    ════════════════════════════════════════════════════════════════ -->
+    <nav class="ex-sidebar" aria-label="Site navigation">
+
+        <!-- Logo -->
+        <a href="#" class="ex-logo-row" aria-label="Spotify">
+            <svg viewBox="0 0 496 512" width="28" height="28" fill="#1ed760" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+                <path d="M248 8C111.1 8 8 111.1 8 248s103.1 240 240 240 240-103.1 240-240S384.9 8 248 8zm110.7 338.1c-4.3 0-6.7-1.4-10.2-3.6-36.3-21.7-80.3-33.3-127-33.3-26.1 0-52.8 3.8-77.3 9.5-4.8 1.2-7.9 2.4-11 2.4-9.5 0-15.5-7.1-15.5-15.5 0-10 5.7-15.2 13.3-17.1 29-7.1 58.5-11.4 90.5-11.4 51 0 100.7 13.3 141.5 38.1 6.7 3.8 10.5 7.9 10.5 17.1.1 8.6-6.7 14.3-15.8 14.3zm29.5-68.1c-5.2 0-8.6-2.4-11.4-4.3-40.4-24-104.7-39-166.4-39-32.8 0-62.3 4.8-84.9 11.4-5.2 1.4-8.1 2.9-11.9 2.9-11.4 0-19.5-9-19.5-20.5 0-11 4.3-17.6 14.8-20.9 27.1-8.6 59.3-13.3 101.4-13.3 64.9 0 134.6 16.2 183.4 44.2 8.1 4.8 12.4 10.2 12.4 21.7-.1 11.6-8.7 18.8-18.9 18.8zm34.3-77.3c-5.7 0-9-1.4-13.3-4.3-45.7-27.6-116.2-43.6-182.4-43.6-37.1 0-73.3 5.2-101.9 13.3-4.3 1.4-8.1 2.9-13.3 2.9-13.8 0-24.3-10.5-24.3-24.3 0-13.3 6.7-21.4 17.6-24.8 33.8-10 73.3-15.5 121.9-15.5 72.9 0 148.7 17.1 203.4 49.3 9.5 5.7 14.3 12.9 14.3 24.3 0 13.8-10.9 22.7-22 22.7z"/>
+            </svg>
+            <span>Spotify</span>
+        </a>
+
+        <!-- Primary nav -->
+        <ul class="ex-nav-list" role="list">
+            <li><a href="index.html" id="nav-home"><i class="fa-solid fa-house" aria-hidden="true"></i> Home</a></li>
+            <li><a href="#" id="nav-search"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i> Search</a></li>
+            <li><a href="#" id="nav-library"><i class="fa-solid fa-book-open" aria-hidden="true"></i> Your Library</a></li>
+        </ul>
+
+        <!-- Secondary nav -->
+        <ul class="ex-nav-secondary" role="list">
+            <li>
+                <a href="#" id="nav-create">
+                    <span class="ex-icon-box ex-icon-gray" aria-hidden="true"><i class="fa-solid fa-plus"></i></span>
+                    Create Playlist
                 </a>
-                
-                <ul class="nav-links">
-                    <li><a href="index.html"><i class="fa-solid fa-house"></i> Home</a></li>
-                    <li><a href="#"><i class="fa-solid fa-search"></i> Search</a></li>
-                    <li><a href="#"><i class="fa-solid fa-book-open"></i> Your Library</a></li>
-                </ul>
+            </li>
+            <li>
+                <a href="#" id="nav-liked">
+                    <span class="ex-icon-box ex-icon-liked" aria-hidden="true"><i class="fa-solid fa-heart"></i></span>
+                    Liked Songs
+                </a>
+            </li>
+        </ul>
 
-                <ul class="nav-links secondary-links" style="margin-top: 30px;">
-                    <li><a href="#"><div class="icon-box bg-gray"><i class="fa-solid fa-plus"></i></div> Create Playlist</a></li>
-                    <li><a href="#"><div class="icon-box liked-bg"><i class="fa-solid fa-heart"></i></div> Liked Songs</a></li>
-                </ul>
+        <hr class="ex-divider">
 
-                <hr class="sidebar-divider">
+        <!-- Your Playlists -->
+        <div class="ex-playlist-hdr" id="playlist-toggle" role="button" tabindex="0" aria-label="Your playlists">
+            <span>Your Playlists</span>
+            <i class="fa-solid fa-plus" aria-hidden="true"></i>
+        </div>
+        <ul class="ex-playlist-list" id="ex-plist" role="list">
+            <li id="pl-chill"><img src="https://picsum.photos/seed/chillvibes/32/32" alt="" aria-hidden="true"> Chill Vibes</li>
+            <li id="pl-focus"><img src="https://picsum.photos/seed/focusflow/32/32" alt="" aria-hidden="true"> Focus Flow</li>
+            <li id="pl-road"><img src="https://picsum.photos/seed/roadtrip/32/32" alt="" aria-hidden="true"> Roadtrip Hits</li>
+            <li id="pl-workout"><img src="https://picsum.photos/seed/workout/32/32" alt="" aria-hidden="true"> Workout Mix</li>
+            <li id="pl-bollywood"><img src="https://picsum.photos/seed/bollywood/32/32" alt="" aria-hidden="true"> Bollywood Classics</li>
+        </ul>
+        <a href="#" class="ex-show-more" id="show-more-link">
+            Show more <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+        </a>
 
-                <div class="your-playlists">
-                    <div class="playlist-header">
-                        <p>Your Playlists</p>
-                        <i class="fa-solid fa-plus"></i>
+        <!-- Discovery Progress Widget -->
+        <div class="ex-disc-widget" role="region" aria-label="Discovery Progress">
+            <div class="ex-disc-title">Discovery Progress</div>
+            <div class="ex-disc-body">
+                <!-- Ring score -->
+                <div class="ex-ring-wrap" role="img" aria-label="72 out of 100">
+                    <svg width="60" height="60" viewBox="0 0 60 60" aria-hidden="true">
+                        <circle class="ex-ring-bg" cx="30" cy="30" r="24" stroke-width="3" fill="none"/>
+                        <circle class="ex-ring-val" cx="30" cy="30" r="24" stroke-width="3" fill="none"
+                            stroke-dasharray="150.8" stroke-dashoffset="42.2"/>
+                    </svg>
+                    <div class="ex-ring-score">
+                        <span class="num">72</span>
+                        <span class="den">/100</span>
                     </div>
-                    <ul class="playlist-list-mini">
-                        <li><img src="https://picsum.photos/seed/chillvibes/30/30"> Chill Vibes</li>
-                        <li><img src="https://picsum.photos/seed/focusflow/30/30"> Focus Flow</li>
-                        <li><img src="https://picsum.photos/seed/roadtrip/30/30"> Roadtrip Hits</li>
-                        <li><img src="https://picsum.photos/seed/workout/30/30"> Workout Mix</li>
-                        <li><img src="https://picsum.photos/seed/bollywood/30/30"> Bollywood Classics</li>
-                    </ul>
-                    <a href="#" class="show-more">Show more <i class="fa-solid fa-chevron-down"></i></a>
                 </div>
-
-                <div class="discovery-progress sidebar-progress">
-                    <h3 class="progress-title">DISCOVERY PROGRESS</h3>
-                    <div class="progress-circle-mini">
-                        <div class="progress-score-mini">
-                            <span class="score-num-mini">72</span>
-                            <span class="score-den-mini">/100</span>
-                        </div>
-                        <svg class="progress-ring-mini" width="70" height="70">
-                            <circle class="progress-ring__circle" stroke="#2a2a2a" stroke-width="4" fill="transparent" r="30" cx="35" cy="35"/>
-                            <circle class="progress-ring__value" stroke="#1ed760" stroke-width="4" fill="transparent" r="30" cx="35" cy="35" stroke-dasharray="188.4" stroke-dashoffset="52"/>
-                        </svg>
-                    </div>
-                    <div class="progress-feedback-mini">
-                        <p><strong>Great job!</strong></p>
-                        <p>You're exploring 28% more music than last month.</p>
-                    </div>
-                    <div class="progress-stats-mini">
-                        <div class="stat-item"><span class="stat-val purple">+18</span> <span class="stat-label">New Artists</span></div>
-                        <div class="stat-item"><span class="stat-val red">+7</span> <span class="stat-label">Genres Explored</span></div>
-                        <div class="stat-item"><span class="stat-val blue">+3</span> <span class="stat-label">Languages</span></div>
-                        <div class="stat-item"><span class="stat-val yellow">+24</span> <span class="stat-label">Hidden Gems Discovered</span></div>
-                    </div>
-                    <a href="#" class="view-progress-link">View progress <i class="fa-solid fa-arrow-right"></i></a>
+                <!-- Metrics -->
+                <div class="ex-disc-metrics">
+                    <div class="ex-disc-metric"><strong>+18</strong> New Artists</div>
+                    <div class="ex-disc-metric"><strong>+7</strong> Genres</div>
+                    <div class="ex-disc-metric"><strong>+3</strong> Languages</div>
+                    <div class="ex-disc-metric"><strong>24</strong> Hidden Gems</div>
                 </div>
             </div>
-        </nav>
+            <a href="#" class="ex-disc-link" id="disc-progress-link">
+                View Progress <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+            </a>
+        </div>
 
-        <!-- Main Content Area -->
-        <main class="main-view explore-beta-main">
-            <div class="explore-top-bar">
-                <div class="explore-title">
-                    <h1>Explore <span class="beta-badge">BETA</span></h1>
-                    <p>AI-powered music discovery, built around you.</p>
-                </div>
-                <div class="top-bar-right">
-                    <button class="nav-btn circular"><i class="fa-regular fa-bell"></i></button>
-                    <img src="https://picsum.photos/seed/userprofile/32/32" class="profile-pic" alt="User">
-                </div>
+    </nav><!-- /ex-sidebar -->
+
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         MAIN CONTENT
+    ════════════════════════════════════════════════════════════════ -->
+    <main class="ex-main" id="main-content" role="main" aria-label="Explore content">
+
+        <!-- Page header -->
+        <header class="ex-page-hdr">
+            <div>
+                <h1>Explore <span class="ex-beta">BETA</span></h1>
+                <p class="ex-page-hdr-sub">AI-powered music discovery built around you.</p>
             </div>
+            <div class="ex-hdr-right">
+                <button class="ex-hdr-btn" id="notify-btn" aria-label="Notifications">
+                    <i class="fa-regular fa-bell" aria-hidden="true"></i>
+                </button>
+                <img src="https://picsum.photos/seed/userprofile/32/32" alt="User profile" class="ex-profile-pic">
+            </div>
+        </header>
 
-            <div class="explore-content-area">
-                <div class="explore-left-col">
-                    <div class="explore-header-box">
-                        <h2>What do you want to discover today?</h2>
-                        <div class="explore-search-bar">
-                            <i class="fa-solid fa-search"></i>
-                            <input type="text" placeholder="Describe your mood, activity, or type of music...">
-                            <i class="fa-solid fa-microphone"></i>
-                        </div>
-                        <div class="explore-chips">
-                            <button class="explore-chip"><i class="fa-solid fa-cloud-rain" style="color: #4ade80;"></i> Rainy Drive</button>
-                            <button class="explore-chip"><i class="fa-regular fa-gem" style="color: #38bdf8;"></i> Hidden Gems</button>
-                            <button class="explore-chip"><i class="fa-solid fa-guitar" style="color: #fcd34d;"></i> Indie India</button>
-                            <button class="explore-chip"><i class="fa-regular fa-face-smile" style="color: #facc15;"></i> Songs like Arijit but happier</button>
-                            <button class="explore-chip"><i class="fa-solid fa-shuffle" style="color: #c084fc;"></i> Surprise me</button>
-                        </div>
+        <!-- Body -->
+        <div class="ex-body">
+
+            <!-- ── Hero Search ───────────────────────────────────────── -->
+            <section aria-label="Natural language discovery search">
+                <div class="ex-hero-search" role="search">
+                    <i class="fa-solid fa-magnifying-glass si" aria-hidden="true"></i>
+                    <input
+                        type="text"
+                        id="discover-input"
+                        class="ex-hero-input"
+                        placeholder="What do you want to discover today?"
+                        aria-label="Describe what you want to discover"
+                        autocomplete="off"
+                        spellcheck="false"
+                    >
+                    <button class="ex-mic-btn" id="mic-btn" aria-label="Voice input" title="Voice search">
+                        <i class="fa-solid fa-microphone" aria-hidden="true"></i>
+                    </button>
+                </div>
+                <div class="ex-chips" role="list" aria-label="Quick discovery suggestions">
+                    <button class="ex-chip" id="chip-rainy"    role="listitem">Rainy Drive</button>
+                    <button class="ex-chip" id="chip-gems"     role="listitem">Hidden Gems</button>
+                    <button class="ex-chip" id="chip-indie"    role="listitem">Indie India</button>
+                    <button class="ex-chip" id="chip-arijit"   role="listitem">Songs like Arijit but happier</button>
+                    <button class="ex-chip" id="chip-surprise" role="listitem">Surprise Me</button>
+                </div>
+            </section>
+
+            <!-- ── Discovery Slider ──────────────────────────────────── -->
+            <section class="ex-slider-wrap" aria-label="Discovery level">
+                <div class="ex-slider-labels">
+                    <span class="ex-slider-lbl">Comfort <small id="familiar-pct">60% Familiar</small></span>
+                    <span class="ex-slider-lbl">Adventure <small id="new-pct">40% New</small></span>
+                </div>
+                <input
+                    type="range"
+                    min="0"
+                    max="100"
+                    value="40"
+                    class="ex-range"
+                    id="disc-slider"
+                    aria-label="Comfort to Adventure"
+                    aria-valuemin="0"
+                    aria-valuemax="100"
+                    aria-valuenow="40"
+                >
+            </section>
+
+            <!-- ── Discovery Journey ─────────────────────────────────── -->
+            <section aria-label="Discovery journey">
+                <div class="ex-sec-hdr">
+                    <span class="ex-sec-title">Your Discovery Journey</span>
+                    <a href="#" class="ex-sec-link" id="journey-link">See all <i class="fa-solid fa-chevron-right" aria-hidden="true"></i></a>
+                </div>
+                <div class="ex-journey-row" role="list" aria-label="Artist progression from familiar to new">
+
+                    <div class="ex-jcard jc-active" id="jc-arijit" role="listitem" tabindex="0" aria-current="true" aria-label="Arijit Singh – You love">
+                        <img src="https://i.scdn.co/image/ab6761610000e5eb0261696c5df3be99da6ed3f3" alt="Arijit Singh" loading="lazy">
+                        <span class="jc-name">Arijit Singh</span>
+                        <span class="jc-lbl">You love</span>
                     </div>
 
-                    <div class="exploration-level">
-                        <div class="level-header">
-                            <h3>Exploration Level <i class="fa-regular fa-circle-question"></i></h3>
-                            <div class="level-labels">
-                                <span class="level-label">Comfort<br><small>60% Familiar</small></span>
-                                <span class="level-label text-right">Adventure<br><small>40% New</small></span>
-                            </div>
-                        </div>
-                        <input type="range" min="0" max="100" value="40" class="explore-slider" id="explore-slider">
+                    <div class="ex-journey-arrow" aria-hidden="true"><i class="fa-solid fa-chevron-right"></i></div>
+
+                    <div class="ex-jcard" id="jc-prateek" role="listitem" tabindex="0" aria-label="Prateek Kuhad – Similar vibe">
+                        <img src="https://i.scdn.co/image/ab6761610000e5eb21b033d59e37cc60a6cb6e72" alt="Prateek Kuhad" loading="lazy">
+                        <span class="jc-name">Prateek Kuhad</span>
+                        <span class="jc-lbl">Similar vibe</span>
                     </div>
 
-                    <div class="discovery-journey">
-                        <div class="journey-header">
-                            <h3>Your Discovery Journey</h3>
-                            <a href="#" class="view-full-journey">View full journey <i class="fa-solid fa-arrow-right"></i></a>
-                        </div>
-                        <p class="journey-subtitle">A personalized path to new music, made for you.</p>
-                        
-                        <div class="journey-timeline">
-                            <div class="timeline-line"></div>
-                            
-                            <div class="journey-item">
-                                <span class="journey-step">1</span>
-                                <img src="https://i.scdn.co/image/ab6761610000e5eb0261696c5df3be99da6ed3f3" alt="Arijit Singh" class="journey-img">
-                                <h4>Arijit Singh</h4>
-                                <p>Familiar<br>You love</p>
-                            </div>
-                            <div class="timeline-arrow"><i class="fa-solid fa-arrow-right"></i></div>
-                            
-                            <div class="journey-item">
-                                <span class="journey-step">2</span>
-                                <img src="https://i.scdn.co/image/ab6761610000e5eb21b033d59e37cc60a6cb6e72" alt="Prateek Kuhad" class="journey-img">
-                                <h4>Prateek Kuhad</h4>
-                                <p>Similar vibe<br>Close to your taste</p>
-                            </div>
-                            <div class="timeline-arrow"><i class="fa-solid fa-arrow-right"></i></div>
-                            
-                            <div class="journey-item active">
-                                <span class="journey-step">3</span>
-                                <img src="https://i.scdn.co/image/ab6761610000e5ebc40600e02356f99fbf422594" alt="Anuv Jain" class="journey-img">
-                                <h4>Anuv Jain</h4>
-                                <p>Fresh discovery<br>New for you</p>
-                            </div>
-                            <div class="timeline-arrow"><i class="fa-solid fa-arrow-right"></i></div>
-                            
-                            <div class="journey-item">
-                                <span class="journey-step">4</span>
-                                <img src="https://i.scdn.co/image/ab6761610000e5ebb19af0ea736c6228d6eb539c" alt="Lifafa" class="journey-img">
-                                <h4>Lifafa</h4>
-                                <p>Indie Gems<br>Rising artist</p>
-                            </div>
-                            <div class="timeline-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+                    <div class="ex-journey-arrow" aria-hidden="true"><i class="fa-solid fa-chevron-right"></i></div>
 
-                            <div class="journey-item">
-                                <span class="journey-step">5</span>
-                                <img src="https://i.scdn.co/image/ab6761610000e5eb98544d640ff1c93a743a14cc" alt="Talha Anjum" class="journey-img">
-                                <h4>Talha Anjum</h4>
-                                <p>Expand your taste<br>New sound</p>
-                            </div>
-                            <div class="timeline-arrow"><i class="fa-solid fa-arrow-right"></i></div>
-
-                            <div class="journey-item">
-                                <span class="journey-step">6</span>
-                                <img src="https://picsum.photos/seed/japaneseindie/90/90" alt="Japanese Indie" class="journey-img">
-                                <h4>Japanese Indie</h4>
-                                <p>Explore more<br>Different culture</p>
-                            </div>
-                            <div class="timeline-arrow"><i class="fa-solid fa-arrow-right"></i></div>
-
-                            <div class="journey-item">
-                                <span class="journey-step">7</span>
-                                <img src="https://picsum.photos/seed/novoamor/90/90" alt="Novo Amor" class="journey-img">
-                                <h4>Novo Amor</h4>
-                                <p>Go global<br>New feel</p>
-                            </div>
-                        </div>
+                    <div class="ex-jcard" id="jc-anuv" role="listitem" tabindex="0" aria-label="Anuv Jain – Fresh discovery">
+                        <img src="https://i.scdn.co/image/ab6761610000e5ebc40600e02356f99fbf422594" alt="Anuv Jain" loading="lazy">
+                        <span class="jc-name">Anuv Jain</span>
+                        <span class="jc-lbl">Fresh discovery</span>
                     </div>
 
-                    <div class="explore-song-details">
-                        <div class="song-details-left">
-                            <div class="song-info-top">
-                                <div class="explore-album-wrapper">
-                                    <img src="https://i.scdn.co/image/ab67616d0000b273b400780212f8674d825f1d7d" alt="Alag Aasman" class="explore-album-art">
-                                    <button class="card-play-btn"><i class="fa-solid fa-play"></i></button>
-                                </div>
-                                <div class="song-meta">
-                                    <h2>Alag Aasman</h2>
-                                    <p>Anuv Jain</p>
-                                    <div class="song-tags">
-                                        <span class="tag tag-match">92% Match</span>
-                                        <span class="tag tag-new">New Artist</span>
-                                    </div>
-                                </div>
-                                <div class="song-actions-top">
-                                    <button class="btn-icon active-green"><i class="fa-solid fa-heart"></i></button>
-                                    <button class="btn-icon"><i class="fa-solid fa-ban"></i></button>
-                                    <button class="btn-icon"><i class="fa-solid fa-ellipsis"></i></button>
-                                </div>
+                    <div class="ex-journey-arrow" aria-hidden="true"><i class="fa-solid fa-chevron-right"></i></div>
+
+                    <div class="ex-jcard" id="jc-lifafa" role="listitem" tabindex="0" aria-label="Lifafa – Hidden Gem">
+                        <img src="https://i.scdn.co/image/ab6761610000e5ebb19af0ea736c6228d6eb539c" alt="Lifafa" loading="lazy">
+                        <span class="jc-name">Lifafa</span>
+                        <span class="jc-lbl">Hidden Gem</span>
+                    </div>
+
+                    <div class="ex-journey-arrow" aria-hidden="true"><i class="fa-solid fa-chevron-right"></i></div>
+
+                    <div class="ex-jcard" id="jc-talha" role="listitem" tabindex="0" aria-label="Talha Anjum – Different culture">
+                        <img src="https://i.scdn.co/image/ab6761610000e5eb98544d640ff1c93a743a14cc" alt="Talha Anjum" loading="lazy">
+                        <span class="jc-name">Talha Anjum</span>
+                        <span class="jc-lbl">Different culture</span>
+                    </div>
+
+                    <div class="ex-journey-arrow" aria-hidden="true"><i class="fa-solid fa-chevron-right"></i></div>
+
+                    <div class="ex-jcard" id="jc-jpindie" role="listitem" tabindex="0" aria-label="Japanese Indie – Global recommendation">
+                        <img src="https://picsum.photos/seed/japaneseindie/90/90" alt="Japanese Indie" loading="lazy">
+                        <span class="jc-name">Japanese Indie</span>
+                        <span class="jc-lbl">Global rec</span>
+                    </div>
+
+                    <div class="ex-journey-arrow" aria-hidden="true"><i class="fa-solid fa-chevron-right"></i></div>
+
+                    <div class="ex-jcard" id="jc-novo" role="listitem" tabindex="0" aria-label="Novo Amor – Global recommendation">
+                        <img src="https://picsum.photos/seed/novoamor/90/90" alt="Novo Amor" loading="lazy">
+                        <span class="jc-name">Novo Amor</span>
+                        <span class="jc-lbl">Global rec</span>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- ── Now Playing Recommendation Card ──────────────────── -->
+            <section aria-label="Recommended song">
+                <div class="ex-sec-hdr">
+                    <span class="ex-sec-title">Recommended for You</span>
+                </div>
+                <div class="ex-rec-card" id="rec-card">
+
+                    <!-- Artwork -->
+                    <div class="ex-rec-art">
+                        <div class="ex-art-wrap">
+                            <img class="ex-art-img" src="https://i.scdn.co/image/ab67616d0000b273b400780212f8674d825f1d7d" alt="Alag Aasman — Anuv Jain" loading="lazy">
+                            <span class="ex-match-badge" aria-label="92 percent match">92% Match</span>
+                        </div>
+                        <button class="ex-rec-play" id="rec-play-btn" aria-label="Play Alag Aasman by Anuv Jain">
+                            <i class="fa-solid fa-play" aria-hidden="true"></i>
+                        </button>
+                    </div>
+
+                    <!-- Info + feedback -->
+                    <div class="ex-rec-info">
+
+                        <!-- Title row with actions -->
+                        <div class="ex-rec-title-row">
+                            <div>
+                                <div class="ex-rec-song">Alag Aasman</div>
+                                <div class="ex-rec-artist">Anuv Jain</div>
                             </div>
-                            <div class="song-feedback">
-                                <div class="why-this">
-                                    <h4>Why this song?</h4>
-                                    <ul>
-                                        <li><i class="fa-solid fa-check" style="color: #1ed760;"></i> You enjoy soulful acoustic songs</li>
-                                        <li><i class="fa-solid fa-check" style="color: #1ed760;"></i> Similar vibe to Prateek Kuhad</li>
-                                        <li><i class="fa-solid fa-check" style="color: #1ed760;"></i> You've liked Anuv Jain's style before</li>
-                                        <li><i class="fa-solid fa-check" style="color: #1ed760;"></i> This artist is less mainstream</li>
-                                    </ul>
-                                </div>
-                                <div class="why-not">
-                                    <h4>Why not?</h4>
-                                    <ul>
-                                        <li><i class="fa-regular fa-circle-xmark"></i> Wrong mood</li>
-                                        <li><i class="fa-regular fa-circle-xmark"></i> Too popular</li>
-                                        <li><i class="fa-regular fa-circle-xmark"></i> Already know this</li>
-                                        <li><i class="fa-regular fa-circle-xmark"></i> Not my taste</li>
-                                        <li><i class="fa-regular fa-circle-xmark"></i> Don't recommend artist</li>
-                                    </ul>
-                                </div>
+                            <div class="ex-rec-actions">
+                                <button class="ex-act-btn" id="rec-like-btn" aria-label="Like" aria-pressed="false">
+                                    <i class="fa-regular fa-heart" aria-hidden="true"></i>
+                                </button>
+                                <button class="ex-act-btn" id="rec-dislike-btn" aria-label="Dislike" aria-pressed="false">
+                                    <i class="fa-solid fa-thumbs-down" aria-hidden="true"></i>
+                                </button>
+                                <button class="ex-act-btn" id="rec-more-btn" aria-label="More options">
+                                    <i class="fa-solid fa-ellipsis" aria-hidden="true"></i>
+                                </button>
                             </div>
                         </div>
-                        <div class="song-details-right">
-                            <h4>Versions</h4>
-                            <ul class="versions-list">
-                                <li class="active"><span>Original</span> <i class="fa-solid fa-chart-simple" style="color: #1ed760;"></i></li>
-                                <li><span>Acoustic</span> <span>{ }</span></li>
-                                <li><span>Studio</span></li>
-                                <li><span>Live</span></li>
-                                <li><span>Instrumental</span></li>
-                                <li class="spotify-original">Spotify Original <i class="fa-solid fa-plus"></i></li>
+
+                        <!-- WHY THIS SONG? -->
+                        <div>
+                            <div class="ex-why-lbl">Why this song?</div>
+                            <ul class="ex-reasons" aria-label="AI reasons for this recommendation">
+                                <li><i class="fa-solid fa-check" aria-hidden="true"></i> Similar vocals</li>
+                                <li><i class="fa-solid fa-check" aria-hidden="true"></i> You liked Prateek Kuhad</li>
+                                <li><i class="fa-solid fa-check" aria-hidden="true"></i> Acoustic preference</li>
+                                <li><i class="fa-solid fa-check" aria-hidden="true"></i> Less mainstream</li>
                             </ul>
                         </div>
-                    </div>
-                </div>
 
-                <div class="explore-sidebar-right">
-                    <div class="studio-header">
-                        <h3>Spotify Studio <i class="fa-solid fa-chevron-right"></i></h3>
-                        <p>Exclusive music experiences.</p>
-                    </div>
-                    <div class="studio-items">
-                        <div class="studio-item">
-                            <img src="https://i.scdn.co/image/ab67706c0000da84577889e472cecc2d4ea9e0ab" alt="Live Sessions">
-                            <div class="studio-info">
-                                <h4>Live Sessions</h4>
-                                <p>Exclusive live performances <span class="tag-new-small">New</span></p>
-                            </div>
+                        <!-- Inline dislike feedback -->
+                        <div class="ex-dislike-panel" id="dislike-panel" role="group" aria-label="Tell us why not" aria-hidden="true">
+                            <div class="ex-dislike-lbl">Why not?</div>
+                            <button class="ex-df-opt" id="df-mood">Wrong mood</button>
+                            <button class="ex-df-opt" id="df-popular">Too popular</button>
+                            <button class="ex-df-opt" id="df-know">Already know this</button>
+                            <button class="ex-df-opt" id="df-taste">Not my taste</button>
+                            <button class="ex-df-opt" id="df-artist">Don't recommend artist</button>
                         </div>
-                        <div class="studio-item">
-                            <div class="studio-icon bg-green-dark"><i class="fa-solid fa-wave-square"></i></div>
-                            <div class="studio-info">
-                                <h4>Studio Originals</h4>
-                                <p>Spotify-recorded versions <span class="tag-new-small">New</span></p>
-                            </div>
-                        </div>
-                        <div class="studio-item">
-                            <img src="https://i.scdn.co/image/ab67706c0000da84a95ea81b5fc912304b4c730e" alt="Behind the Song">
-                            <div class="studio-info">
-                                <h4>Behind the Song</h4>
-                                <p>Stories from artists and creators <span class="tag-new-small">New</span></p>
-                            </div>
-                        </div>
-                        <div class="studio-item">
-                            <img src="https://i.scdn.co/image/ab67706c0000da8445163ed037785c4bf2ec7a25" alt="Early Releases">
-                            <div class="studio-info">
-                                <h4>Early Releases</h4>
-                                <p>Hear new music first <span class="tag-new-small">New</span></p>
-                            </div>
-                        </div>
-                        <div class="studio-item">
-                            <img src="https://i.scdn.co/image/ab67706c0000da84e1b8b8d00d234ba443c3327f" alt="Artist Commentary">
-                            <div class="studio-info">
-                                <h4>Artist Commentary</h4>
-                                <p>Hear it from the artist <span class="tag-new-small">New</span></p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </main>
 
-        <!-- Player Bar -->
-        <footer class="bottom-player">
-            <div class="player-left">
-                <div class="now-playing-mini">
-                    <div class="cover-art-mini">
-                        <img src="https://i.scdn.co/image/ab67616d0000b273b400780212f8674d825f1d7d" alt="Album Art" style="width:100%; height:100%; object-fit:cover; border-radius:4px;">
+                    </div><!-- /ex-rec-info -->
+
+                    <!-- Versions panel -->
+                    <div class="ex-versions-col" aria-label="Song versions">
+                        <div class="ex-ver-lbl">Versions</div>
+                        <ul class="ex-ver-list" role="listbox" aria-label="Select version">
+                            <li class="v-on" id="ver-original" role="option" tabindex="0" aria-selected="true">Original <i class="fa-solid fa-bars" aria-hidden="true"></i></li>
+                            <li id="ver-acoustic"    role="option" tabindex="0" aria-selected="false">Acoustic</li>
+                            <li id="ver-studio"      role="option" tabindex="0" aria-selected="false">Studio</li>
+                            <li id="ver-live"        role="option" tabindex="0" aria-selected="false">Live</li>
+                            <li id="ver-instrumental" role="option" tabindex="0" aria-selected="false">Instrumental</li>
+                            <li class="v-spotify" id="ver-spotify" role="option" tabindex="0">
+                                <i class="fa-brands fa-spotify" aria-hidden="true"></i> Spotify Original
+                            </li>
+                        </ul>
                     </div>
-                    <div class="mini-info">
-                        <h4>Alag Aasman</h4>
-                        <p>Anuv Jain</p>
-                    </div>
+
+                </div><!-- /ex-rec-card -->
+            </section>
+
+        </div><!-- /ex-body -->
+    </main><!-- /ex-main -->
+
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         RIGHT COLUMN — SPOTIFY STUDIO
+    ════════════════════════════════════════════════════════════════ -->
+    <aside class="ex-studio" aria-label="Spotify Studio">
+        <div class="ex-studio-hdr">
+            <span class="ex-studio-title">Spotify Studio</span>
+            <i class="fa-solid fa-chevron-right ex-studio-chev" aria-hidden="true"></i>
+        </div>
+        <p class="ex-studio-sub">Exclusive music experiences</p>
+
+        <ul class="ex-studio-list" role="list">
+            <li class="ex-studio-item" id="studio-live" role="listitem" tabindex="0">
+                <img class="ex-studio-thumb" src="https://i.scdn.co/image/ab67706c0000da84577889e472cecc2d4ea9e0ab" alt="Live Sessions" loading="lazy">
+                <div>
+                    <h4>Live Sessions</h4>
+                    <p>Exclusive live performances <span class="snew">NEW</span></p>
                 </div>
-                <div class="mini-actions">
-                    <button class="action-btn mini active like-btn"><i class="fa-solid fa-heart" style="color: #1ed760;"></i></button>
-                    <button class="action-btn mini"><i class="fa-solid fa-tv"></i></button>
+            </li>
+            <li class="ex-studio-item" id="studio-originals" role="listitem" tabindex="0">
+                <div class="ex-studio-icon bg-green-dark" aria-hidden="true"><i class="fa-solid fa-wave-square"></i></div>
+                <div>
+                    <h4>Studio Originals</h4>
+                    <p>Spotify-recorded versions <span class="snew">NEW</span></p>
+                </div>
+            </li>
+            <li class="ex-studio-item" id="studio-behind" role="listitem" tabindex="0">
+                <img class="ex-studio-thumb" src="https://i.scdn.co/image/ab67706c0000da84a95ea81b5fc912304b4c730e" alt="Behind the Song" loading="lazy">
+                <div>
+                    <h4>Behind the Song</h4>
+                    <p>Stories from artists <span class="snew">NEW</span></p>
+                </div>
+            </li>
+            <li class="ex-studio-item" id="studio-early" role="listitem" tabindex="0">
+                <img class="ex-studio-thumb" src="https://i.scdn.co/image/ab67706c0000da8445163ed037785c4bf2ec7a25" alt="Early Releases" loading="lazy">
+                <div>
+                    <h4>Early Releases</h4>
+                    <p>Hear new music first <span class="snew">NEW</span></p>
+                </div>
+            </li>
+            <li class="ex-studio-item" id="studio-commentary" role="listitem" tabindex="0">
+                <img class="ex-studio-thumb" src="https://i.scdn.co/image/ab67706c0000da84e1b8b8d00d234ba443c3327f" alt="Artist Commentary" loading="lazy">
+                <div>
+                    <h4>Artist Commentary</h4>
+                    <p>Hear it from the artist <span class="snew">NEW</span></p>
+                </div>
+            </li>
+        </ul>
+
+        <div class="ex-premium-note">
+            <i class="fa-brands fa-spotify" aria-hidden="true"></i>
+            <span>Premium-only exclusive content</span>
+        </div>
+    </aside>
+
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         BOTTOM PLAYER
+    ════════════════════════════════════════════════════════════════ -->
+    <footer class="ex-player" aria-label="Now playing">
+
+        <!-- Left: track info + like/dislike -->
+        <div class="player-left">
+            <div class="ex-now-playing">
+                <div class="ex-cover-mini">
+                    <img src="https://i.scdn.co/image/ab67616d0000b273b400780212f8674d825f1d7d" alt="Alag Aasman album art">
+                </div>
+                <div class="ex-mini-info">
+                    <h4>Alag Aasman</h4>
+                    <p>Anuv Jain</p>
                 </div>
             </div>
-            
-            <div class="player-center">
-                <div class="player-controls">
-                    <button class="control-btn"><i class="fa-solid fa-shuffle"></i></button>
-                    <button class="control-btn"><i class="fa-solid fa-backward-step"></i></button>
-                    <button class="control-btn play-pause"><i class="fa-solid fa-play"></i></button>
-                    <button class="control-btn"><i class="fa-solid fa-forward-step"></i></button>
-                    <button class="control-btn"><i class="fa-solid fa-repeat"></i></button>
-                </div>
-                <div class="progress-bar-container">
-                    <span class="time">1:24</span>
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: 30%;">
-                            <div class="progress-handle"></div>
-                        </div>
-                    </div>
-                    <span class="time">4:28</span>
-                </div>
+            <div class="ex-player-fb">
+                <button class="ex-fb-btn" id="player-like-btn" aria-label="Like" aria-pressed="false">
+                    <i class="fa-regular fa-heart" aria-hidden="true"></i>
+                </button>
+                <button class="ex-fb-btn" id="player-dislike-btn" aria-label="Dislike" aria-pressed="false">
+                    <i class="fa-solid fa-thumbs-down" aria-hidden="true"></i>
+                </button>
             </div>
-            
-            <div class="player-right">
-                <button class="control-btn"><i class="fa-solid fa-microphone"></i></button>
-                <button class="control-btn"><i class="fa-solid fa-list-ul"></i></button>
-                <button class="control-btn"><i class="fa-solid fa-computer"></i></button>
-                <div class="volume-control">
-                    <button class="control-btn"><i class="fa-solid fa-volume-high"></i></button>
-                    <div class="progress-bar volume-bar">
-                        <div class="progress-fill" style="width: 70%;"></div>
+        </div>
+
+        <!-- Center: controls + progress -->
+        <div class="player-center">
+            <div class="ex-controls">
+                <button class="ctrl" id="player-shuffle" aria-label="Shuffle"><i class="fa-solid fa-shuffle" aria-hidden="true"></i></button>
+                <button class="ctrl" id="player-prev"    aria-label="Previous"><i class="fa-solid fa-backward-step" aria-hidden="true"></i></button>
+                <button class="ctrl ctrl-play" id="player-play" aria-label="Play" aria-pressed="false">
+                    <i class="fa-solid fa-play" aria-hidden="true"></i>
+                </button>
+                <button class="ctrl" id="player-next"   aria-label="Next"><i class="fa-solid fa-forward-step" aria-hidden="true"></i></button>
+                <button class="ctrl" id="player-repeat" aria-label="Repeat"><i class="fa-solid fa-repeat" aria-hidden="true"></i></button>
+            </div>
+            <div class="ex-pb-container">
+                <span class="ex-time" id="player-cur">1:24</span>
+                <div class="ex-pb" id="player-pb" role="slider" aria-label="Playback position" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100">
+                    <div class="ex-pb-fill" id="player-fill" style="width:30%">
+                        <div class="ex-pb-handle"></div>
                     </div>
                 </div>
-                <button class="control-btn"><i class="fa-solid fa-up-right-and-down-left-from-center"></i></button>
+                <span class="ex-time" id="player-tot">4:28</span>
             </div>
-        </footer>
-    </div>
-    
-    <script src="script.js"></script>
-    <script>
-        // Specific logic for explore page
-        const whyNotOptions = document.querySelectorAll('.why-not li');
-        whyNotOptions.forEach(option => {
-            option.addEventListener('click', function() {
-                const icon = this.querySelector('i');
-                if (icon.classList.contains('fa-circle-xmark')) {
-                    icon.classList.remove('fa-circle-xmark', 'fa-regular');
-                    icon.classList.add('fa-circle-check', 'fa-solid');
-                    icon.style.color = '#e63946';
-                    this.style.color = '#fff';
-                } else {
-                    icon.classList.add('fa-circle-xmark', 'fa-regular');
-                    icon.classList.remove('fa-circle-check', 'fa-solid');
-                    icon.style.color = '';
-                    this.style.color = '';
-                }
-            });
+        </div>
+
+        <!-- Right: aux controls -->
+        <div class="player-right">
+            <button class="ctrl" aria-label="Lyrics"><i class="fa-solid fa-microphone" aria-hidden="true"></i></button>
+            <button class="ctrl" aria-label="Queue"><i class="fa-solid fa-list-ul" aria-hidden="true"></i></button>
+            <button class="ctrl" aria-label="Connect device"><i class="fa-solid fa-computer" aria-hidden="true"></i></button>
+            <div class="ex-vol">
+                <button class="ctrl" aria-label="Volume"><i class="fa-solid fa-volume-high" aria-hidden="true"></i></button>
+                <div class="ex-vol-bar" role="slider" aria-label="Volume" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100">
+                    <div class="ex-vol-fill" id="vol-fill"></div>
+                </div>
+            </div>
+            <button class="ctrl" aria-label="Full screen"><i class="fa-solid fa-up-right-and-down-left-from-center" aria-hidden="true"></i></button>
+        </div>
+
+    </footer>
+
+</div><!-- /app-layout -->
+
+<script>
+/* =================================================================
+   EXPLORE PAGE — INTERACTIONS
+================================================================= */
+
+// ── Discovery Slider ──────────────────────────────────────────
+const slider      = document.getElementById('disc-slider');
+const familiarEl  = document.getElementById('familiar-pct');
+const newEl       = document.getElementById('new-pct');
+
+function syncSlider() {
+    const n = parseInt(slider.value);
+    const c = 100 - n;
+    familiarEl.textContent = c + '% Familiar';
+    newEl.textContent      = n + '% New';
+    slider.setAttribute('aria-valuenow', n);
+    slider.style.background = `linear-gradient(to right, var(--brand-green) ${n}%, #535353 ${n}%)`;
+}
+slider.addEventListener('input', syncSlider);
+syncSlider();
+
+// ── Suggestion Chips ──────────────────────────────────────────
+document.querySelectorAll('.ex-chip').forEach(chip => {
+    chip.addEventListener('click', function () {
+        document.querySelectorAll('.ex-chip').forEach(c => c.classList.remove('active'));
+        this.classList.add('active');
+        const input = document.getElementById('discover-input');
+        if (this.id === 'chip-surprise') {
+            input.value = '';
+            input.placeholder = 'Finding something new for you…';
+        } else {
+            input.value = this.textContent.trim();
+        }
+    });
+});
+
+// ── Mic Button ────────────────────────────────────────────────
+const micBtn = document.getElementById('mic-btn');
+micBtn.addEventListener('click', function () {
+    const on = this.classList.toggle('recording');
+    this.querySelector('i').style.color = on ? '#e63946' : '';
+    this.setAttribute('aria-label', on ? 'Stop recording' : 'Voice input');
+});
+
+// ── Journey Cards ─────────────────────────────────────────────
+document.querySelectorAll('.ex-jcard').forEach(card => {
+    card.addEventListener('click', function () {
+        document.querySelectorAll('.ex-jcard').forEach(c => {
+            c.classList.remove('jc-active');
+            c.setAttribute('aria-current', 'false');
         });
+        this.classList.add('jc-active');
+        this.setAttribute('aria-current', 'true');
+    });
+    card.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); card.click(); }
+    });
+});
 
-        const versionOptions = document.querySelectorAll('.versions-list li:not(.spotify-original)');
-        versionOptions.forEach(option => {
-            option.addEventListener('click', function() {
-                versionOptions.forEach(opt => opt.classList.remove('active'));
-                this.classList.add('active');
-            });
+// ── Rec Card — Like ───────────────────────────────────────────
+const recLikeBtn = document.getElementById('rec-like-btn');
+const playerLikeBtn = document.getElementById('player-like-btn');
+
+function setLiked(state) {
+    recLikeBtn.setAttribute('aria-pressed', state);
+    playerLikeBtn.setAttribute('aria-pressed', state);
+    if (state) {
+        recLikeBtn.classList.add('liked');
+        recLikeBtn.innerHTML = '<i class="fa-solid fa-heart" aria-hidden="true"></i>';
+        playerLikeBtn.classList.add('liked');
+        playerLikeBtn.innerHTML = '<i class="fa-solid fa-heart" aria-hidden="true"></i>';
+    } else {
+        recLikeBtn.classList.remove('liked');
+        recLikeBtn.innerHTML = '<i class="fa-regular fa-heart" aria-hidden="true"></i>';
+        playerLikeBtn.classList.remove('liked');
+        playerLikeBtn.innerHTML = '<i class="fa-regular fa-heart" aria-hidden="true"></i>';
+    }
+}
+
+recLikeBtn.addEventListener('click', () => {
+    const on = recLikeBtn.getAttribute('aria-pressed') !== 'true';
+    setLiked(on);
+    if (on) setDisliked(false);
+});
+
+playerLikeBtn.addEventListener('click', () => {
+    const on = playerLikeBtn.getAttribute('aria-pressed') !== 'true';
+    setLiked(on);
+    if (on) setDisliked(false);
+});
+
+// ── Rec Card — Dislike + inline feedback ─────────────────────
+const recDislikeBtn  = document.getElementById('rec-dislike-btn');
+const playerDislikeBtn = document.getElementById('player-dislike-btn');
+const dislikePanel   = document.getElementById('dislike-panel');
+
+function setDisliked(state) {
+    recDislikeBtn.setAttribute('aria-pressed', state);
+    playerDislikeBtn.setAttribute('aria-pressed', state);
+    if (state) {
+        recDislikeBtn.classList.add('disliked');
+        playerDislikeBtn.classList.add('unliked');
+        dislikePanel.classList.add('open');
+        dislikePanel.setAttribute('aria-hidden', 'false');
+    } else {
+        recDislikeBtn.classList.remove('disliked');
+        playerDislikeBtn.classList.remove('unliked');
+        dislikePanel.classList.remove('open');
+        dislikePanel.setAttribute('aria-hidden', 'true');
+        document.querySelectorAll('.ex-df-opt').forEach(o => o.classList.remove('chosen'));
+    }
+}
+
+recDislikeBtn.addEventListener('click', () => {
+    const on = recDislikeBtn.getAttribute('aria-pressed') !== 'true';
+    setDisliked(on);
+    if (on) setLiked(false);
+});
+
+playerDislikeBtn.addEventListener('click', () => {
+    const on = playerDislikeBtn.getAttribute('aria-pressed') !== 'true';
+    setDisliked(on);
+    if (on) setLiked(false);
+});
+
+// Dislike option selection → dismiss after 800ms
+document.querySelectorAll('.ex-df-opt').forEach(opt => {
+    opt.addEventListener('click', function () {
+        document.querySelectorAll('.ex-df-opt').forEach(o => o.classList.remove('chosen'));
+        this.classList.add('chosen');
+        setTimeout(() => setDisliked(false), 800);
+    });
+});
+
+// ── Versions ─────────────────────────────────────────────────
+const verItems = document.querySelectorAll('.ex-ver-list li:not(.v-spotify)');
+verItems.forEach(v => {
+    v.addEventListener('click', function () {
+        verItems.forEach(li => {
+            li.classList.remove('v-on');
+            li.setAttribute('aria-selected', 'false');
+            // strip icon
+            const icon = li.querySelector('i');
+            if (icon) icon.remove();
         });
-    </script>
+        this.classList.add('v-on');
+        this.setAttribute('aria-selected', 'true');
+        const ic = document.createElement('i');
+        ic.className = 'fa-solid fa-bars';
+        ic.setAttribute('aria-hidden', 'true');
+        ic.style.cssText = 'color:var(--brand-green);font-size:10px;';
+        this.appendChild(ic);
+    });
+    v.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); v.click(); } });
+});
+
+// ── Play/Pause (both rec card and player) ─────────────────────
+let isPlaying = false;
+const playerPlay = document.getElementById('player-play');
+const recPlay    = document.getElementById('rec-play-btn');
+
+function togglePlay() {
+    isPlaying = !isPlaying;
+    playerPlay.setAttribute('aria-pressed', isPlaying);
+    playerPlay.setAttribute('aria-label', isPlaying ? 'Pause' : 'Play');
+    playerPlay.innerHTML = isPlaying
+        ? '<i class="fa-solid fa-pause" aria-hidden="true"></i>'
+        : '<i class="fa-solid fa-play" aria-hidden="true"></i>';
+    recPlay.innerHTML = isPlaying
+        ? '<i class="fa-solid fa-pause" aria-hidden="true"></i>'
+        : '<i class="fa-solid fa-play" aria-hidden="true"></i>';
+}
+playerPlay.addEventListener('click', togglePlay);
+recPlay.addEventListener('click', togglePlay);
+
+// ── Studio keyboard support ───────────────────────────────────
+document.querySelectorAll('.ex-studio-item').forEach(item => {
+    item.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); item.click(); } });
+});
+</script>
+
 </body>
 </html>

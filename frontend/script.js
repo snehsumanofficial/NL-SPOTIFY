@@ -136,6 +136,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const likeBtns = document.querySelectorAll('.like-btn');
     const dislikeBtns = document.querySelectorAll('.dislike-btn');
 
+    // Guard: exit early on pages that don't have the main search (e.g. explore.html)
+    if (!searchInput) return;
+
     // State
     let currentMood = null;
     let currentActivity = null;
