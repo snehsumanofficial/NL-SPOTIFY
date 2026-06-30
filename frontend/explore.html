@@ -21,6 +21,13 @@
   .explore-page ::-webkit-scrollbar-thumb { background: #535353; border-radius: 3px; }
   .explore-page ::-webkit-scrollbar-thumb:hover { background: #7a7a7a; }
 
+  /* Utilities */
+  .img-zoom { transition: transform 0.25s ease; }
+  .img-zoom:hover { transform: scale(1.03); }
+  .card-elevate { transition: all 0.25s ease; }
+  .card-elevate:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
+  .ripple-active:active { transform: scale(0.97); opacity: 0.8; }
+
   /* ── LAYOUT ──────────────────────────────────────────────────── */
   .ep-layout {
     display: grid;
@@ -202,7 +209,7 @@
   .ep-mic-btn.listening { color: #e63946; animation: micPulse 1s ease infinite; }
   @keyframes micPulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.25)} }
 
-  /* Suggestions */
+  /* Suggestions Dropdown */
   .ep-suggestions {
     position: absolute; top: calc(100% + 8px); left: 0; right: 0;
     background: #282828; border-radius: 8px; z-index: 500;
@@ -226,23 +233,32 @@
   @keyframes dotBounce { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-8px)} }
   .ep-sug-loading-text { font-size: 14px; color: #b3b3b3; }
 
+  /* Rich Search Results */
   .ep-sug-section { padding: 10px 0; }
   .ep-sug-group-label {
     font-size: 10px; font-weight: 700; letter-spacing: 1px;
     text-transform: uppercase; color: #b3b3b3; padding: 4px 16px 8px;
   }
-  .ep-sug-item {
+  .ep-rich-sug-item {
     display: flex; align-items: center; gap: 12px;
     padding: 10px 16px; cursor: pointer; font-size: 14px; color: #fff;
     transition: background .1s;
   }
-  .ep-sug-item:hover { background: rgba(255,255,255,.08); }
-  .ep-sug-item i { color: #b3b3b3; width: 16px; text-align: center; font-size: 13px; }
-  .ep-sug-item span.sug-label { flex: 1; }
-  .ep-sug-chip {
-    background: #333; padding: 2px 8px; border-radius: 500px;
-    font-size: 11px; color: #b3b3b3; flex-shrink: 0;
+  .ep-rich-sug-item:hover { background: rgba(255,255,255,.08); }
+  .ep-rich-sug-item img { width: 40px; height: 40px; border-radius: 4px; object-fit: cover; flex-shrink: 0; }
+  .ep-rich-info { flex: 1; min-width: 0; }
+  .ep-rich-title { font-weight: 600; font-size: 14px; margin-bottom: 2px; }
+  .ep-rich-sub { font-size: 12px; color: #b3b3b3; display: flex; align-items: center; gap: 6px; }
+  .ep-rich-meta { background: #333; padding: 1px 6px; border-radius: 4px; font-size: 10px; }
+  .ep-rich-actions { display: flex; align-items: center; gap: 8px; opacity: 0; transition: opacity 0.2s; }
+  .ep-rich-sug-item:hover .ep-rich-actions { opacity: 1; }
+  .ep-rich-btn {
+    background: transparent; border: none; color: #b3b3b3; font-size: 16px;
+    cursor: pointer; padding: 4px; transition: color .15s, transform .15s;
   }
+  .ep-rich-btn:hover { color: #fff; transform: scale(1.1); }
+  .ep-rich-play { color: #1ed760; }
+  .ep-rich-play:hover { color: #1db954; }
 
   /* ── CHIPS ───────────────────────────────────────────────────── */
   .ep-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
@@ -325,9 +341,10 @@
   }
 
   .ep-rec-art-col { flex-shrink: 0; display: flex; flex-direction: column; align-items: center; gap: 10px; }
-  .ep-art-wrap { position: relative; width: 116px; height: 116px; }
-  .ep-art-img { width: 100%; height: 100%; border-radius: 8px; object-fit: cover; }
-  .ep-match { position: absolute; top: -8px; right: -8px; background: #1ed760; color: #000; font-size: 10px; font-weight: 800; padding: 3px 7px; border-radius: 500px; white-space: nowrap; }
+  .ep-art-wrap { position: relative; width: 116px; height: 116px; border-radius: 8px; overflow: hidden; }
+  .ep-art-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease; }
+  .ep-art-wrap:hover .ep-art-img { transform: scale(1.05); }
+  .ep-match { position: absolute; top: -8px; right: -8px; background: #1ed760; color: #000; font-size: 10px; font-weight: 800; padding: 3px 7px; border-radius: 500px; white-space: nowrap; z-index: 2; }
   .ep-rec-play {
     background: #1ed760; color: #000; border: none; width: 36px; height: 36px;
     border-radius: 50%; font-size: 13px; cursor: pointer;
@@ -339,8 +356,10 @@
 
   .ep-rec-info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 10px; }
   .ep-rec-title-row { display: flex; justify-content: space-between; align-items: flex-start; }
-  .ep-rec-song { font-size: 18px; font-weight: 700; }
-  .ep-rec-artist { font-size: 13px; color: #b3b3b3; margin-top: 2px; }
+  .ep-rec-song { font-size: 18px; font-weight: 700; cursor: pointer; }
+  .ep-rec-song:hover { text-decoration: underline; }
+  .ep-rec-artist { font-size: 13px; color: #b3b3b3; margin-top: 2px; cursor: pointer; }
+  .ep-rec-artist:hover { text-decoration: underline; color: #fff; }
   .ep-rec-acts { display: flex; align-items: center; gap: 6px; }
   .ep-act {
     background: transparent; border: none; color: #b3b3b3; font-size: 18px;
@@ -357,7 +376,8 @@
     display: flex; align-items: center; justify-content: space-between;
     padding: 10px 0; cursor: pointer; user-select: none;
   }
-  .ep-why-label { font-size: 11px; font-weight: 700; letter-spacing: .8px; text-transform: uppercase; color: #b3b3b3; }
+  .ep-why-label { font-size: 11px; font-weight: 700; letter-spacing: .8px; text-transform: uppercase; color: #b3b3b3; transition: color 0.15s; }
+  .ep-acc-header:hover .ep-why-label { color: #fff; }
   .ep-acc-icon { color: #b3b3b3; font-size: 11px; transition: transform .25s ease; }
   .ep-accordion.open .ep-acc-icon { transform: rotate(180deg); }
   .ep-acc-body { max-height: 0; overflow: hidden; opacity: 0; transition: max-height .3s ease, opacity .3s ease; }
@@ -402,9 +422,9 @@
     border-radius: 6px; cursor: pointer; transition: background .15s;
   }
   .ep-si:hover { background: rgba(255,255,255,.07); }
+  .ep-si-img-wrap { overflow: hidden; border-radius: 4px; width: 48px; height: 48px; flex-shrink: 0; }
   .ep-si:hover .ep-si-thumb { transform: scale(1.05); }
-  .ep-si-thumb { width: 48px; height: 48px; border-radius: 4px; object-fit: cover; flex-shrink: 0; transition: transform .2s; }
-  .ep-si-icon { width: 48px; height: 48px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; background: #0d7335; color: #1ed760; }
+  .ep-si-thumb { width: 100%; height: 100%; object-fit: cover; transition: transform .2s; }
   .ep-si h4 { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
   .ep-si p { font-size: 11px; color: #b3b3b3; }
   .ep-snew { color: #1ed760; border: 1px solid rgba(30,215,96,.4); padding: 1px 4px; border-radius: 2px; font-size: 9px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase; margin-left: 4px; }
@@ -422,11 +442,13 @@
   .pl-right { justify-content: flex-end; gap: 12px; }
   .pl-center { width: 40%; display: flex; flex-direction: column; align-items: center; gap: 8px; }
   .pl-now-playing { display: flex; align-items: center; gap: 12px; }
-  .pl-cover { width: 56px; height: 56px; border-radius: 4px; overflow: hidden; flex-shrink: 0; }
-  .pl-cover img { width: 100%; height: 100%; object-fit: cover; }
+  .pl-cover { width: 56px; height: 56px; border-radius: 4px; overflow: hidden; flex-shrink: 0; cursor: pointer; }
+  .pl-cover img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.2s; }
+  .pl-cover:hover img { transform: scale(1.05); }
   .pl-info h4 { font-size: 14px; font-weight: 500; margin-bottom: 2px; cursor: pointer; }
   .pl-info h4:hover { text-decoration: underline; }
-  .pl-info p { font-size: 11px; color: #b3b3b3; }
+  .pl-info p { font-size: 11px; color: #b3b3b3; cursor: pointer; }
+  .pl-info p:hover { color: #fff; text-decoration: underline; }
   .pl-actions { display: flex; align-items: center; gap: 2px; margin-left: 12px; }
   .pl-btn {
     background: transparent; border: none; color: #b3b3b3; font-size: 16px;
@@ -618,7 +640,7 @@
 
   /* Dislike Sheet */
   .ep-dislike-sheet {
-    position: fixed; bottom: -340px; left: 50%; transform: translateX(-50%);
+    position: fixed; bottom: -440px; left: 50%; transform: translateX(-50%);
     width: 480px; max-width: 96vw; background: #282828; border-radius: 16px 16px 0 0;
     z-index: 1100; padding: 24px; transition: bottom .3s ease;
     box-shadow: 0 -8px 32px rgba(0,0,0,.6);
@@ -758,16 +780,16 @@
     <button class="ep-playlist-add"><i class="fa-solid fa-plus"></i></button>
   </div>
   <ul class="ep-playlists" id="ep-playlists">
-    <li><img src="https://picsum.photos/seed/chillvibespl/32/32" alt="">Chill Vibes</li>
-    <li><img src="https://picsum.photos/seed/focusflowpl/32/32" alt="">Focus Flow</li>
-    <li><img src="https://picsum.photos/seed/roadtriphits/32/32" alt="">Roadtrip Hits</li>
-    <li><img src="https://picsum.photos/seed/workoutmix88/32/32" alt="">Workout Mix</li>
-    <li><img src="https://picsum.photos/seed/bollywoodcl/32/32" alt="">Bollywood Classics</li>
+    <li><img src="https://picsum.photos/seed/chillvibespl/60/60" alt="" class="img-zoom">Chill Vibes</li>
+    <li><img src="https://picsum.photos/seed/focusflowpl/60/60" alt="" class="img-zoom">Focus Flow</li>
+    <li><img src="https://picsum.photos/seed/roadtriphits/60/60" alt="" class="img-zoom">Roadtrip Hits</li>
+    <li><img src="https://picsum.photos/seed/workoutmix88/60/60" alt="" class="img-zoom">Workout Mix</li>
+    <li><img src="https://picsum.photos/seed/bollywoodcl/60/60" alt="" class="img-zoom">Bollywood Classics</li>
   </ul>
   <a href="#" class="ep-show-more">Show more <i class="fa-solid fa-chevron-down"></i></a>
 
   <!-- Discovery Progress Widget -->
-  <div class="ep-disc-widget" id="disc-widget">
+  <div class="ep-disc-widget card-elevate" id="disc-widget">
     <div class="ep-disc-widget-title">Discovery Progress</div>
     <div class="ep-disc-body">
       <div class="ep-ring-wrap">
@@ -797,8 +819,8 @@
       <p class="ep-page-sub">AI-powered music discovery, built around you.</p>
     </div>
     <div class="ep-header-right">
-      <button class="ep-icon-btn" id="notify-btn"><i class="fa-regular fa-bell"></i></button>
-      <img src="https://picsum.photos/seed/userprofile42/32/32" alt="Profile" class="ep-profile">
+      <button class="ep-icon-btn ripple-active" id="notify-btn"><i class="fa-regular fa-bell"></i></button>
+      <img src="https://picsum.photos/seed/userprofile42/60/60" alt="Profile" class="ep-profile img-zoom">
     </div>
   </header>
 
@@ -819,30 +841,17 @@
             <span class="ep-sug-loading-text">Finding your next discovery...</span>
           </div>
           <div id="sug-list">
-            <div class="ep-sug-section">
-              <div class="ep-sug-group-label">Recent</div>
-              <div class="ep-sug-item" data-query="Songs like Arijit Singh but different"><i class="fa-solid fa-clock-rotate-left"></i><span class="sug-label">Songs like Arijit Singh but different</span></div>
-              <div class="ep-sug-item" data-query="Hidden indie artists India"><i class="fa-solid fa-clock-rotate-left"></i><span class="sug-label">Hidden indie artists India</span></div>
-            </div>
-            <div class="ep-sug-section">
-              <div class="ep-sug-group-label">Try Asking</div>
-              <div class="ep-sug-item" data-query="I want songs for a rainy drive"><i class="fa-solid fa-wand-magic-sparkles"></i><span class="sug-label">I want songs for a rainy drive</span><span class="ep-sug-chip">Mood</span></div>
-              <div class="ep-sug-item" data-query="Songs like Arijit Singh but not mainstream"><i class="fa-solid fa-wand-magic-sparkles"></i><span class="sug-label">Songs like Arijit Singh but not mainstream</span><span class="ep-sug-chip">Taste</span></div>
-              <div class="ep-sug-item" data-query="Happy songs for morning workout"><i class="fa-solid fa-wand-magic-sparkles"></i><span class="sug-label">Happy songs for morning workout</span><span class="ep-sug-chip">Activity</span></div>
-              <div class="ep-sug-item" data-query="Hidden indie artists from India"><i class="fa-solid fa-wand-magic-sparkles"></i><span class="sug-label">Hidden indie artists from India</span><span class="ep-sug-chip">Explore</span></div>
-              <div class="ep-sug-item" data-query="90s Bollywood nostalgia"><i class="fa-solid fa-wand-magic-sparkles"></i><span class="sug-label">90s Bollywood nostalgia</span><span class="ep-sug-chip">Era</span></div>
-              <div class="ep-sug-item" data-query="Jazz for late night studying"><i class="fa-solid fa-wand-magic-sparkles"></i><span class="sug-label">Jazz for late night studying</span><span class="ep-sug-chip">Focus</span></div>
-            </div>
+            <!-- Results populate here via JS -->
           </div>
         </div>
       </div>
       <!-- Chips -->
       <div class="ep-chips" id="chips">
-        <button class="ep-chip" data-journey="rainy">🌧 Rainy Drive</button>
-        <button class="ep-chip" data-journey="gems">💎 Hidden Gems</button>
-        <button class="ep-chip" data-journey="indie">🎸 Indie India</button>
-        <button class="ep-chip" data-journey="arijit">🎤 Like Arijit</button>
-        <button class="ep-chip" data-journey="surprise">✨ Surprise Me</button>
+        <button class="ep-chip ripple-active" data-journey="rainy">🌧 Rainy Drive</button>
+        <button class="ep-chip ripple-active" data-journey="gems">💎 Hidden Gems</button>
+        <button class="ep-chip ripple-active" data-journey="indie">🎸 Indie India</button>
+        <button class="ep-chip ripple-active" data-journey="arijit">🎤 Like Arijit</button>
+        <button class="ep-chip ripple-active" data-journey="surprise">✨ Surprise Me</button>
       </div>
     </section>
 
@@ -867,13 +876,13 @@
     <!-- Recommendation Card -->
     <section>
       <div class="ep-sec-hdr"><span class="ep-sec-title">Recommended for You</span></div>
-      <div class="ep-rec-card" id="rec-card">
+      <div class="ep-rec-card card-elevate" id="rec-card">
         <div class="ep-rec-art-col">
           <div class="ep-art-wrap">
             <img class="ep-art-img" id="rec-img" src="https://i.scdn.co/image/ab67616d0000b273b400780212f8674d825f1d7d" alt="Album art">
             <span class="ep-match" id="rec-match">92% Match</span>
           </div>
-          <button class="ep-rec-play" id="rec-play"><i class="fa-solid fa-play" id="rec-play-icon"></i></button>
+          <button class="ep-rec-play ripple-active" id="rec-play"><i class="fa-solid fa-play" id="rec-play-icon"></i></button>
         </div>
         <div class="ep-rec-info">
           <div class="ep-rec-title-row">
@@ -882,9 +891,9 @@
               <div class="ep-rec-artist" id="rec-artist">Anuv Jain</div>
             </div>
             <div class="ep-rec-acts">
-              <button class="ep-act" id="rec-like" title="Like"><i class="fa-regular fa-heart"></i></button>
-              <button class="ep-act" id="rec-dislike" title="Dislike"><i class="fa-solid fa-thumbs-down"></i></button>
-              <button class="ep-act" id="rec-more" title="More"><i class="fa-solid fa-ellipsis"></i></button>
+              <button class="ep-act ripple-active" id="rec-like" title="Like"><i class="fa-regular fa-heart"></i></button>
+              <button class="ep-act ripple-active" id="rec-dislike" title="Dislike"><i class="fa-solid fa-thumbs-down"></i></button>
+              <button class="ep-act ripple-active" id="rec-more" title="More"><i class="fa-solid fa-ellipsis"></i></button>
             </div>
           </div>
           <!-- Why Accordion -->
@@ -895,10 +904,7 @@
             </div>
             <div class="ep-acc-body">
               <ul class="ep-reasons" id="why-reasons">
-                <li><i class="fa-solid fa-check"></i>Similar vocals to your favourites <span class="ep-reason-pct">89%</span></li>
-                <li><i class="fa-solid fa-check"></i>You liked Prateek Kuhad <span class="ep-reason-pct">92%</span></li>
-                <li><i class="fa-solid fa-check"></i>Acoustic preference match <span class="ep-reason-pct">85%</span></li>
-                <li><i class="fa-solid fa-check"></i>Less mainstream (28K listeners) <span class="ep-reason-pct">78%</span></li>
+                <!-- Injected via JS -->
               </ul>
             </div>
           </div>
@@ -930,23 +936,23 @@
   <p class="ep-studio-sub">Exclusive music experiences</p>
   <ul class="ep-studio-items">
     <li class="ep-si" data-studio="live" tabindex="0">
-      <img class="ep-si-thumb" src="https://i.scdn.co/image/ab67706c0000da84577889e472cecc2d4ea9e0ab" alt="Live Sessions">
+      <div class="ep-si-img-wrap"><img class="ep-si-thumb" src="https://i.scdn.co/image/ab67706c0000da84577889e472cecc2d4ea9e0ab" alt="Live Sessions"></div>
       <div><h4>Live Sessions</h4><p>Exclusive live performances <span class="ep-snew">NEW</span></p></div>
     </li>
     <li class="ep-si" data-studio="originals" tabindex="0">
-      <div class="ep-si-icon"><i class="fa-solid fa-wave-square"></i></div>
+      <div class="ep-si-img-wrap"><img class="ep-si-thumb" src="https://picsum.photos/seed/studioorg88/60/60" alt="Studio Originals"></div>
       <div><h4>Studio Originals</h4><p>Spotify-recorded versions <span class="ep-snew">NEW</span></p></div>
     </li>
     <li class="ep-si" data-studio="behind" tabindex="0">
-      <img class="ep-si-thumb" src="https://i.scdn.co/image/ab67706c0000da84a95ea81b5fc912304b4c730e" alt="Behind the Song">
+      <div class="ep-si-img-wrap"><img class="ep-si-thumb" src="https://i.scdn.co/image/ab67706c0000da84a95ea81b5fc912304b4c730e" alt="Behind the Song"></div>
       <div><h4>Behind the Song</h4><p>Stories from artists <span class="ep-snew">NEW</span></p></div>
     </li>
     <li class="ep-si" data-studio="early" tabindex="0">
-      <img class="ep-si-thumb" src="https://i.scdn.co/image/ab67706c0000da8445163ed037785c4bf2ec7a25" alt="Early Releases">
+      <div class="ep-si-img-wrap"><img class="ep-si-thumb" src="https://i.scdn.co/image/ab67706c0000da8445163ed037785c4bf2ec7a25" alt="Early Releases"></div>
       <div><h4>Early Releases</h4><p>Hear new music first <span class="ep-snew">NEW</span></p></div>
     </li>
     <li class="ep-si" data-studio="commentary" tabindex="0">
-      <img class="ep-si-thumb" src="https://i.scdn.co/image/ab67706c0000da84e1b8b8d00d234ba443c3327f" alt="Commentary">
+      <div class="ep-si-img-wrap"><img class="ep-si-thumb" src="https://i.scdn.co/image/ab67706c0000da84e1b8b8d00d234ba443c3327f" alt="Commentary"></div>
       <div><h4>Artist Commentary</h4><p>Hear it from the artist <span class="ep-snew">NEW</span></p></div>
     </li>
   </ul>
@@ -963,16 +969,16 @@
       <div class="pl-info"><h4 id="pl-title">Alag Aasman</h4><p id="pl-artist">Anuv Jain</p></div>
     </div>
     <div class="pl-actions">
-      <button class="pl-btn" id="pl-like"><i class="fa-regular fa-heart"></i></button>
-      <button class="pl-btn" id="pl-dislike"><i class="fa-solid fa-thumbs-down"></i></button>
+      <button class="pl-btn ripple-active" id="pl-like"><i class="fa-regular fa-heart"></i></button>
+      <button class="pl-btn ripple-active" id="pl-dislike"><i class="fa-solid fa-thumbs-down"></i></button>
     </div>
   </div>
   <div class="pl-center">
     <div class="ep-controls">
       <button class="ctrl" id="ctrl-shuffle"><i class="fa-solid fa-shuffle"></i></button>
-      <button class="ctrl" id="ctrl-prev"><i class="fa-solid fa-backward-step"></i></button>
-      <button class="ctrl play-btn" id="ctrl-play"><i class="fa-solid fa-play" id="ctrl-play-icon"></i></button>
-      <button class="ctrl" id="ctrl-next"><i class="fa-solid fa-forward-step"></i></button>
+      <button class="ctrl ripple-active" id="ctrl-prev"><i class="fa-solid fa-backward-step"></i></button>
+      <button class="ctrl play-btn ripple-active" id="ctrl-play"><i class="fa-solid fa-play" id="ctrl-play-icon"></i></button>
+      <button class="ctrl ripple-active" id="ctrl-next"><i class="fa-solid fa-forward-step"></i></button>
       <button class="ctrl" id="ctrl-repeat"><i class="fa-solid fa-repeat"></i></button>
     </div>
     <div class="ep-pb-row">
@@ -1010,9 +1016,9 @@
     <div class="ep-modal-monthly" id="modal-monthly"></div>
     <div class="ep-modal-genres" id="modal-genres"></div>
     <div class="ep-modal-actions">
-      <button class="ep-modal-play-big" id="modal-play"><i class="fa-solid fa-play"></i></button>
-      <button class="ep-follow" id="modal-follow">Follow</button>
-      <button class="ep-act" style="font-size:20px;" id="modal-save"><i class="fa-regular fa-bookmark"></i></button>
+      <button class="ep-modal-play-big ripple-active" id="modal-play"><i class="fa-solid fa-play"></i></button>
+      <button class="ep-follow ripple-active" id="modal-follow">Follow</button>
+      <button class="ep-act ripple-active" style="font-size:20px;" id="modal-save"><i class="fa-regular fa-bookmark"></i></button>
     </div>
     <div class="ep-modal-section">Popular Tracks</div>
     <ul class="ep-modal-tracks" id="modal-tracks"></ul>
@@ -1029,7 +1035,7 @@
     <div class="ep-drawer-tag" id="drawer-tag"></div>
     <div class="ep-drawer-title" id="drawer-title"></div>
     <div class="ep-drawer-desc" id="drawer-desc"></div>
-    <button class="ep-drawer-cta" id="drawer-play"><i class="fa-solid fa-play"></i> Play Now</button>
+    <button class="ep-drawer-cta ripple-active" id="drawer-play"><i class="fa-solid fa-play"></i> Play Now</button>
     <ul class="ep-drawer-list" id="drawer-list"></ul>
   </div>
 </div>
@@ -1071,22 +1077,23 @@
 <div class="ep-dislike-sheet" id="dislike-sheet">
   <div class="ep-sheet-handle"></div>
   <div class="ep-sheet-title">Why not this song?</div>
-  <div class="ep-sheet-sub">Your feedback trains your personal AI.</div>
+  <div class="ep-sheet-sub">Help improve your recommendations.</div>
   <ul class="ep-sheet-options">
     <li class="ep-sheet-opt" data-reason="wrong-mood"><i class="fa-regular fa-face-meh"></i> Wrong mood right now</li>
-    <li class="ep-sheet-opt" data-reason="too-popular"><i class="fa-solid fa-fire"></i> Too popular / overplayed</li>
+    <li class="ep-sheet-opt" data-reason="too-popular"><i class="fa-solid fa-fire"></i> Too mainstream</li>
     <li class="ep-sheet-opt" data-reason="know-it"><i class="fa-solid fa-circle-check"></i> Already know this song</li>
     <li class="ep-sheet-opt" data-reason="dont-like-artist"><i class="fa-solid fa-ban"></i> Don't like this artist</li>
-    <li class="ep-sheet-opt" data-reason="too-slow"><i class="fa-solid fa-gauge-simple-low"></i> Too slow for me</li>
+    <li class="ep-sheet-opt" data-reason="no-genre"><i class="fa-solid fa-guitar"></i> Don't recommend this genre</li>
+    <li class="ep-sheet-opt" data-reason="other"><i class="fa-solid fa-ellipsis"></i> Other</li>
   </ul>
-  <button class="ep-sheet-cancel" id="sheet-cancel">Cancel</button>
+  <button class="ep-sheet-cancel ripple-active" id="sheet-cancel">Cancel</button>
 </div>
 
 <!-- Toasts -->
 <div class="ep-toasts" id="toast-container"></div>
 
 <!-- Demo Mode -->
-<button class="ep-demo-btn" id="demo-btn"><i class="fa-solid fa-play"></i> Demo</button>
+<button class="ep-demo-btn ripple-active" id="demo-btn"><i class="fa-solid fa-play"></i> Demo</button>
 <div class="ep-demo-panel" id="demo-panel">
   <div class="ep-demo-phdr">
     <h3>🎭 Demo Mode</h3>
@@ -1128,39 +1135,50 @@ const A = {
   lifafa: { id:'lifafa', name:'Lifafa', photo:'https://i.scdn.co/image/ab6761610000e5ebb19af0ea736c6228d6eb539c', monthly:'412K monthly listeners', genres:['Electronic','Indie Pop','Hindi Psychedelic'], tracks:[{ t:'Akela', al:'Jaana', d:'4:10', img:'https://picsum.photos/seed/akelaalb/60/60'},{ t:'Jaana', al:'Jaana', d:'3:56', img:'https://picsum.photos/seed/jaanaalb/60/60'},{ t:'Kho Gaye Hum', al:'Jaana', d:'4:22', img:'https://picsum.photos/seed/khogayealb/60/60'}], similar:['Easy Wanderlings','When Chai Met Toast','Dhruv'], label:'Hidden Gem' },
   talha: { id:'talha', name:'Talha Anjum', photo:'https://i.scdn.co/image/ab6761610000e5eb98544d640ff1c93a743a14cc', monthly:'1.8M monthly listeners', genres:['Desi Hip-Hop','Rap','Urdu Pop'], tracks:[{ t:'BAARAT', al:'NAYA SAAL', d:'3:12', img:'https://picsum.photos/seed/baaratalb/60/60'},{ t:'Whisky', al:'Whisky', d:'3:28', img:'https://picsum.photos/seed/whiskyalb/60/60'},{ t:'Foji', al:'Foji', d:'2:55', img:'https://picsum.photos/seed/fojialb/60/60'}], similar:['Seedhe Maut','KRSNA','Shah Rule'], label:'Different culture' },
   localTrain: { id:'localTrain', name:'The Local Train', photo:'https://picsum.photos/seed/localtrain7474/400/400', monthly:'5.6M monthly listeners', genres:['Indie Rock','Hindi Rock','Alternative'], tracks:[{ t:'Aaoge Tum Kabhi', al:'Aalas Ka Pedha', d:'4:45', img:'https://picsum.photos/seed/aaogealb/60/60'},{ t:'Teri Khair Mangdi', al:'Aalas Ka Pedha', d:'3:52', img:'https://picsum.photos/seed/teri88alb/60/60'},{ t:'Khoya', al:'Khoya', d:'4:18', img:'https://picsum.photos/seed/khoyaalb/60/60'}], similar:['When Chai Met Toast','Prateek Kuhad','Dhruv Visvanath'], label:'Comfort zone' },
-  jBreakfast: { id:'jBreakfast', name:'Japanese Breakfast', photo:'https://picsum.photos/seed/japanesebreakfast77/400/400', monthly:'2.9M monthly listeners', genres:['Indie Pop','Art Pop','Dream Pop'], tracks:[{ t:'Paprika', al:'Jubilee', d:'4:41', img:'https://picsum.photos/seed/paprikajbalb/60/60'},{ t:'Be Sweet', al:'Jubilee', d:'3:47', img:'https://picsum.photos/seed/besweetalb/60/60'},{ t:'Kokomo, IN', al:'Soft Sounds', d:'2:34', img:'https://picsum.photos/seed/kokomoinalb/60/60'}], similar:['Phoebe Bridgers','Soccer Mommy','Novo Amor'], label:'Global rec' },
-  novoAmor: { id:'novoAmor', name:'Novo Amor', photo:'https://picsum.photos/seed/novoamorphoto88/400/400', monthly:'1.8M monthly listeners', genres:['Indie Folk','Dream Pop','Acoustic'], tracks:[{ t:'Anchor', al:'Woodgate, NY', d:'3:38', img:'https://picsum.photos/seed/anchoralb/60/60'},{ t:'Carry You', al:'Carry You', d:'3:22', img:'https://picsum.photos/seed/carryyoualb/60/60'},{ t:'State Lines', al:'Birthplace', d:'4:05', img:'https://picsum.photos/seed/statelinesalb/60/60'}], similar:['Bon Iver','Cigarettes After Sex','Aurora'], label:'Global rec' },
   wCMT: { id:'wCMT', name:'When Chai Met Toast', photo:'https://picsum.photos/seed/whenchaimttoast99/400/400', monthly:'1.2M monthly listeners', genres:['Indie Folk','Malayalam Pop','Acoustic'], tracks:[{ t:'Moana', al:'When Chai Met Toast', d:'4:12', img:'https://picsum.photos/seed/moanawcmtalb/60/60'},{ t:'Khoj', al:'Khoj', d:'3:48', img:'https://picsum.photos/seed/khojwcmtalb/60/60'},{ t:'Anth Nahi', al:'Anth Nahi', d:'4:02', img:'https://picsum.photos/seed/anthnahi99/60/60'}], similar:['Easy Wanderlings','The Local Train','Prateek Kuhad'], label:'Hidden Gem' },
-  cigarettes: { id:'cigarettes', name:'Cigarettes After Sex', photo:'https://picsum.photos/seed/cigarettesafter66/400/400', monthly:'12.4M monthly listeners', genres:['Ambient Pop','Dream Pop','Shoegaze'], tracks:[{ t:"Nothing's Gonna Hurt You Baby", al:'Cigarettes After Sex', d:'4:52', img:'https://picsum.photos/seed/nothingsgonnaalb/60/60'},{ t:'Apocalypse', al:'Cigarettes After Sex', d:'5:18', img:'https://picsum.photos/seed/apocalypsecasalb/60/60'},{ t:'Affection', al:'Affection', d:'4:46', img:'https://picsum.photos/seed/affectioncasalb/60/60'}], similar:['Novo Amor','Mazzy Star','Beach House'], label:'Similar vibe' }
+  seedhe: { id:'seedhe', name:'Seedhe Maut', photo:'https://picsum.photos/seed/seedhemaut88/400/400', monthly:'2.1M monthly listeners', genres:['Desi Hip-Hop','Indian Rap','Delhi Indie'], tracks:[{ t:'Nanchaku', al:'Nayaab', d:'3:15', img:'https://picsum.photos/seed/nanchakualb/60/60'},{ t:'Batti', al:'Nayaab', d:'2:58', img:'https://picsum.photos/seed/battialb/60/60'}], similar:['Talha Anjum','KRSNA','Prabh Deep'], label:'High Energy' },
+  talwiinder: { id:'talwiinder', name:'Talwiinder', photo:'https://picsum.photos/seed/talwiinder99/400/400', monthly:'1.9M monthly listeners', genres:['Punjabi Pop','Indie Punjabi'], tracks:[{ t:'Gallan 4', al:'Gallan', d:'3:22', img:'https://picsum.photos/seed/gallan4alb/60/60'},{ t:'Kamli', al:'Kamli', d:'2:45', img:'https://picsum.photos/seed/kamlialb/60/60'}], similar:['AP Dhillon','Diljit Dosanjh','The Local Train'], label:'Trending' },
+  aurora: { id:'aurora', name:'Aurora', photo:'https://picsum.photos/seed/aurora77/400/400', monthly:'8.4M monthly listeners', genres:['Art Pop','Norwegian Pop'], tracks:[{ t:'Runaway', al:'All My Demons', d:'4:08', img:'https://picsum.photos/seed/runawayalb/60/60'},{ t:'Cure For Me', al:'The Gods We Can Touch', d:'3:18', img:'https://picsum.photos/seed/cureformealb/60/60'}], similar:['Florence + The Machine','Novo Amor','Phoebe Bridgers'], label:'Ethereal' },
+  phoebe: { id:'phoebe', name:'Phoebe Bridgers', photo:'https://picsum.photos/seed/phoebebridgers22/400/400', monthly:'6.5M monthly listeners', genres:['Indie Pop','Folk Pop'], tracks:[{ t:'Motion Sickness', al:'Stranger in the Alps', d:'3:49', img:'https://picsum.photos/seed/motionsicknessalb/60/60'},{ t:'Kyoto', al:'Punisher', d:'3:04', img:'https://picsum.photos/seed/kyotoalb/60/60'}], similar:['Julien Baker','Lucy Dacus','Japanese Breakfast'], label:'Emotional' },
+  lany: { id:'lany', name:'LANY', photo:'https://picsum.photos/seed/lany99/400/400', monthly:'7.2M monthly listeners', genres:['Indie Pop','Synth-Pop'], tracks:[{ t:'ILYSB', al:'LANY', d:'3:31', img:'https://picsum.photos/seed/ilysbalb/60/60'},{ t:'Malibu Nights', al:'Malibu Nights', d:'4:46', img:'https://picsum.photos/seed/malibunightsalb/60/60'}], similar:['The 1975','Lauv','Troye Sivan'], label:'Late Night' },
+  jBreakfast: { id:'jBreakfast', name:'Japanese Breakfast', photo:'https://picsum.photos/seed/japanesebreakfast77/400/400', monthly:'2.9M monthly listeners', genres:['Indie Pop','Art Pop','Dream Pop'], tracks:[{ t:'Paprika', al:'Jubilee', d:'4:41', img:'https://picsum.photos/seed/paprikajbalb/60/60'},{ t:'Be Sweet', al:'Jubilee', d:'3:47', img:'https://picsum.photos/seed/besweetalb/60/60'}], similar:['Phoebe Bridgers','Soccer Mommy','Novo Amor'], label:'Global rec' },
+  novoAmor: { id:'novoAmor', name:'Novo Amor', photo:'https://picsum.photos/seed/novoamorphoto88/400/400', monthly:'1.8M monthly listeners', genres:['Indie Folk','Dream Pop','Acoustic'], tracks:[{ t:'Anchor', al:'Woodgate, NY', d:'3:38', img:'https://picsum.photos/seed/anchoralb/60/60'},{ t:'State Lines', al:'Birthplace', d:'4:05', img:'https://picsum.photos/seed/statelinesalb/60/60'}], similar:['Bon Iver','Aurora'], label:'Global rec' },
 };
 
 const JOURNEYS = {
-  default:  [A.arijit, A.prateek, A.anuv, A.lifafa, A.talha, A.jBreakfast, A.novoAmor],
-  rainy:    [A.prateek, A.anuv, A.cigarettes, A.novoAmor, A.lifafa, A.wCMT, A.jBreakfast],
-  gems:     [A.wCMT, A.lifafa, A.prateek, A.anuv, A.talha, A.novoAmor, A.jBreakfast],
-  indie:    [A.localTrain, A.wCMT, A.prateek, A.anuv, A.lifafa, A.talha, A.novoAmor],
+  default:  [A.arijit, A.prateek, A.anuv, A.lifafa, A.talha, A.lany, A.aurora],
+  rainy:    [A.prateek, A.anuv, A.phoebe, A.novoAmor, A.lifafa, A.wCMT, A.lany],
+  gems:     [A.wCMT, A.lifafa, A.prateek, A.talwiinder, A.talha, A.novoAmor, A.jBreakfast],
+  indie:    [A.localTrain, A.wCMT, A.prateek, A.anuv, A.lifafa, A.seedhe, A.talwiinder],
   arijit:   [A.arijit, A.prateek, A.anuv, A.localTrain, A.wCMT, A.lifafa, A.novoAmor],
-  surprise: [A.talha, A.lifafa, A.cigarettes, A.novoAmor, A.jBreakfast, A.anuv, A.prateek],
-  japanese: [A.arijit, A.lifafa, A.jBreakfast, A.novoAmor, A.cigarettes, A.prateek, A.anuv]
+  surprise: [A.seedhe, A.talha, A.lifafa, A.aurora, A.jBreakfast, A.phoebe, A.lany],
+  japanese: [A.jBreakfast, A.aurora, A.phoebe, A.novoAmor, A.lany, A.prateek, A.anuv]
 };
 
 const SONGS = {
   default:  { title:'Alag Aasman', artist:'Anuv Jain', dur:'3:48', img:'https://i.scdn.co/image/ab67616d0000b273b400780212f8674d825f1d7d', match:92, reasons:[['Similar vocals to your favourites','89%'],['You liked Prateek Kuhad','92%'],['Acoustic preference match','85%'],['Less mainstream (28K listeners)','78%']] },
-  rainy:    { title:'Kasoor', artist:'Prateek Kuhad', dur:'4:18', img:'https://picsum.photos/seed/kasooralb2024/250/250', match:89, reasons:[['Perfect for introspective moods','91%'],['Acoustic-driven sound you prefer','88%'],['Prateek is in your top artists','94%'],['Matches rainy-day playlist energy','85%']] },
+  rainy:    { title:'Motion Sickness', artist:'Phoebe Bridgers', dur:'3:49', img:'https://picsum.photos/seed/motionsicknessalb/250/250', match:89, reasons:[['Perfect for introspective moods','91%'],['Acoustic-driven sound you prefer','88%'],['Matches rainy-day playlist energy','85%']] },
   gems:     { title:'Moana', artist:'When Chai Met Toast', dur:'4:12', img:'https://picsum.photos/seed/moanawcmt2024/250/250', match:86, reasons:[['Under 1M listeners — hidden gem','96%'],['Acoustic folk matches your taste','82%'],['Similar to Prateek Kuhad you like','78%'],['Multi-lingual — new territory','71%']] },
   indie:    { title:'Aaoge Tum Kabhi', artist:'The Local Train', dur:'4:45', img:'https://picsum.photos/seed/aaogenew2024/250/250', match:84, reasons:[['Indie rock in your listening history','87%'],['Hindi alternative you haven\'t tried','83%'],['Matches your acoustic preference','79%'],['Popular in your city right now','75%']] },
   arijit:   { title:'cold/mess', artist:'Prateek Kuhad', dur:'3:52', img:'https://picsum.photos/seed/coldmessalb2024/250/250', match:94, reasons:[['92% vocal similarity to Arijit Singh','92%'],['Same emotional depth you love','89%'],['Less mainstream — 3M vs 45M listeners','95%'],['Acoustic — your #1 genre preference','88%']] },
-  surprise: { title:'BAARAT', artist:'Talha Anjum', dur:'3:12', img:'https://picsum.photos/seed/baaratcover24/250/250', match:71, reasons:[['Completely outside your comfort zone','96%'],['Top Desi Hip-Hop track of 2024','88%'],['High energy — new territory for you','82%'],['Exploration Level 80% — push harder','78%']] },
+  surprise: { title:'Nanchaku', artist:'Seedhe Maut', dur:'3:15', img:'https://picsum.photos/seed/nanchakualb/250/250', match:71, reasons:[['Completely outside your comfort zone','96%'],['Top Desi Hip-Hop track of 2024','88%'],['High energy — new territory for you','82%'],['Exploration Level 80% — push harder','78%']] },
   japanese: { title:'Paprika', artist:'Japanese Breakfast', dur:'4:41', img:'https://picsum.photos/seed/paprikacover24/250/250', match:79, reasons:[['Japanese-American indie pop gem','91%'],['Michelle Zauner — critically acclaimed','86%'],['Similar to Novo Amor you saved','80%'],['Opens your global listening journey','75%']] }
 };
 
 const STUDIO = {
-  live:        { tag:'LIVE SESSIONS', title:'Live at Electric Ballroom', desc:'Watch Prateek Kuhad perform his entire cold/mess album live in London. Intimate, raw, and completely unfiltered.', img:'https://i.scdn.co/image/ab67706c0000da84577889e472cecc2d4ea9e0ab', cta:'Watch Now', items:[{ t:'Kasoor (Live)', a:'Prateek Kuhad', img:'https://picsum.photos/seed/kasoorlive24/52/52'},{ t:'cold/mess (Live)', a:'Prateek Kuhad', img:'https://picsum.photos/seed/coldmesslive24/52/52'},{ t:'Summer of 17 (Live)', a:'Prateek Kuhad', img:'https://picsum.photos/seed/summerof1724/52/52'}] },
-  originals:   { tag:'STUDIO ORIGINALS', title:'Studio Sessions: Anuv Jain', desc:'Exclusive Spotify-recorded acoustic sessions from Anuv Jain. Songs recorded in a single take, exactly as he wrote them.', img:'https://i.scdn.co/image/ab67706c0000da84a95ea81b5fc912304b4c730e', cta:'Listen Now', items:[{ t:'Alag Aasman (Spotify Version)', a:'Anuv Jain', img:'https://picsum.photos/seed/anuvspot24/52/52'},{ t:'Baarishein (Stripped)', a:'Anuv Jain', img:'https://picsum.photos/seed/baarisheinstrip24/52/52'}] },
-  behind:      { tag:'BEHIND THE SONG', title:'The Story Behind Kasoor', desc:"Prateek Kuhad opens up about writing Kasoor at 3am after a heartbreak — the song that changed everything.", img:'https://i.scdn.co/image/ab67706c0000da84577889e472cecc2d4ea9e0ab', cta:'Watch Story', items:[{ t:'Behind Kasoor — Interview', a:'Prateek Kuhad', img:'https://picsum.photos/seed/kasoorstory24/52/52'},{ t:'Making of cold/mess', a:'Prateek Kuhad', img:'https://picsum.photos/seed/coldmessmake24/52/52'}] },
-  early:       { tag:'EARLY RELEASES', title:'Upcoming: Anuv Jain Album 2', desc:"Get first access to Anuv Jain's upcoming second studio album — two weeks before public release.", img:'https://i.scdn.co/image/ab67706c0000da8445163ed037785c4bf2ec7a25', cta:'Unlock Early', items:[{ t:'Track 1 (Unreleased)', a:'Anuv Jain', img:'https://picsum.photos/seed/anuvtrack124/52/52'},{ t:'Track 2 (Unreleased)', a:'Anuv Jain', img:'https://picsum.photos/seed/anuvtrack224/52/52'}] },
-  commentary:  { tag:'ARTIST COMMENTARY', title:'Arijit on His Process', desc:"Arijit Singh walks through how he selects songs, prepares for sessions, and what inspired his most emotional recordings.", img:'https://i.scdn.co/image/ab67706c0000da84e1b8b8d00d234ba443c3327f', cta:'Listen Now', items:[{ t:'On singing Tum Hi Ho', a:'Arijit Singh', img:'https://picsum.photos/seed/arijitcomm124/52/52'},{ t:'On emotional connection', a:'Arijit Singh', img:'https://picsum.photos/seed/arijitcomm224/52/52'}] }
+  live:        { tag:'LIVE SESSIONS', title:'Live at Electric Ballroom', desc:'Watch Prateek Kuhad perform his entire cold/mess album live in London. Intimate, raw, and completely unfiltered.', img:'https://i.scdn.co/image/ab67706c0000da84577889e472cecc2d4ea9e0ab', cta:'Watch Now', items:[{ t:'Kasoor (Live)', a:'Prateek Kuhad', img:'https://picsum.photos/seed/kasoorlive24/52/52'},{ t:'cold/mess (Live)', a:'Prateek Kuhad', img:'https://picsum.photos/seed/coldmesslive24/52/52'}] },
+  originals:   { tag:'STUDIO ORIGINALS', title:'Studio Sessions: Anuv Jain', desc:'Exclusive Spotify-recorded acoustic sessions from Anuv Jain. Songs recorded in a single take, exactly as he wrote them.', img:'https://picsum.photos/seed/studioorg88/400/400', cta:'Listen Now', items:[{ t:'Alag Aasman (Spotify Version)', a:'Anuv Jain', img:'https://picsum.photos/seed/anuvspot24/52/52'},{ t:'Baarishein (Stripped)', a:'Anuv Jain', img:'https://picsum.photos/seed/baarisheinstrip24/52/52'}] },
+  behind:      { tag:'BEHIND THE SONG', title:'The Story Behind Kasoor', desc:"Prateek Kuhad opens up about writing Kasoor at 3am after a heartbreak — the song that changed everything.", img:'https://i.scdn.co/image/ab67706c0000da84a95ea81b5fc912304b4c730e', cta:'Watch Story', items:[{ t:'Behind Kasoor — Interview', a:'Prateek Kuhad', img:'https://picsum.photos/seed/kasoorstory24/52/52'}] },
+  early:       { tag:'EARLY RELEASES', title:'Upcoming: Anuv Jain Album 2', desc:"Get first access to Anuv Jain's upcoming second studio album — two weeks before public release.", img:'https://i.scdn.co/image/ab67706c0000da8445163ed037785c4bf2ec7a25', cta:'Unlock Early', items:[{ t:'Track 1 (Unreleased)', a:'Anuv Jain', img:'https://picsum.photos/seed/anuvtrack124/52/52'}] },
+  commentary:  { tag:'ARTIST COMMENTARY', title:'Arijit on His Process', desc:"Arijit Singh walks through how he selects songs, prepares for sessions, and what inspired his most emotional recordings.", img:'https://i.scdn.co/image/ab67706c0000da84e1b8b8d00d234ba443c3327f', cta:'Listen Now', items:[{ t:'On singing Tum Hi Ho', a:'Arijit Singh', img:'https://picsum.photos/seed/arijitcomm124/52/52'}] }
 };
+
+const SEARCH_RESULTS_MOCK = [
+  { img:'https://picsum.photos/seed/tumhiho88/60/60', title:'Tum Hi Ho', artist:'Arijit Singh', dur:'4:22', genre:'Bollywood', pop:'98' },
+  { img:'https://picsum.photos/seed/motionsicknessalb/60/60', title:'Motion Sickness', artist:'Phoebe Bridgers', dur:'3:49', genre:'Indie Pop', pop:'82' },
+  { img:'https://picsum.photos/seed/battialb/60/60', title:'Batti', artist:'Seedhe Maut', dur:'2:58', genre:'Desi Hip-Hop', pop:'75' },
+  { img:'https://picsum.photos/seed/gallan4alb/60/60', title:'Gallan 4', artist:'Talwiinder', dur:'3:22', genre:'Punjabi Pop', pop:'88' },
+];
 
 const DEMO_SCENARIOS = [
   { query:"I'm bored with my playlist, surprise me",     journey:'surprise', slider:80, song:'surprise', studio:'live' },
@@ -1231,6 +1249,8 @@ function syncLikeDislike() {
 
 $('ctrl-play').addEventListener('click', ()=>playPause());
 $('rec-play').addEventListener('click', ()=>{ playPause(); if(S.playing) toast(`Playing: ${S.currentSong.title}`, 'info'); });
+$('rec-song').addEventListener('click', ()=>playPause());
+$('pl-title').addEventListener('click', ()=>playPause());
 
 $('ctrl-shuffle').addEventListener('click',function(){ S.shuffle=!S.shuffle; this.classList.toggle('active',S.shuffle); });
 $('ctrl-repeat').addEventListener('click',function(){ S.repeat=!S.repeat; this.classList.toggle('active',S.repeat); });
@@ -1278,11 +1298,16 @@ $('sheet-cancel').addEventListener('click', closeDislikeSheet);
 $$('.ep-sheet-opt').forEach(opt=>opt.addEventListener('click',function(){
   $$('.ep-sheet-opt').forEach(o=>o.classList.remove('chosen')); this.classList.add('chosen');
   S.disliked=true; syncLikeDislike();
+  
+  // Feedback saved toast immediately
+  toast("Thanks! We'll improve your recommendations.", 'success');
+  
+  // Wait 1 second, then slide down and change song
   setTimeout(()=>{
-    closeDislikeSheet(); this.classList.remove('chosen');
-    toast('Thanks! Recommendations updated.');
-    setTimeout(()=>fadeNewRec(), 500);
-  }, 700);
+    closeDislikeSheet(); 
+    this.classList.remove('chosen');
+    fadeNewRec();
+  }, 1000);
 }));
 
 function fadeNewRec() {
@@ -1317,14 +1342,46 @@ const suggestions=$('search-suggestions');
 const sugLoading=$('sug-loading');
 const sugList=$('sug-list');
 
-searchInput.addEventListener('focus',()=>{ searchBar.classList.add('focused'); suggestions.classList.add('open'); });
+searchInput.addEventListener('focus',()=>{ searchBar.classList.add('focused'); suggestions.classList.add('open'); renderRichSearch(); });
 document.addEventListener('click',e=>{ if(!e.target.closest('.ep-search-wrap')){ searchBar.classList.remove('focused'); suggestions.classList.remove('open'); } });
-searchInput.addEventListener('input',()=>{
-  const v=searchInput.value.toLowerCase();
-  $$('.ep-sug-item').forEach(it=>{ it.style.display=(!v||it.dataset.query.toLowerCase().includes(v))?'':'none'; });
-});
-$$('.ep-sug-item').forEach(it=>it.addEventListener('click',()=>{ searchInput.value=it.dataset.query; suggestions.classList.remove('open'); triggerSearch(it.dataset.query); }));
+
 searchInput.addEventListener('keydown',e=>{ if(e.key==='Enter'&&searchInput.value.trim()) triggerSearch(searchInput.value.trim()); });
+
+function renderRichSearch() {
+  sugList.innerHTML = SEARCH_RESULTS_MOCK.map(r => `
+    <div class="ep-rich-sug-item" data-query="${r.title}">
+      <img src="${r.img}" alt="${r.title}">
+      <div class="ep-rich-info">
+        <div class="ep-rich-title">${r.title}</div>
+        <div class="ep-rich-sub">
+          <span>${r.artist}</span> • <span class="ep-rich-meta">${r.genre}</span> • <span style="font-size:10px;"><i class="fa-solid fa-fire" style="color:#b3b3b3;"></i> ${r.pop}</span>
+        </div>
+      </div>
+      <div class="ep-rich-actions">
+        <button class="ep-rich-btn ep-rich-play" title="Play"><i class="fa-solid fa-play"></i></button>
+        <button class="ep-rich-btn" title="Add to Queue"><i class="fa-solid fa-plus"></i></button>
+        <button class="ep-rich-btn" title="Save"><i class="fa-regular fa-heart"></i></button>
+      </div>
+    </div>
+  `).join('');
+  
+  $$('.ep-rich-sug-item').forEach(it=>{
+    it.addEventListener('click',(e)=>{ 
+      if(e.target.closest('.ep-rich-btn')){
+        e.stopPropagation();
+        if(e.target.closest('.ep-rich-play')){
+           toast(`Playing ${it.dataset.query}`, 'info');
+           const song={ title:it.dataset.query, artist:it.querySelector('.ep-rich-sub span').textContent, dur:'3:30', img:it.querySelector('img').src, match:99, reasons:[['You searched for this','100%']] };
+           loadSong(song,true);
+        } else {
+           toast(`Action on ${it.dataset.query}`, 'success');
+        }
+        return;
+      }
+      searchInput.value=it.dataset.query; suggestions.classList.remove('open'); triggerSearch(it.dataset.query); 
+    });
+  });
+}
 
 async function triggerSearch(query) {
   suggestions.classList.remove('open');
@@ -1335,8 +1392,8 @@ async function triggerSearch(query) {
   let key='default';
   if(q.includes('rain')) key='rainy';
   else if(q.includes('hidden')||q.includes('gem')) key='gems';
-  else if(q.includes('indie')||q.includes('india')) key='indie';
-  else if(q.includes('arijit')) key='arijit';
+  else if(q.includes('indie')||q.includes('india')||q.includes('batti')) key='indie';
+  else if(q.includes('arijit')||q.includes('tum hi ho')) key='arijit';
   else if(q.includes('surpris')||q.includes('bored')) key='surprise';
   else if(q.includes('japan')) key='japanese';
   S.journeyKey=key;
@@ -1394,7 +1451,7 @@ function loadJourney(key, immediate=false) {
   }
   setTimeout(()=>{
     row.innerHTML=artists.flatMap((a,i)=>[
-      `<div class="ep-jcard${i===0?' jc-active':''}" data-aid="${a.id}" role="button" tabindex="0" style="transition-delay:${i*55}ms">
+      `<div class="ep-jcard${i===0?' jc-active':''} card-elevate" data-aid="${a.id}" role="button" tabindex="0" style="transition-delay:${i*55}ms">
         <img src="${a.photo}" alt="${a.name}" loading="lazy">
         <span class="jc-name">${a.name}</span>
         <span class="jc-lbl">${a.label}</span>
@@ -1497,7 +1554,7 @@ function buildChart(){
   $('pm-chart').innerHTML=labels.map((l,i)=>`<div class="ep-pm-bar-wrap"><div class="ep-pm-bar${i===6?' green':''}" style="height:${Math.round((vals[i]/max)*76)+4}px"></div><span class="ep-pm-bar-label">${l}</span></div>`).join('');
 }
 function buildRecent(){
-  const r=[A.anuv,A.prateek,A.lifafa,A.wCMT,A.novoAmor];
+  const r=[A.anuv,A.prateek,A.seedhe,A.talwiinder,A.novoAmor];
   $('pm-recent').innerHTML=r.map(a=>`<div class="ep-pm-recent-a"><img src="${a.photo}" alt="${a.name}"><span>${a.name}</span></div>`).join('');
 }
 
@@ -1541,6 +1598,7 @@ async function runDemo(sc){
   try{
     setStep('Step 1 — Typing your search query...');
     ring($('search-bar')); searchBar.classList.add('focused'); suggestions.classList.add('open');
+    renderRichSearch();
     await wait(500); if(S.demoCancelled) return;
     await typeText(searchInput, sc.query); await wait(500); if(S.demoCancelled) return;
 
