@@ -746,13 +746,6 @@
   .demo-ring { outline: 2px solid #1ed760 !important; outline-offset: 3px !important; transition: outline .3s !important; border-radius: 6px; }
 
   /* Responsive */
-  @media (max-width: 1100px) {
-    .ep-layout { grid-template-columns: 220px 1fr; }
-    .ep-studio-col { display: none; }
-  }
-  @media (max-width: 768px) {
-    .ep-layout { grid-template-columns: 1fr; grid-template-rows: 1fr 90px; }
-    .ep-sidebar { display: none; }
     .ep-main { grid-column: 1; }
     .ep-player { grid-column: 1; }
     .ep-rec-card { flex-direction: column; }
@@ -825,7 +818,7 @@
   <div id="view-explore">
   <header class="ep-page-header">
     <div>
-      <h1>Explore <span class="ep-beta">BETA</span></h1>
+      <h1>Explore <span class="ep-beta">BETA</span> <i class="fa-solid fa-question ep-help-icon" id="help-search"></i></h1>
       <p class="ep-page-sub">Discover music beyond your comfort zone.</p>
     </div>
     <div class="ep-header-right">
@@ -871,6 +864,7 @@
     <section class="ep-slider-section">
       <div class="ep-slider-labels">
         <span class="ep-slider-lbl">Comfort <small id="familiar-pct">60% Familiar</small></span>
+        <span class="ep-slider-lbl">Your Discovery Journey <i class="fa-solid fa-question ep-help-icon" id="help-slider"></i></span>
         <span class="ep-slider-lbl">Adventure <small id="new-pct">40% New</small></span>
       </div>
       <input type="range" min="0" max="100" value="40" class="ep-range" id="disc-slider">
@@ -1053,21 +1047,19 @@
     </div>
     <div class="ep-ls-section">
       <h4 class="ep-ls-section-title">AI Audio Modes</h4>
-      <ul class="ep-ver-list" id="ls-modes">
-        <li>Vocals Only</li>
-        <li>Beats Only</li>
-        <li>Bass Only</li>
-        <li>Drums Only</li>
-        <li>Piano Only</li>
-        <li>Strings Only</li>
-        <li>Guitar Only</li>
-        <li>Instrumental Only</li>
-        <li>Karaoke Mode</li>
-        <li>Studio Mix</li>
-        <li>Live Mix</li>
-        <li>Ambient Mix</li>
-        <li>Spatial Audio</li>
-      </ul>
+      <div class="ep-eq-preview" id="ls-eq-preview">
+        <div class="ep-eq-title"><i class="fa-solid fa-headphones"></i> <span id="ls-eq-label">Previewing Audio Mode</span></div>
+        <div class="ep-eq-layers" id="ls-eq-layers">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+      <div class="ep-chips" id="ls-modes-chips">
+        <button class="ep-chip ripple-active" data-mode="Vocals Only">Vocals Only</button>
+        <button class="ep-chip ripple-active" data-mode="Beats Only">Beats Only</button>
+        <button class="ep-chip ripple-active" data-mode="Piano Only">Piano Only</button>
+        <button class="ep-chip ripple-active" data-mode="Guitar Only">Guitar Only</button>
+        <button class="ep-chip ripple-active" data-mode="Instrumental">Instrumental</button>
+      </div>
     </div>
   </div>
 </div>
@@ -1164,6 +1156,47 @@
   <div class="ep-demo-dot"></div>
   <span id="demo-step-text">Running demo...</span>
   <button class="ep-demo-skip" id="demo-skip">Skip</button>
+</div>
+
+<!-- Onboarding Elements -->
+<div class="ep-ob-backdrop" id="ob-backdrop"></div>
+<div class="ep-ob-tooltip" id="ob-tooltip">
+  <div class="ep-ob-step" id="ob-step">1/4</div>
+  <div class="ep-ob-text" id="ob-text">Search by intention, not by artist.</div>
+  <ul class="ep-ob-examples" id="ob-examples"></ul>
+</div>
+<div class="ep-ob-success" id="ob-success">
+  <h2>🎉 You're Ready to Explore!</h2>
+  <p class="sub">You've unlocked:</p>
+  <ul class="ep-unlocks">
+    <li><i class="fa-solid fa-circle-check"></i> AI Discovery Search</li>
+    <li><i class="fa-solid fa-circle-check"></i> Discovery Slider</li>
+    <li><i class="fa-solid fa-circle-check"></i> Why This Song</li>
+    <li><i class="fa-solid fa-circle-check"></i> Listen Your Way</li>
+  </ul>
+  <div class="ep-ob-prompt-box">
+    <span>Suggested Prompt</span>
+    <p>🎵 "Recommend underrated indie songs for a rainy evening."</p>
+  </div>
+  <button class="ep-ob-btn" id="ob-finish-btn">Start Exploring</button>
+</div>
+
+<!-- Studio Modal -->
+<div class="ep-studio-modal" id="studio-modal">
+  <img src="https://picsum.photos/seed/studioseshalb/600/300" class="ep-sm-img" alt="Studio">
+  <div class="ep-sm-body">
+    <h3 class="ep-sm-title">Spotify Studio</h3>
+    <p class="ep-sm-sub">We are working on bringing exclusive music experiences to Spotify Explore.</p>
+    <ul class="ep-sm-features">
+      <li class="ep-sm-feature"><i class="fa-brands fa-spotify"></i><div><h4>Spotify Originals</h4><p>Unique recordings found nowhere else.</p></div></li>
+      <li class="ep-sm-feature"><i class="fa-solid fa-microphone-lines"></i><div><h4>Behind the Song</h4><p>Artist commentary on their creative process.</p></div></li>
+      <li class="ep-sm-feature"><i class="fa-solid fa-record-vinyl"></i><div><h4>Live Sessions</h4><p>High quality recordings from our studio.</p></div></li>
+    </ul>
+    <div class="ep-sm-actions">
+      <button class="ep-sm-btn-close" id="sm-close">Close</button>
+      <button class="ep-sm-btn-notify" id="sm-notify">Notify Me</button>
+    </div>
+  </div>
 </div>
 
 <!-- ════════════════ JAVASCRIPT ENGINE ════════════════ -->
@@ -1410,10 +1443,49 @@ function closeListenSheet(){ $('listen-sheet').classList.remove('open'); maybeCl
 
 $('listen-way-btn').addEventListener('click', openListenSheet);
 
-$$('#ls-versions li, #ls-modes li').forEach(opt=>opt.addEventListener('click',function(){
-  $$('#ls-versions li, #ls-modes li').forEach(o=>o.classList.remove('v-on'));
+$$('#ls-versions li').forEach(opt=>opt.addEventListener('click',function(){
+  $$('#ls-versions li').forEach(o=>o.classList.remove('v-on'));
   this.classList.add('v-on');
   toast(`Audio mode switched to: ${this.textContent}`, 'info');
+}));
+
+// Listen Your Way (Interactive EQ Demo)
+$$('#ls-modes-chips .ep-chip').forEach(chip=>chip.addEventListener('click',function(){
+  $$('#ls-modes-chips .ep-chip').forEach(c=>c.classList.remove('selected'));
+  this.classList.add('selected');
+  const mode = this.dataset.mode;
+  $('ls-eq-label').textContent = `Previewing ${mode}`;
+  $('ls-eq-preview').classList.add('show');
+  
+  const layersEl = $('ls-eq-layers');
+  layersEl.innerHTML = ''; // reset
+
+  const createLayer = (name, active) => {
+    return `<div class="ep-layer ${active ? 'active' : ''}">
+      <div class="ep-layer-name">${name}</div>
+      <div class="ep-layer-bars">
+        <div class="ep-layer-bar"></div><div class="ep-layer-bar"></div><div class="ep-layer-bar"></div>
+        <div class="ep-layer-bar"></div><div class="ep-layer-bar"></div><div class="ep-layer-bar"></div>
+        <div class="ep-layer-bar"></div><div class="ep-layer-bar"></div>
+      </div>
+    </div>`;
+  };
+
+  const layers = ['Vocals', 'Beats', 'Bass', 'Guitar', 'Piano'];
+  let activeLayer = 'Vocals'; // default fallback
+  if (mode === 'Beats Only') activeLayer = 'Beats';
+  else if (mode === 'Piano Only') activeLayer = 'Piano';
+  else if (mode === 'Guitar Only') activeLayer = 'Guitar';
+  else if (mode === 'Instrumental') activeLayer = 'Bass';
+
+  layers.forEach(l => {
+    const isActive = (mode === 'Vocals Only' && l === 'Vocals') ||
+                     (mode === 'Beats Only' && l === 'Beats') ||
+                     (mode === 'Piano Only' && l === 'Piano') ||
+                     (mode === 'Guitar Only' && l === 'Guitar') ||
+                     (mode === 'Instrumental' && l !== 'Vocals');
+    layersEl.innerHTML += createLayer(l, isActive);
+  });
 }));
 
 function fadeNewRec() {
@@ -1737,7 +1809,7 @@ async function runDemo(sc){
     setStep('Step 4 — Listen Your Way (Vocals Only)');
     ring($('listen-way-btn')); await wait(800); if(S.demoCancelled) return;
     openListenSheet(); await wait(1200); if(S.demoCancelled) return;
-    const modeOpts = $$('#ls-modes li');
+    const modeOpts = $$('#ls-modes-chips .ep-chip');
     if(modeOpts.length) {
       ring(modeOpts[0]); await wait(800); if(S.demoCancelled) return;
       modeOpts[0].click(); await wait(1500); if(S.demoCancelled) return;
@@ -1762,7 +1834,176 @@ async function runDemo(sc){
   }
 }
 
+// ── ONBOARDING ENGINE ──────────────────────────────────────────
+const O_STATE = { step: 0, active: false };
+const obBackdrop = $('ob-backdrop');
+const obTooltip = $('ob-tooltip');
+const obStep = $('ob-step');
+const obText = $('ob-text');
+const obExamples = $('ob-examples');
+const obSuccess = $('ob-success');
+
+const TOOLTIPS = {
+  1: {
+    el: $('search-bar'), pos: 'pos-bottom', text: "Search by intention, not by artist.",
+    ex: ["Songs like Arijit Singh but underrated", "Rainy evening drive", "Hidden indie artists"]
+  },
+  2: {
+    el: $('disc-slider'), pos: 'pos-top', text: "Control how adventurous your recommendations should be.", ex: []
+  },
+  3: {
+    el: $('why-toggle'), pos: 'pos-top', text: "Understand why every recommendation appears.", ex: []
+  },
+  4: {
+    el: $('listen-way-btn'), pos: 'pos-left', text: "Experience music differently.", ex: []
+  }
+};
+
+function showObTooltip(stepNum) {
+  const t = TOOLTIPS[stepNum];
+  if(!t) return;
+  const rect = t.el.getBoundingClientRect();
+  obTooltip.className = `ep-ob-tooltip show ${t.pos}`;
+  obStep.textContent = `${stepNum}/4`;
+  obText.textContent = t.text;
+  obExamples.innerHTML = t.ex.map(e=>`<li>${e}</li>`).join('');
+  
+  if (t.pos === 'pos-bottom') {
+    obTooltip.style.top = `${rect.bottom}px`;
+    obTooltip.style.left = `${rect.left}px`;
+  } else if (t.pos === 'pos-top') {
+    obTooltip.style.top = `${rect.top - obTooltip.offsetHeight}px`;
+    obTooltip.style.left = `${rect.left}px`;
+  } else if (t.pos === 'pos-left') {
+    obTooltip.style.top = `${rect.top - (obTooltip.offsetHeight - rect.height)/2}px`;
+    obTooltip.style.left = `${rect.left - obTooltip.offsetWidth}px`;
+  }
+}
+
+function clearObHighlight() {
+  $$('.ob-highlight').forEach(el=>el.classList.remove('ob-highlight'));
+  obTooltip.classList.remove('show');
+}
+
+function startOnboardingStep(stepNum) {
+  if (!O_STATE.active) return;
+  O_STATE.step = stepNum;
+  clearObHighlight();
+  const t = TOOLTIPS[stepNum];
+  t.el.classList.add('ob-highlight');
+  
+  // Show tooltip slightly delayed so rect calculation works properly
+  setTimeout(()=>showObTooltip(stepNum), 50);
+
+  if (stepNum === 1) {
+    const handleS = (e) => {
+      if (e.key === 'Enter' && searchInput.value.trim().length > 0) {
+        searchInput.removeEventListener('keydown', handleS);
+        if(navigator.vibrate) navigator.vibrate(30);
+        setTimeout(() => startOnboardingStep(2), 600);
+      }
+    };
+    searchInput.addEventListener('keydown', handleS);
+  }
+  else if (stepNum === 2) {
+    const handleSl = () => {
+      sliderEl.removeEventListener('change', handleSl);
+      if(navigator.vibrate) navigator.vibrate(30);
+      setTimeout(() => startOnboardingStep(3), 600);
+    };
+    sliderEl.addEventListener('change', handleSl);
+  }
+  else if (stepNum === 3) {
+    const handleW = () => {
+      $('why-toggle').removeEventListener('click', handleW);
+      if(navigator.vibrate) navigator.vibrate(30);
+      setTimeout(() => startOnboardingStep(4), 600);
+    };
+    $('why-toggle').addEventListener('click', handleW);
+  }
+  else if (stepNum === 4) {
+    const handleL = function() {
+      $$('#ls-modes-chips .ep-chip').forEach(c=>c.removeEventListener('click', handleL));
+      if(navigator.vibrate) navigator.vibrate([30,50,30]);
+      setTimeout(() => completeOnboarding(), 1500);
+    };
+    $$('#ls-modes-chips .ep-chip').forEach(c=>c.addEventListener('click', handleL));
+  }
+}
+
+function completeOnboarding() {
+  O_STATE.active = false;
+  clearObHighlight();
+  obBackdrop.classList.remove('show');
+  obSuccess.classList.add('show');
+  localStorage.setItem('explore_onboarded', 'true');
+  document.body.classList.add('onboarded');
+}
+
+$('ob-finish-btn').addEventListener('click', ()=>{
+  obSuccess.classList.remove('show');
+  if(navigator.vibrate) navigator.vibrate(20);
+});
+
+// Help Icons Logic
+$$('.ep-help-icon').forEach(icon => {
+  icon.addEventListener('click', (e) => {
+    e.stopPropagation(); // prevent parent clicks like why-toggle accordion
+    const id = e.target.id;
+    let step = 1;
+    if(id==='help-slider') step=2;
+    if(id==='help-why') step=3;
+    if(id==='help-listen') step=4;
+    
+    if(obTooltip.classList.contains('show') && obStep.textContent === `${step}/4`) {
+      obTooltip.classList.remove('show');
+    } else {
+      showObTooltip(step);
+      // auto hide after 5s
+      setTimeout(() => obTooltip.classList.remove('show'), 5000);
+    }
+  });
+});
+
+// Nudge on missed clicks during onboarding
+document.addEventListener('click', (e)=>{
+  if (O_STATE.active) {
+    const hl = document.querySelector('.ob-highlight');
+    if (hl && !hl.contains(e.target)) {
+      hl.classList.remove('ob-shake');
+      void hl.offsetWidth; // trigger reflow
+      hl.classList.add('ob-shake');
+      if(navigator.vibrate) navigator.vibrate(50);
+    }
+  }
+}, true);
+
+// Studio Modal Logic
+$$('[data-modal="studio"]').forEach(el => {
+  el.addEventListener('click', () => {
+    $('studio-modal').classList.add('open');
+    obBackdrop.classList.add('show');
+  });
+});
+$('sm-close').addEventListener('click', () => {
+  $('studio-modal').classList.remove('open');
+  if(!O_STATE.active) obBackdrop.classList.remove('show');
+});
+$('sm-notify').addEventListener('click', () => {
+  $('studio-modal').classList.remove('open');
+  if(!O_STATE.active) obBackdrop.classList.remove('show');
+  toast('You will be notified when Studio features arrive!', 'success');
+});
+
 // ── INIT ───────────────────────────────────────────────────────
+if (!localStorage.getItem('explore_onboarded')) {
+  O_STATE.active = true;
+  obBackdrop.classList.add('show');
+  setTimeout(() => startOnboardingStep(1), 500);
+} else {
+  document.body.classList.add('onboarded');
+}
+
 loadJourney('default', true);
 loadSong(SONGS.default);
 </script>
