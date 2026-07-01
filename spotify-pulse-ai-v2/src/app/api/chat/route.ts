@@ -83,14 +83,31 @@ If the answer is not supported by the reviews, say:
 Reviews:
 ${reviewsContext || "No reviews uploaded yet."}
 
-Return:
-1. Answer
-2. Supporting Evidence
-3. Relevant Reviews
-4. Top Quotes
-5. Related Themes
-6. Suggested Feature
-7. Generate PRD
+Format your response exactly as follows:
+
+### Executive Summary
+[Brief summary of the main problem and findings]
+
+### Evidence Summary
+* **Matching Reviews:** [Number of matching reviews]
+* **Average Rating:** [Average rating]
+* **Sources:** [List sources with percentages, e.g., Reddit (65%), Spotify Community (35%)]
+
+### Representative User Quotes
+> "[Quote 1]" - *[Source 1]*
+> "[Quote 2]" - *[Source 2]*
+
+### Root Cause
+[Explain the underlying reason for the user pain point]
+
+### Product Opportunity
+[Suggest a feature or change to address the root cause]
+
+### Business Impact
+[Explain how solving this improves metrics like retention or session length]
+
+### Confidence Score
+**[Score]%** ([High/Medium/Low] Confidence - [Brief justification])
 `;
 
     // 5. Send Question + Context to Groq (Real AI inference!)

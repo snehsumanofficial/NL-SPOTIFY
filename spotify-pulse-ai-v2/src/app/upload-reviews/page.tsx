@@ -26,6 +26,33 @@ export default function UploadReviews() {
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
   const [showSurveyResponses, setShowSurveyResponses] = useState(false);
 
+  const RESEARCH_QA = [
+    {
+      question: "Why do users struggle to discover new music?",
+      answer: "The algorithm feels repetitive and creates an 'echo chamber' effect, failing to surface diverse artists outside of immediate past listening habits. Users feel trapped in loops of familiar tracks (cited in 98 mentions of discovery difficulty)."
+    },
+    {
+      question: "What are the most common frustrations with recommendations?",
+      answer: "Users frequently complain (127 mentions) about skipping songs only to have the algorithm return to the same familiar tracks. There is high negative sentiment regarding this repetitive loop and lack of true variety."
+    },
+    {
+      question: "What listening behaviors are users trying to achieve?",
+      answer: "Users are seeking a balance—personalized but fresh music discovery. They actively want to explore new genres and rely on curated playlists to guide them out of their comfort zones."
+    },
+    {
+      question: "What causes users to repeatedly listen to the same content?",
+      answer: "When algorithmic exploration fails or requires too much manual effort, users fall back to the comfort of familiar playlists. (Repeat listening cited in 47 items)."
+    },
+    {
+      question: "Which user segments experience different discovery challenges?",
+      answer: "Power Listeners experience algorithm fatigue and complain about the exact same artists dominating 'Discover Weekly'. Casual Listeners simply don't know where to start and thus rely heavily on the same few default playlists."
+    },
+    {
+      question: "What unmet needs emerge consistently across reviews?",
+      answer: "Users want more direct control over recommendation diversity (such as tuning novelty vs. familiarity), better surfacing of niche/new artists, and clearer discovery paths beyond the standard algorithmic playlists."
+    }
+  ];
+
   const mockSurveyResponses = [
     { id: 1, date: "2026-06-25", method: "Discover Weekly", frustration: "Algorithm feels repetitive", desire: "Better mood-based filters" },
     { id: 2, date: "2026-06-26", method: "TikTok / Social Media", frustration: "Hard to find niche genres", desire: "Social listening with friends" },
@@ -540,6 +567,30 @@ export default function UploadReviews() {
                </button>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Discovery Research Dashboard */}
+      <section className="space-y-6 pt-8 border-t border-white/10 relative animate-in slide-in-from-bottom-10 duration-1000">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-2xl font-bold tracking-tight text-white flex items-center gap-2">
+              <Lightbulb className="w-6 h-6 text-[#1DB954]" />
+              Discovery Research Dashboard
+            </h2>
+            <p className="text-zinc-400 mt-1">Key insights extracted from cross-platform user feedback.</p>
+          </div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {RESEARCH_QA.map((item, idx) => (
+            <div key={`rq-${idx}`} className="card-glass rounded-xl p-5 border border-white/5 hover:border-[#1DB954]/50 transition-all flex flex-col shadow-lg">
+              <h3 className="text-[15px] font-bold text-white mb-3 flex items-start">
+                <span className="text-[#1DB954] mr-2 text-lg leading-none mt-0.5">•</span>
+                {item.question}
+              </h3>
+              <p className="text-zinc-300 text-sm leading-relaxed flex-1">{item.answer}</p>
+            </div>
+          ))}
         </div>
       </section>
 
