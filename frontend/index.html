@@ -1153,11 +1153,11 @@
     <p>Experience the full product in under 60 seconds</p>
   </div>
   <ul class="ep-demo-scenarios">
-    <li class="ep-demo-sc" data-sc="0"><div class="ep-demo-num">1</div><div><h4>Search & Play</h4><p>Search "Rainy Drive" & Play</p></div></li>
-    <li class="ep-demo-sc" data-sc="1"><div class="ep-demo-num">2</div><div><h4>Dislike Flow</h4><p>Provide feedback on recs</p></div></li>
-    <li class="ep-demo-sc" data-sc="2"><div class="ep-demo-num">3</div><div><h4>Why This Song?</h4><p>View AI reasoning</p></div></li>
-    <li class="ep-demo-sc" data-sc="3"><div class="ep-demo-num">4</div><div><h4>Listen Your Way</h4><p>Switch to Vocals Only</p></div></li>
-    <li class="ep-demo-sc" data-sc="4"><div class="ep-demo-num">5</div><div><h4>Spotify Studio</h4><p>Explore exclusive content</p></div></li>
+    <li class="ep-demo-sc" data-sc="0"><div class="ep-demo-num">1</div><div><h4>Bored with my playlist</h4><p>Discover something completely new</p></div></li>
+    <li class="ep-demo-sc" data-sc="1"><div class="ep-demo-num">2</div><div><h4>Like Arijit, not mainstream</h4><p>Find hidden similar artists</p></div></li>
+    <li class="ep-demo-sc" data-sc="2"><div class="ep-demo-num">3</div><div><h4>Hidden indie artists</h4><p>Explore the underground scene</p></div></li>
+    <li class="ep-demo-sc" data-sc="3"><div class="ep-demo-num">4</div><div><h4>Music for a rainy drive</h4><p>Mood-based discovery</p></div></li>
+    <li class="ep-demo-sc" data-sc="4"><div class="ep-demo-num">5</div><div><h4>Explore Japanese indie</h4><p>Cross-cultural journey</p></div></li>
   </ul>
 </div>
 <div class="ep-demo-progress" id="demo-bar">
@@ -1282,11 +1282,11 @@ const SEARCH_RESULTS_MOCK = [
 ];
 
 const DEMO_SCENARIOS = [
-  { id: 1 },
-  { id: 2 },
-  { id: 3 },
-  { id: 4 },
-  { id: 5 },
+  { query:"I'm bored with my playlist, surprise me",     journey:'surprise', slider:80, song:'surprise', studio:'live' },
+  { query:'Songs like Arijit Singh but not mainstream',   journey:'arijit',   slider:55, song:'arijit',   studio:'behind' },
+  { query:'Find me hidden indie artists from India',      journey:'gems',     slider:70, song:'gems',     studio:'originals' },
+  { query:'I want songs for a rainy drive',               journey:'rainy',    slider:40, song:'rainy',    studio:'live' },
+  { query:'Take me into Japanese indie music',            journey:'japanese', slider:90, song:'japanese', studio:'commentary' },
 ];
 
 // ── STATE ──────────────────────────────────────────────────────
@@ -1677,7 +1677,7 @@ $('demo-skip').addEventListener('click',()=>{ S.demoCancelled=true; S.demoRunnin
 
 $$('.ep-demo-sc').forEach(sc=>sc.addEventListener('click',()=>{
   demoPanel.classList.remove('open');
-  runDemo(DEMO_SCENARIOS[parseInt(sc.dataset.sc)-1]);
+  runDemo(DEMO_SCENARIOS[parseInt(sc.dataset.sc)]);
 }));
 
 function setStep(txt){ $('demo-step-text').textContent=txt; $('demo-bar').classList.add('show'); }
@@ -1702,60 +1702,60 @@ async function runDemo(sc){
   if(S.demoRunning) return;
   S.demoRunning=true; S.demoCancelled=false;
   try{
-    if(sc.id === 1) {
-      setStep('Simulating Search -> Rainy Drive -> Play...');
-      ring($('search-bar')); searchBar.classList.add('focused'); suggestions.classList.add('open');
-      await wait(500); if(S.demoCancelled) return;
-      await typeText(searchInput, "Rainy Drive"); await wait(500); if(S.demoCancelled) return;
-      ring(null); suggestions.classList.remove('open');
-      sugList.style.display='none'; sugLoading.classList.add('show'); suggestions.classList.add('open');
-      await wait(1200); if(S.demoCancelled) return;
-      sugLoading.classList.remove('show'); sugList.style.display=''; suggestions.classList.remove('open');
-      S.journeyKey='rainy'; loadJourney('rainy'); loadSong(SONGS.rainy||SONGS.default);
-      await wait(500); if(S.demoCancelled) return;
-      playPause(true); toast('Playing: Rainy Drive Mix','info');
-      await wait(1000); if(S.demoCancelled) return;
-    }
-    else if(sc.id === 2) {
-      setStep('Simulating Dislike Flow...');
-      ring($('rec-dislike')); await wait(800); if(S.demoCancelled) return;
-      openDislikeSheet(); await wait(1200); if(S.demoCancelled) return;
-      const opts = $$('#dislike-options li');
-      if(opts.length) {
-        ring(opts[0]); await wait(800); if(S.demoCancelled) return;
-        opts[0].click(); await wait(1200); if(S.demoCancelled) return;
-      }
-    }
-    else if(sc.id === 3) {
-      setStep('Simulating ⓘ Why This Song...');
-      ring($('why-toggle')); await wait(800); if(S.demoCancelled) return;
-      $('why-acc').classList.add('open'); await wait(2500); if(S.demoCancelled) return;
-      $('why-acc').classList.remove('open'); await wait(500); if(S.demoCancelled) return;
-    }
-    else if(sc.id === 4) {
-      setStep('Simulating Listen Your Way...');
-      ring($('listen-way-btn')); await wait(800); if(S.demoCancelled) return;
-      openListenSheet(); await wait(1200); if(S.demoCancelled) return;
-      const opts = $$('#ls-modes li');
-      if(opts.length) {
-        ring(opts[0]); await wait(800); if(S.demoCancelled) return;
-        opts[0].click(); await wait(1500); if(S.demoCancelled) return;
-      }
-      closeListenSheet(); await wait(500); if(S.demoCancelled) return;
-    }
-    else if(sc.id === 5) {
-      setStep('Simulating Spotify Studio...');
-      const stEl=document.querySelector(`[data-studio="live"]`); 
-      if(stEl) { ring(stEl); await wait(800); if(S.demoCancelled) return; }
-      openStudioDrawer('live'); await wait(2500); if(S.demoCancelled) return;
-      $('studio-drawer').classList.remove('open'); maybeCloseBackdrop();
-      await wait(500); if(S.demoCancelled) return;
+    // Step 1: Search -> Select Journey -> Play
+    setStep(`Step 1 — Search -> Select "${sc.journey}" -> Start playing`);
+    ring($('search-bar')); searchBar.classList.add('focused'); suggestions.classList.add('open');
+    renderRichSearch();
+    await wait(500); if(S.demoCancelled) return;
+    await typeText(searchInput, sc.query); await wait(500); if(S.demoCancelled) return;
+    ring(null); suggestions.classList.remove('open');
+    sugList.style.display='none'; sugLoading.classList.add('show'); suggestions.classList.add('open');
+    await wait(1200); if(S.demoCancelled) return;
+    sugLoading.classList.remove('show'); sugList.style.display=''; suggestions.classList.remove('open');
+    S.journeyKey=sc.journey; loadJourney(sc.journey); loadSong(SONGS[sc.song]||SONGS.default);
+    await wait(800); if(S.demoCancelled) return;
+    playPause(true); toast(`Playing: ${SONGS[sc.song||'default'].title}`,'info');
+    await wait(1500); if(S.demoCancelled) return;
+
+    // Step 2: Dislike Recommendation
+    setStep('Step 2 — Dislike Recommendation Flow');
+    ring($('rec-dislike')); await wait(800); if(S.demoCancelled) return;
+    openDislikeSheet(); await wait(1200); if(S.demoCancelled) return;
+    const dislikeOpts = $$('#dislike-options li');
+    if(dislikeOpts.length) {
+      ring(dislikeOpts[0]); await wait(800); if(S.demoCancelled) return;
+      dislikeOpts[0].click(); await wait(2500); if(S.demoCancelled) return;
     }
 
-    setStep('Demo complete!');
-    ring(null); toast('Demo finished!');
+    // Step 3: Why This Song
+    setStep('Step 3 — ⓘ Why This Song Accordion');
+    ring($('why-toggle')); await wait(800); if(S.demoCancelled) return;
+    $('why-acc').classList.add('open'); await wait(2500); if(S.demoCancelled) return;
+    $('why-acc').classList.remove('open'); await wait(1000); if(S.demoCancelled) return;
+
+    // Step 4: Listen Your Way
+    setStep('Step 4 — Listen Your Way (Vocals Only)');
+    ring($('listen-way-btn')); await wait(800); if(S.demoCancelled) return;
+    openListenSheet(); await wait(1200); if(S.demoCancelled) return;
+    const modeOpts = $$('#ls-modes li');
+    if(modeOpts.length) {
+      ring(modeOpts[0]); await wait(800); if(S.demoCancelled) return;
+      modeOpts[0].click(); await wait(1500); if(S.demoCancelled) return;
+    }
+    closeListenSheet(); await wait(1000); if(S.demoCancelled) return;
+
+    // Step 5: Spotify Studio
+    setStep('Step 5 — Spotify Studio Exclusive Content');
+    const stEl=document.querySelector(`[data-studio="${sc.studio}"]`); 
+    if(stEl) { ring(stEl); await wait(800); if(S.demoCancelled) return; }
+    openStudioDrawer(sc.studio); await wait(3000); if(S.demoCancelled) return;
+    $('studio-drawer').classList.remove('open'); maybeCloseBackdrop();
+    await wait(800); if(S.demoCancelled) return;
+
+    setStep('✨ Demo complete! Explore on your own.');
+    ring(null); toast('Demo finished! Enjoy Spotify Explore.');
   }catch(e){console.error(e);}finally{
-    await wait(1500);
+    await wait(2500);
     $('demo-bar').classList.remove('show');
     $$('.demo-ring').forEach(el=>el.classList.remove('demo-ring'));
     S.demoRunning=false;

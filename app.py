@@ -309,362 +309,288 @@ def ask_the_reviews_ai(question, text_data):
     except Exception as e:
         return f"Sorry, I couldn't process that question right now. Error: {str(e)}"
 
-# --- Tabs ---
-tab0, tab1, tab2, tab3, tab4, tab5 = st.tabs(["🤖 AI Review Analyzer", "📊 Insight Dashboard", "🔍 Interactive Analyzer", "🗃️ Raw Data Reports", "💬 Ask the Reviews", "🧪 Research & Validation"])
+# --- Sidebar Navigation ---
+st.sidebar.markdown("""
+<style>
+[data-testid="stSidebar"] {
+    background-color: #121212 !important;
+}
+.stRadio > div {
+    gap: 8px;
+}
+.stRadio label {
+    padding: 10px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+}
+/* Style the active radio button to have purple background */
+div[role="radiogroup"] > label[data-baseweb="radio"] > div:first-child {
+    display: none;
+}
+div[role="radiogroup"] > label[data-baseweb="radio"] {
+    background-color: transparent;
+    transition: all 0.2s ease;
+}
+div[role="radiogroup"] > label[data-baseweb="radio"][aria-checked="true"] {
+    background-color: #7248B9;
+    color: white;
+}
+</style>
+""", unsafe_allow_html=True)
+
+nav_options = {
+    "Overview": "⛶ Overview",
+    "Pain Points": "🔥 Pain Points",
+    "Themes": "🧩 Themes",
+    "Segments": "👥 Segments",
+    "Sentiment": "☺ Sentiment",
+    "Opportunities": "💡 Opportunities",
+    "Raw Data": "📄 Raw Data",
+    "Settings": "⚙ Settings"
+}
+
+selected_nav = st.sidebar.radio("Navigation", list(nav_options.values()), label_visibility="collapsed")
+
+if selected_nav == nav_options["Overview"]: tab_active = "tab0"
+elif selected_nav in [nav_options["Pain Points"], nav_options["Segments"]]: tab_active = "tab2"
+elif selected_nav in [nav_options["Themes"], nav_options["Sentiment"]]: tab_active = "tab1"
+elif selected_nav == nav_options["Opportunities"]: tab_active = "tab4"
+elif selected_nav == nav_options["Raw Data"]: tab_active = "tab3"
+elif selected_nav == nav_options["Settings"]: tab_active = "tab5"
+else: tab_active = "tab0"
+
+# --- Global Date Filter ---
+st.sidebar.markdown("<br>", unsafe_allow_html=True)
+import datetime
+date_range = st.sidebar.date_input("📅 Filter by Date Range", [datetime.date(2026, 5, 1), datetime.date(2026, 6, 18)])
+
+if not df.empty and 'date' in df.columns:
+    df['parsed_date'] = pd.to_datetime(df['date'], errors='coerce', utc=True).dt.tz_localize(None)
+    df['day'] = df['parsed_date'].dt.date
+    if isinstance(date_range, tuple) and len(date_range) == 2:
+        start_date, end_date = date_range
+        df = df[(df['day'] >= start_date) & (df['day'] <= end_date)]
 
 # ==========================================
-# TAB 0: AI REVIEW ANALYZER
+# TAB 0: OVERVIEW (Mockup Dashboard)
 # ==========================================
-with tab0:
-    st.markdown('''
-        <div style='text-align: center; margin-bottom: 30px;'>
-            <h1 style='color: #a482ff;'>PROJECT A: AI REVIEW ANALYZER</h1>
-            <h3 style='color: #cccccc; font-weight: 300;'>Turn thousands of user reviews into actionable product insights</h3>
-        </div>
-    ''', unsafe_allow_html=True)
+if tab_active == 'tab0':
+    st.markdown("""
+    <style>
+    .overview-container {
+        background-color: #121212;
+        padding: 24px;
+        border-radius: 12px;
+        color: white;
+    }
+    .kpi-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 24px;
+        gap: 16px;
+    }
+    .kpi-card {
+        background-color: #1A1A1A;
+        border: 1px solid #2A2A2A;
+        border-radius: 8px;
+        padding: 16px;
+        flex: 1;
+    }
+    .kpi-label {
+        color: #A0A0A0;
+        font-size: 13px;
+        font-weight: 500;
+        margin-bottom: 8px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    .kpi-value {
+        font-size: 28px;
+        font-weight: 700;
+        color: white;
+    }
+    .kpi-value.negative { color: #E22134; }
+    .kpi-value.text-val { font-size: 20px; }
     
-    st.markdown('''
-        <div style='display: flex; justify-content: space-between; background-color: #121212; padding: 20px; border-radius: 10px; margin-bottom: 40px; border: 1px solid #333;'>
-            <div style='text-align: center;'><h3 style='color: #a482ff; margin-bottom: 5px;'>☁️ Collect</h3><p style='color: #aaa; font-size: 14px;'>Gather reviews from multiple platforms at scale</p></div>
-            <div style='text-align: center;'><h3 style='color: #a482ff; margin-bottom: 5px;'>🧠 Analyze</h3><p style='color: #aaa; font-size: 14px;'>AI classifiers extracts insights, sentiment, and themes</p></div>
-            <div style='text-align: center;'><h3 style='color: #a482ff; margin-bottom: 5px;'>🔍 Discover</h3><p style='color: #aaa; font-size: 14px;'>Uncover real pain points, unmet needs and opportunities</p></div>
-            <div style='text-align: center;'><h3 style='color: #a482ff; margin-bottom: 5px;'>🎯 Decide</h3><p style='color: #aaa; font-size: 14px;'>Data-backed insights to build the right products</p></div>
-        </div>
-    ''', unsafe_allow_html=True)
+    .chart-container {
+        background-color: #1A1A1A;
+        border: 1px solid #2A2A2A;
+        border-radius: 8px;
+        padding: 16px;
+        height: 100%;
+    }
+    .chart-title {
+        color: white;
+        font-size: 16px;
+        font-weight: 600;
+        margin-bottom: 16px;
+    }
     
-    st.info("**GOAL:** Understand why users struggle with music discovery on Spotify and identify the biggest opportunities for Growth.")
-    st.markdown("---")
+    .pain-point-pill {
+        display: inline-block;
+        background-color: #242424;
+        border: 1px solid #333;
+        color: #E0E0E0;
+        padding: 6px 12px;
+        border-radius: 500px;
+        font-size: 13px;
+        margin-right: 8px;
+        margin-bottom: 8px;
+    }
+    </style>
+    """, unsafe_allow_html=True)
     
-    col1, col2 = st.columns([1, 1.2])
+    st.markdown("<div class='overview-container'>", unsafe_allow_html=True)
     
-    with col1:
-        st.subheader("1. DATA SOURCES")
-        st.markdown("We collect reviews and discussions from everywhere users express feedback")
-        
-        data_sources = pd.DataFrame({
-            "Platform": ["App Store Reviews", "Google Play Reviews", "Reddit Discussions", "Spotify Community", "X (Twitter) Mentions", "YouTube Comments"],
-            "Description": ["iOS reviews & ratings", "Android reviews & ratings", "r/spotify, r/music, r/listentothis", "Community ideas & feedback", "Tweets & replies about Spotify", "Comments on Spotify videos"],
-            "Count": ["12,842", "18,731", "8,612", "2,104", "15,562", "6,943"]
-        })
-        st.dataframe(data_sources, use_container_width=True, hide_index=True)
-        st.markdown("**Total Raw Items Collected: 64,794**")
-        
-    with col2:
-        st.subheader("2. INGESTION & PROCESSING PIPELINE")
-        st.markdown("Automated pipeline to clean, structure and prepare data for AI analysis")
-        
-        st.markdown('''
-        <div style='display: flex; justify-content: space-between; background-color: #181818; padding: 20px; border-radius: 10px; margin-top: 20px; border: 1px solid #333;'>
-            <div style='text-align: center; width: 18%;'><h2 style='margin:0;'>📥</h2><b>Collect</b><p style='font-size:12px;color:#aaa;'>Fetch reviews via APIs & scrapers</p></div>
-            <div style='text-align: center; width: 5%; padding-top: 20px;'>➡️</div>
-            <div style='text-align: center; width: 18%;'><h2 style='margin:0;'>🧹</h2><b>Clean</b><p style='font-size:12px;color:#aaa;'>Remove duplicates, spam, irrelevant content</p></div>
-            <div style='text-align: center; width: 5%; padding-top: 20px;'>➡️</div>
-            <div style='text-align: center; width: 18%;'><h2 style='margin:0;'>📄</h2><b>Normalize</b><p style='font-size:12px;color:#aaa;'>Standardize text, language detection</p></div>
-            <div style='text-align: center; width: 5%; padding-top: 20px;'>➡️</div>
-            <div style='text-align: center; width: 18%;'><h2 style='margin:0;'>🧩</h2><b>Chunk</b><p style='font-size:12px;color:#aaa;'>Break long posts into meaningful chunks</p></div>
-            <div style='text-align: center; width: 5%; padding-top: 20px;'>➡️</div>
-            <div style='text-align: center; width: 18%;'><h2 style='margin:0;'>🗄️</h2><b>Store</b><p style='font-size:12px;color:#aaa;'>Store in vector DB for semantic analysis</p></div>
-        </div>
-        ''', unsafe_allow_html=True)
-        st.caption("**Tech Used:** n8n (Orchestration) • Python • OpenAI GPT-4o • Pinecone (Vector DB) • PostgreSQL")
-
-    st.markdown("---")
+    # Header
+    st.markdown("<h2 style='margin:0; color:white; margin-bottom: 24px;'>OVERVIEW</h2>", unsafe_allow_html=True)
     
-    st.subheader("3. AI ANALYSIS OF EACH REVIEW")
-    st.markdown("Each review is analyzed by GPT-4o using a structured prompt")
+    # KPIs Calculation
+    total_revs = f"{len(df):,}" if not df.empty else "0"
     
-    c3_1, c3_2 = st.columns([1, 1.5])
-    with c3_1:
-        st.markdown("<div class='card' style='border: 1px solid #a482ff;'>", unsafe_allow_html=True)
-        st.markdown("**INPUT (Raw Review)**")
-        st.markdown("*Spotify keeps recommending the same artists and playlists. Discovery feels repetitive and boring now. I end up using YouTube to find new music.*")
-        st.markdown("<br><span style='color:#aaa; font-size: 12px;'>Platform: App Store • Rating: 2⭐ • Date: 18 Jun 2026</span>", unsafe_allow_html=True)
-        st.markdown("</div>", unsafe_allow_html=True)
-        
-    with c3_2:
-        st.markdown("<div class='card'>", unsafe_allow_html=True)
-        st.markdown("**AI OUTPUT (Structured Insight)**")
-        out_data = {
-            "Field": ["Pain Point", "Sentiment", "User Goal", "User Segment", "Discovery Related?", "Recommendation Related?", "Root Cause", "Opportunity Area"],
-            "Value": ["Repetitive recommendations", "Negative", "Discover new & diverse music", "Long-term Premium User", "Yes", "Yes", "Algorithm over-favors familiarity", "Discovery"]
+    neg_pct = "0%"
+    if not df.empty and 'nps_category' in df.columns:
+        total_rated = len(df[df['nps_category'] != 'Unknown'])
+        if total_rated > 0:
+            detractors = len(df[df['nps_category'] == 'Detractor'])
+            neg_pct = f"{round((detractors/total_rated)*100, 1)}%"
+            
+    top_theme = "N/A"
+    if not df.empty:
+        frustration_keywords = {
+            "Repetitive Recommendations": r'repeat|same song|same artist|same music|loop|echo chamber',
+            "Too Many Ads": r'\bads?\b|advertisement|commercial|too many ads',
+            "App Crashes / Bugs": r'crash|bug|glitch|freeze|lag|not working|broken',
+            "Hard Discovery": r'algorithm|recommendation.*bad|suggest.*wrong|discover weekly.*bad',
+            "Premium Value Concerns": r'expensive|price|cost|premium|subscription|pay',
         }
-        st.table(pd.DataFrame(out_data))
-        st.markdown("</div>", unsafe_allow_html=True)
+        frust_counts = []
+        for label, pattern in frustration_keywords.items():
+            cnt = df['text'].str.contains(pattern, case=False, na=False, regex=True).sum()
+            if cnt > 0: frust_counts.append({"Theme": label, "Mentions": cnt})
+        if frust_counts:
+            top_theme = max(frust_counts, key=lambda x: x['Mentions'])['Theme']
 
-    st.markdown("---")
-    
-    st.subheader("4. BULK ANALYSIS RESULTS")
-    st.markdown("All reviews are processed and structured for aggregation. **64,794 reviews -> 64,122 analyzed items** (after cleaning & deduplication)")
-    
-    bulk_data = pd.DataFrame({
-        "Review (Shortened)": [
-            "Keeps recommending the same artists...",
-            "Too many ads. Can't even pick songs...",
-            "I want more underground artists...",
-            "Spotify doesn't surprise me anymore...",
-            "Hard to find regional language songs...",
-            "Premium is expensive for what we get."
-        ],
-        "Platform": ["App Store", "Google Play", "Reddit", "YouTube", "X (Twitter)", "App Store"],
-        "Sentiment": ["Negative", "Negative", "Negative", "Negative", "Negative", "Negative"],
-        "Pain Point": ["Repetitive recommendations", "Excessive ads & restrictions", "Lack of hidden gems", "Predictable recommendations", "Difficult to discover regional music", "Premium value concern"],
-        "Segment": ["Long-term Premium User", "Free User", "Music Enthusiast", "Premium User", "Regional Listener", "Premium User"],
-        "Opportunity Area": ["Discovery", "Premium Value", "Hidden Gems", "Discovery", "Regional Discovery", "Premium Value"]
-    })
-    st.dataframe(bulk_data, use_container_width=True, hide_index=True)
-
-    st.markdown("---")
-    
-    st.subheader("5. THEME CLUSTERING")
-    st.markdown("AI groups similar pain points into major themes using semantic clustering.")
-    
-    t1, t2, t3 = st.columns(3)
-    t4, t5, t6 = st.columns(3)
-    
-    with t1:
-        st.markdown("<div class='card' style='border-top: 4px solid #ff4b4b; text-align: center;'><h1 style='margin:0;'>🔄</h1><h4>Repetitive Recommendations</h4><h2 style='color:#ff4b4b;'>33.9%</h2><p style='color:#aaa;'>21,756 reviews</p></div>", unsafe_allow_html=True)
-    with t2:
-        st.markdown("<div class='card' style='border-top: 4px solid #ffa500; text-align: center;'><h1 style='margin:0;'>🔍</h1><h4>Hard Discovery / Lack of Hidden Gems</h4><h2 style='color:#ffa500;'>26.3%</h2><p style='color:#aaa;'>16,842 reviews</p></div>", unsafe_allow_html=True)
-    with t3:
-        st.markdown("<div class='card' style='border-top: 4px solid #00c0f2; text-align: center;'><h1 style='margin:0;'>💎</h1><h4>Premium Value Concerns</h4><h2 style='color:#00c0f2;'>15.2%</h2><p style='color:#aaa;'>9,731 reviews</p></div>", unsafe_allow_html=True)
-    with t4:
-        st.markdown("<div class='card' style='border-top: 4px solid #1DB954; text-align: center;'><h1 style='margin:0;'>🚫</h1><h4>Excessive Ads & Limitations</h4><h2 style='color:#1DB954;'>13.9%</h2><p style='color:#aaa;'>8,912 reviews</p></div>", unsafe_allow_html=True)
-    with t5:
-        st.markdown("<div class='card' style='border-top: 4px solid #a482ff; text-align: center;'><h1 style='margin:0;'>🌍</h1><h4>Regional Music Discovery</h4><h2 style='color:#a482ff;'>7.3%</h2><p style='color:#aaa;'>4,671 reviews</p></div>", unsafe_allow_html=True)
-    with t6:
-        st.markdown("<div class='card' style='border-top: 4px solid #888; text-align: center;'><h1 style='margin:0;'>💬</h1><h4>Other UX Issues (Search, Bugs, etc.)</h4><h2 style='color:#888;'>3.4%</h2><p style='color:#aaa;'>2,210 reviews</p></div>", unsafe_allow_html=True)
-
-    st.markdown("---")
-    
-    st.subheader("6. SENTIMENT DISTRIBUTION")
-    st.markdown("Overall sentiment across all analyzed reviews")
-    
-    s_col1, s_col2 = st.columns([1, 2])
-    with s_col1:
-        sentiment_df = pd.DataFrame({"Sentiment": ["Negative", "Neutral", "Positive"], "Count": [39803, 13912, 10407]})
-        fig_donut = px.pie(sentiment_df, values='Count', names='Sentiment', hole=0.6, color='Sentiment', 
-                           color_discrete_map={'Negative':'#ff4b4b', 'Neutral':'#ffa500', 'Positive':'#1DB954'})
-        fig_donut.update_layout(plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)', margin=dict(t=0, b=0, l=0, r=0))
-        st.plotly_chart(fig_donut, use_container_width=True)
-    with s_col2:
-        st.markdown("<br><br>", unsafe_allow_html=True)
-        st.markdown("**Key Takeaway:**")
-        st.info("Majority of reviews (62.1%) are negative and strongly related to discovery and recommendation experience.")
-
-    st.markdown("---")
-    
-    st.subheader("7. USER SEGMENT INSIGHTS")
-    st.markdown("Which user segments face the biggest discovery issues?")
-    
-    seg_col1, seg_col2 = st.columns([2, 1])
-    with seg_col1:
-        segment_df = pd.DataFrame({
-            "Segment": ["Long-term Premium Users (2+ yrs)", "Music Enthusiasts", "Students", "Casual Listeners", "Free Users"],
-            "Percentage": [38, 24, 16, 13, 9]
-        })
-        fig_bar = px.bar(segment_df, x='Percentage', y='Segment', orientation='h', color_discrete_sequence=['#a482ff'])
-        fig_bar.update_layout(yaxis={'categoryorder':'total ascending'}, plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)', margin=dict(t=0, b=0, l=0, r=0))
-        st.plotly_chart(fig_bar, use_container_width=True)
-    with seg_col2:
-        st.markdown("<br><br>", unsafe_allow_html=True)
-        st.markdown("**Key Takeaway:**")
-        st.info("Long-term Premium Users are the most frustrated segment, primarily complaining about repetitive recommendations and lack of discovery.")
-
-    st.markdown("---")
-    
-    st.subheader("8. OPPORTUNITY PRIORITIZATION")
-    st.markdown("Opportunities ranked by Impact vs Effort")
-    
-    opp_df = pd.DataFrame({
-        "Opportunity": ["Better Discovery Feed", "Discovery Slider", "Reject / Don't Recommend", "AI Discovery Copilot", "Hidden Gems Mode", "Studio Mode", "Improved Search Filters", "Better Onboarding", "Personalization 2.0", "Social Discovery 2.0"],
-        "Effort": [2, 3, 2, 8, 7, 9, 2, 3, 8, 9],
-        "Impact": [8, 7, 9, 9, 8, 7, 3, 4, 3, 4],
-        "Category": ["Quick Wins", "Quick Wins", "Quick Wins", "Major Bets", "Major Bets", "Major Bets", "Fill-Ins", "Fill-Ins", "Long-term Bets", "Long-term Bets"]
-    })
-    
-    fig_scatter = px.scatter(opp_df, x="Effort", y="Impact", color="Category", text="Opportunity",
-                             color_discrete_map={"Quick Wins": "#1DB954", "Major Bets": "#a482ff", "Fill-Ins": "#ffa500", "Long-term Bets": "#ff4b4b"})
-    fig_scatter.update_traces(textposition='top center')
-    fig_scatter.add_hline(y=5, line_dash="dash", line_color="gray")
-    fig_scatter.add_vline(x=5, line_dash="dash", line_color="gray")
-    fig_scatter.update_layout(plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)', xaxis_range=[0,10], yaxis_range=[0,10])
-    st.plotly_chart(fig_scatter, use_container_width=True)
-
-    st.markdown("---")
-    
-    st.subheader("9. INSIGHTS DASHBOARD")
-    st.markdown("Real-time dashboard for PMs and Growth team")
-    
-    st.markdown('''
-        <div style='background-color: #121212; padding: 30px; border-radius: 15px; border: 1px solid #333;'>
-            <h2 style='margin-top: 0;'>OVERVIEW</h2>
-            <div style='display: flex; justify-content: space-between; border-bottom: 1px solid #333; padding-bottom: 20px; margin-bottom: 20px;'>
-                <div>
-                    <p style='color: #aaa; margin: 0;'>Total Reviews Analyzed</p>
-                    <h1 style='margin: 0; color: white;'>64,122</h1>
-                </div>
-                <div>
-                    <p style='color: #aaa; margin: 0;'>Negative Sentiment</p>
-                    <h1 style='margin: 0; color: #ff4b4b;'>62.1%</h1>
-                </div>
-                <div>
-                    <p style='color: #aaa; margin: 0;'>Top Theme</p>
-                    <h3 style='margin: 0; color: white;'>Repetitive Recommendations</h3>
-                </div>
-                <div>
-                    <p style='color: #aaa; margin: 0;'>Top Segment</p>
-                    <h3 style='margin: 0; color: white;'>Long-term Premium Users</h3>
-                </div>
-            </div>
+    top_seg = "N/A"
+    if not df.empty:
+        cat_options = {
+            "Long-term Premium Users": "premium|years|since|subscriber|paying",
+            "Casual Listeners": "casual|free|sometimes|occasionally",
+            "Music Enthusiasts": "audiophile|quality|obsessed|always listening",
+        }
+        seg_counts = []
+        for name, kw in cat_options.items():
+            cnt = df['text'].str.contains(kw, case=False, na=False, regex=True).sum()
+            if cnt > 0: seg_counts.append({"Segment": name, "Count": cnt})
+        if seg_counts:
+            top_seg = max(seg_counts, key=lambda x: x['Count'])['Segment']
             
-            <div style='display: flex; justify-content: space-between;'>
-                <div style='width: 45%;'>
-                    <h4 style='color: #aaa;'>Top Themes</h4>
-                    <p style='color: #ff4b4b; margin: 5px 0;'>Repetitive Recommendations <span style='float:right;'>33.9%</span></p>
-                    <div style='width: 100%; background: #333; height: 8px; border-radius: 4px;'><div style='width: 33.9%; background: #ff4b4b; height: 100%; border-radius: 4px;'></div></div>
-                    <p style='color: #ffa500; margin: 5px 0; margin-top: 15px;'>Hard Discovery <span style='float:right;'>26.2%</span></p>
-                    <div style='width: 100%; background: #333; height: 8px; border-radius: 4px;'><div style='width: 26.2%; background: #ffa500; height: 100%; border-radius: 4px;'></div></div>
-                    <p style='color: #00c0f2; margin: 5px 0; margin-top: 15px;'>Premium Value Concerns <span style='float:right;'>15.2%</span></p>
-                    <div style='width: 100%; background: #333; height: 8px; border-radius: 4px;'><div style='width: 15.2%; background: #00c0f2; height: 100%; border-radius: 4px;'></div></div>
-                </div>
-                <div style='width: 45%;'>
-                    <h4 style='color: #aaa;'>Recent Pain Points</h4>
-                    <ul style='color: white; line-height: 1.8;'>
-                        <li>"Same songs again and again" - <span style='color: #aaa;'>App Store</span></li>
-                        <li>"Not discovering new artists" - <span style='color: #aaa;'>Reddit</span></li>
-                        <li>"Too many ads" - <span style='color: #aaa;'>Google Play</span></li>
-                        <li>"Premium not worth it" - <span style='color: #aaa;'>App Store</span></li>
-                        <li>"Hard to find regional music" - <span style='color: #aaa;'>Community</span></li>
-                    </ul>
-                </div>
-            </div>
+    st.markdown(f"""
+    <div class='kpi-row'>
+        <div class='kpi-card'>
+            <div class='kpi-label'>Total Reviews Analyzed</div>
+            <div class='kpi-value'>{total_revs}</div>
         </div>
-    ''', unsafe_allow_html=True)
+        <div class='kpi-card'>
+            <div class='kpi-label'>Negative Sentiment</div>
+            <div class='kpi-value negative'>{neg_pct}</div>
+        </div>
+        <div class='kpi-card'>
+            <div class='kpi-label'>Top Theme</div>
+            <div class='kpi-value text-val'>{top_theme}</div>
+        </div>
+        <div class='kpi-card'>
+            <div class='kpi-label'>Top Segment</div>
+            <div class='kpi-value text-val'>{top_seg}</div>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
     
-    st.markdown("<br><br><br><div style='text-align: center;'><h3 style='color: #1DB954;'>🎯 OUTCOME</h3><p>The Review Analyzer helps us understand REAL user problems and uncover <b>HIGH-IMPACT</b> opportunities to drive meaningful music discovery.</p></div>", unsafe_allow_html=True)
-
-
-# ==========================================
-with tab0:
-    st.title("Spotify Review Intelligence Engine")
-    st.markdown("**Description:** Analyze Spotify user reviews and identify pain points, unmet needs, user segments, sentiment, and opportunities related to music discovery and recommendation systems.")
+    # Charts Row
+    c1, c2 = st.columns(2)
     
-    st.markdown("---")
-    
-    st.subheader("1. Define Inputs & Context")
-    col_input, col_ex = st.columns(2)
-    with col_input:
-        st.markdown("<div class='card'>", unsafe_allow_html=True)
-        st.markdown("##### Inputs Needed:")
-        st.markdown("- **Review Text**")
-        st.markdown("- **Platform** (App Store, Play Store, Reddit, etc.)")
-        st.markdown("- **Date**")
-        st.markdown("</div>", unsafe_allow_html=True)
-    with col_ex:
-        st.markdown("<div class='card'>", unsafe_allow_html=True)
-        st.markdown("##### Example Review:")
-        st.info('"Spotify keeps recommending the same artists and playlists. Discovery feels repetitive..."')
-        st.markdown("</div>", unsafe_allow_html=True)
-
-    st.markdown("---")
-    
-    st.subheader("2. Spotify Review Intelligence Engine (Layer 1)")
-    
-    c_prompt, c_schema = st.columns([2, 1])
-    with c_prompt:
-        with st.expander("View Master Prompt", expanded=True):
-            st.code('''You are a Senior Product Research Analyst at Spotify.
-
-Analyze the following review.
-
-Return:
-1. Primary Pain Point
-2. Sentiment (Positive/Neutral/Negative)
-3. User Goal
-4. User Segment
-5. Discovery Related? (Yes/No)
-6. Recommendation Related? (Yes/No)
-7. Root Cause
-8. Opportunity Area
-
-Possible Opportunity Areas:
-- Discovery
-- Recommendations
-- Search
-- User Experience
-- Premium Value
-- Artist Discovery
-- Hidden Gems
-- Personalization
-
-Review:
-{{review}}''', language="text")
-            
-    with c_schema:
-        st.markdown("<div class='card'>", unsafe_allow_html=True)
-        st.markdown("##### Target Output Schema:")
-        st.markdown("""
-        - `Pain Point`
-        - `Sentiment`
-        - `User Goal`
-        - `Segment`
-        - `Root Cause`
-        - `Opportunity Area`
-        """)
-        st.markdown("</div>", unsafe_allow_html=True)
-
-    st.markdown("---")
-    
-    st.subheader("3. Batch Analyze")
-    st.markdown("*Data sources loaded: App Store Reviews, Play Store Reviews, Reddit Posts, Spotify Community.*")
-    
-    if st.button("▶ Run Batch Processing", type="primary"):
-        with st.spinner("Initializing Spotify Review Intelligence Engine... analyzing scraped data..."):
-            import time
-            time.sleep(2.5)
-        st.success("Batch processing complete! 14,200+ reviews analyzed.")
-        st.session_state['show_dashboard'] = True
-
-    if st.session_state.get('show_dashboard', False):
-        st.markdown("---")
-        st.subheader("4. Insight Synthesizer (Layer 2)")
-        with st.expander("View Synthesizer Prompt", expanded=False):
-            st.code('''You are a Principal Product Manager.
-
-Given the analyzed reviews:
-
-1. Find top 10 recurring pain points.
-2. Identify user segments.
-3. Identify unmet needs.
-4. Identify recommendation frustrations.
-5. Identify discovery challenges.
-6. Recommend product opportunities.''', language="text")
+    with c1:
+        st.markdown("<div class='chart-container'><div class='chart-title'>Top Themes</div>", unsafe_allow_html=True)
         
-        st.markdown("---")
-        st.subheader("📊 Final Dashboard")
+        theme_data = pd.DataFrame({
+            "Theme": ["Other Issues", "Regional Discovery", "Ads & Limitations", "Premium Value Concerns", "Hard Discovery", "Repetitive Recommendations"],
+            "Percentage": [3.4, 7.3, 13.9, 15.2, 26.2, 33.9]
+        })
         
-        col_comp, col_opp = st.columns(2)
+        fig_themes = px.bar(theme_data, x='Percentage', y='Theme', orientation='h', text='Percentage')
+        fig_themes.update_traces(
+            marker_color=['#4A4A4A', '#8E44AD', '#27AE60', '#3498DB', '#F39C12', '#E74C3C'],
+            texttemplate='%{text}%', textposition='outside',
+            textfont=dict(color='white')
+        )
+        fig_themes.update_layout(
+            plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
+            margin=dict(l=0, r=40, t=0, b=0),
+            xaxis=dict(showgrid=False, showticklabels=False, title=""),
+            yaxis=dict(showgrid=False, title="", tickfont=dict(color='#E0E0E0', size=13)),
+            height=300
+        )
+        st.plotly_chart(fig_themes, use_container_width=True, config={'displayModeBar': False})
+        st.markdown("</div>", unsafe_allow_html=True)
         
-        with col_comp:
-            st.markdown("#### Top Complaints")
-            comp_data = {
-                "Complaint": ["Repetitive recommendations", "Same artists", "Discovery fatigue"],
-                "Frequency": ["34%", "26%", "19%"]
-            }
-            st.dataframe(pd.DataFrame(comp_data), use_container_width=True, hide_index=True)
-            
-        with col_opp:
-            st.markdown("#### Top Opportunities")
-            opp_data = {
-                "Opportunity": ["Hidden Gems", "Discovery Copilot", "Context-Aware Discovery"],
-                "Impact": ["High", "Very High", "High"]
-            }
-            st.dataframe(pd.DataFrame(opp_data), use_container_width=True, hide_index=True)
+    with c2:
+        st.markdown("<div class='chart-container'><div class='chart-title'>Sentiment Over Time</div>", unsafe_allow_html=True)
+        
+        # Generate dummy time series data
+        dates = pd.date_range(start="2026-05-01", end="2026-06-18")
+        import numpy as np
+        np.random.seed(42)
+        
+        neg_trend = np.random.normal(loc=62, scale=3, size=len(dates))
+        neu_trend = np.random.normal(loc=22, scale=2, size=len(dates))
+        pos_trend = np.random.normal(loc=16, scale=2, size=len(dates))
+        
+        # Add a slight spike to negative near the end
+        neg_trend[-10:] += np.linspace(0, 5, 10)
+        
+        time_df = pd.DataFrame({
+            "Date": np.tile(dates, 3),
+            "Sentiment": ["Negative"]*len(dates) + ["Neutral"]*len(dates) + ["Positive"]*len(dates),
+            "Percentage": np.concatenate([neg_trend, neu_trend, pos_trend])
+        })
+        
+        fig_time = px.line(time_df, x='Date', y='Percentage', color='Sentiment',
+                           color_discrete_map={"Negative": "#E22134", "Neutral": "#F1C40F", "Positive": "#1DB954"})
+        fig_time.update_layout(
+            plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
+            margin=dict(l=0, r=0, t=0, b=0),
+            xaxis=dict(showgrid=False, title="", tickfont=dict(color='#A0A0A0'), dtick="M1", tickformat="%b %e"),
+            yaxis=dict(showgrid=True, gridcolor='#333', title="", tickfont=dict(color='#A0A0A0'), ticksuffix="%"),
+            legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1, font=dict(color='#E0E0E0')),
+            height=300
+        )
+        st.plotly_chart(fig_time, use_container_width=True, config={'displayModeBar': False})
+        st.markdown("</div>", unsafe_allow_html=True)
+        
+    # Recent Pain Points
+    st.markdown("<br>", unsafe_allow_html=True)
+    st.markdown("<div class='chart-container'><div class='chart-title' style='margin-bottom:12px;'>Recent Pain Points</div>", unsafe_allow_html=True)
+    
+    pain_points = [
+        "Same songs again and again",
+        "Not discovering new artists",
+        "Too many ads",
+        "Premium not worth it",
+        "Hard to find regional music"
+    ]
+    
+    html_pills = "".join([f"<span class='pain-point-pill'>{pp}</span>" for pp in pain_points])
+    st.markdown(html_pills, unsafe_allow_html=True)
+    
+    st.markdown("</div>", unsafe_allow_html=True)
+    
+    st.markdown("</div>", unsafe_allow_html=True)
 
 # ==========================================
 # TAB 1: INSIGHT DASHBOARD
 # ==========================================
-with tab1:
+if tab_active == 'tab1':
     st.title("Performance & Sentiment Dashboard")
     
     if not df.empty:
@@ -852,7 +778,7 @@ with tab1:
 # ==========================================
 # QUANTITATIVE ANALYTICS (Appended to Tab 1)
 # ==========================================
-with tab1: # Quantitative Analytics Section
+if tab_active == 'tab1': # Quantitative Analytics Section
     st.header("Quantitative Analytics")
     st.markdown("Deep statistical breakdown of user feedback metrics without AI.")
     
@@ -962,7 +888,7 @@ with tab1: # Quantitative Analytics Section
 # ==========================================
 # TAB 2: INTERACTIVE ANALYZER
 # ==========================================
-with tab2:
+if tab_active == 'tab2':
     st.title("Interactive Discovery Analyzer")
     st.markdown("Extract specific review segments from the database using keywords and automatically analyze them with Claude.")
     
@@ -1169,7 +1095,7 @@ with tab2:
 # ==========================================
 # TAB 3: RAW DATA
 # ==========================================
-with tab3:
+if tab_active == 'tab3':
     st.header("Raw Dataset")
     if not df.empty:
         platforms = ["All"] + list(df['platform'].dropna().unique())
@@ -1194,7 +1120,7 @@ with tab3:
 # ==========================================
 # TAB 4: ASK THE REVIEWS
 # ==========================================
-with tab4:
+if tab_active == 'tab4':
     st.title("💬 Ask the Reviews")
     st.markdown("Ask any question and get answers powered by real user reviews from the dataset.")
     
@@ -1282,7 +1208,7 @@ with tab4:
 # ==========================================
 # TAB 5: RESEARCH & VALIDATION
 # ==========================================
-with tab5:
+if tab_active == 'tab5':
     st.title("🧪 Research & Validation")
     st.markdown("Primary research insights, validated user personas, and answers to the core research questions.")
 
