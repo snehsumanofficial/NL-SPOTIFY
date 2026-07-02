@@ -765,6 +765,11 @@
   .ob-checklist li { font-size: 12px; font-weight: 600; color: #888; display: flex; align-items: center; gap: 8px; transition: color 0.3s ease; }
   .ob-checklist li.ck-done { color: #1a1a1a; }
   .ob-checklist li .ck-icon { width: 18px; text-align: center; font-size: 13px; transition: all 0.3s; }
+  .ob-examples { list-style: none; display: none; flex-direction: column; gap: 6px; margin-bottom: 12px; background: #f6f6f6; padding: 10px; border-radius: 6px; }
+  .ob-examples li { font-size: 11px; font-style: italic; color: #535353; display: flex; gap: 6px; align-items: flex-start; }
+  .ob-examples li::before { content: '•'; color: #1ed760; font-weight: bold; }
+  .ob-ex-link { color: #535353; text-decoration: none; cursor: pointer; transition: color 0.2s; }
+  .ob-ex-link:hover { color: #1ed760; text-decoration: underline; }
   .ob-action-hint { font-size: 11px; color: #b3b3b3; font-style: italic; margin-top: 4px; animation: obHintPulse 2s ease-in-out infinite; }
   @keyframes obHintPulse { 0%,100%{opacity:.6} 50%{opacity:1} }
 
@@ -1342,6 +1347,7 @@
     <li id="ck-3"><span class="ck-icon">☐</span> Why This Song</li>
     <li id="ck-4"><span class="ck-icon">☐</span> Listen Your Way</li>
   </ul>
+  <ul class="ob-examples" id="ob-examples"></ul>
   <p class="ob-action-hint" id="ob-hint"></p>
 </div>
 
@@ -2038,6 +2044,7 @@ const OB_STEPS = {
   1: {
     msg: "👋 Welcome to Spotify Explore!\n\nInstead of searching by artist, describe the kind of music you're looking for — a mood, activity, or feeling.\n\nGo ahead and type something below.",
     hint: "Type a prompt and press Enter to continue...",
+    ex: ["Songs like Arijit Singh but underrated", "Rainy evening drive", "Hidden indie artists"],
     el: () => $('search-bar'),
     side: 'below'
   },
@@ -2126,10 +2133,17 @@ function showHand(el, type = 'click') {
     // Simulate typing text character by character
     const searchText = "Songs like Arijit Singh but underrated";
     let i = 0;
+    let userTyped = false;
+    
+    // Listen for manual user input to interrupt the demo
+    const onInput = () => { userTyped = true; searchInput.removeEventListener('input', onInput); };
+    searchInput.addEventListener('input', onInput);
+
     clearInterval(OB.handTimer);
     OB.handTimer = setInterval(() => {
       if (!OB.active) { clearInterval(OB.handTimer); return; }
-      if (searchInput.value.length > 0) { clearInterval(OB.handTimer); return; }
+      if (userTyped) { clearInterval(OB.handTimer); return; } // Stop demo if user interacts
+      
       searchInput.value = searchText.slice(0, ++i);
       // Pulse input border
       searchInput.style.borderColor = '#1ed760';
@@ -2137,9 +2151,10 @@ function showHand(el, type = 'click') {
         clearInterval(OB.handTimer);
         // After typing demo, clear and focus for user
         setTimeout(() => {
-          if (searchInput.value === searchText && OB.active && OB.step === 1) {
+          if (!userTyped && searchInput.value === searchText && OB.active && OB.step === 1) {
             searchInput.value = '';
             searchInput.style.borderColor = '';
+            searchInput.focus(); // Focus so user can start typing!
           }
         }, 1800);
       }
@@ -2207,6 +2222,25 @@ function startOnboardingStep(n) {
   OB.stepBadge.textContent = `Step ${n} of 4`;
   OB.coachMsg.textContent = cfg.msg;
   OB.hint.textContent = cfg.hint;
+  
+  const exContainer = $('ob-examples');
+  if (cfg.ex && cfg.ex.length > 0) {
+    exContainer.innerHTML = cfg.ex.map(e => `<li><a class="ob-ex-link">${e}</a></li>`).join('');
+    exContainer.style.display = 'flex';
+    $$('.ob-ex-link').forEach(link => {
+      link.addEventListener('click', (e) => {
+        searchInput.value = e.target.textContent;
+        searchInput.focus();
+        // Hide hand immediately if they clicked an example
+        hideHand();
+        // Simulate enter to trigger handleSearch
+        searchInput.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+      });
+    });
+  } else {
+    exContainer.style.display = 'none';
+  }
+
   positionCoach(el, cfg.side);
   OB.coach.style.display = 'block';
   requestAnimationFrame(() => {
