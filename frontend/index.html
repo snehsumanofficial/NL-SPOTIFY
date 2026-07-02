@@ -2199,17 +2199,9 @@ function transitionToStep(n) {
   OB.coach.style.opacity = '0';
   OB.coach.style.transform = 'translateY(8px) scale(0.97)';
   hideHand();
-  
-  // Start scrolling immediately so layout settles before calculation
-  const cfg = OB_STEPS[n];
-  if (cfg) {
-    const el = cfg.el();
-    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  }
-
   setTimeout(() => {
     startOnboardingStep(n);
-  }, 450);
+  }, 350);
 }
 
 // ── START ONBOARDING STEP ──────────────────────────────────────
@@ -2222,7 +2214,15 @@ function startOnboardingStep(n) {
   const el = cfg.el();
   if (!el) return;
 
+  // Scroll element into view instantly so calculations are accurate
+  el.scrollIntoView({ block: 'center' });
+
   // Spotlight
+  if (n === 3) {
+    OB.overlay.style.opacity = '0'; // User requested no dimming for step 3
+  } else {
+    OB.overlay.style.opacity = '1';
+  }
   setSpotlight(el);
 
   // Coach card
@@ -2494,7 +2494,7 @@ if (!localStorage.getItem('explore_onboarded')) {
   OB.active = true;
   document.body.classList.add('ob-active');
   OB.overlay.classList.add('show');
-  setTimeout(() => transitionToStep(1), 600);
+  setTimeout(() => startOnboardingStep(1), 600);
 } else {
   document.body.classList.add('onboarded');
 }
