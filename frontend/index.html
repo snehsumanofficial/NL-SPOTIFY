@@ -2051,7 +2051,7 @@ const OB_STEPS = {
   2: {
     msg: "🎚️ Great! Now let's make your recommendations even more adventurous.\n\nThis slider controls how far outside your comfort zone Spotify should go.",
     hint: "Drag the slider to update your journey...",
-    el: () => $('disc-slider'),
+    el: () => document.querySelector('.ep-slider-section'),
     side: 'above'
   },
   3: {
@@ -2094,13 +2094,14 @@ function positionCoach(el, side) {
   OB.coach.style.removeProperty('right');
   OB.coach.style.removeProperty('top');
   OB.coach.style.removeProperty('bottom');
+  
+  const coachH = OB.coach.offsetHeight || 240;
 
   if (side === 'below') {
     OB.coach.style.top = `${r.bottom + pad}px`;
     OB.coach.style.left = `${Math.min(r.left, window.innerWidth - 316)}px`;
   } else if (side === 'above') {
-    // Position will be calculated after display:block
-    OB.coach.style.top = `${r.top - 240}px`;
+    OB.coach.style.top = `${r.top - coachH - pad}px`;
     OB.coach.style.left = `${Math.min(r.left, window.innerWidth - 316)}px`;
   } else if (side === 'left') {
     OB.coach.style.top = `${Math.max(r.top - 60, 20)}px`;
@@ -2241,8 +2242,9 @@ function startOnboardingStep(n) {
     exContainer.style.display = 'none';
   }
 
+  OB.coach.style.display = 'block'; // Must be visible to calculate height
   positionCoach(el, cfg.side);
-  OB.coach.style.display = 'block';
+  
   requestAnimationFrame(() => {
     OB.coach.style.opacity = '1';
     OB.coach.style.transform = 'translateY(0) scale(1)';
