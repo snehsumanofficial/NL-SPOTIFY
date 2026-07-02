@@ -27,6 +27,7 @@ const routes = [
   { name: "Analytics", path: "/analytics", icon: BarChart2 },
   { name: "Monitoring", path: "/monitoring", icon: Bell },
   { name: "AI Product Copilot", path: "/ai-copilot", icon: Bot },
+  { name: "Qualitative Insights", path: "/insights", icon: Lightbulb },
   { name: "Personas", path: "/personas", icon: Users },
   { name: "Opportunity Hub", path: "/opportunity-hub", icon: Lightbulb },
   { name: "PRD Generator", path: "/prd-generator", icon: FileText },
