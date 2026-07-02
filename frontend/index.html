@@ -745,6 +745,37 @@
 
   .demo-ring { outline: 2px solid #1ed760 !important; outline-offset: 3px !important; transition: outline .3s !important; border-radius: 6px; }
 
+  /* ── GUIDED ONBOARDING ───────────────────────────────────────── */
+  body.ob-active { pointer-events: none; }
+  
+  .ob-highlight {
+    position: relative !important; z-index: 10000 !important;
+    box-shadow: 0 0 0 4px #1ed760, 0 8px 32px rgba(30,215,96,0.3), 0 0 120px rgba(255,255,255,0.1) !important;
+    border-radius: inherit; pointer-events: auto !important;
+    animation: obPulse 2s infinite ease-in-out;
+  }
+  @keyframes obPulse {
+    0%, 100% { box-shadow: 0 0 0 2px rgba(30,215,96,0.6), 0 0 120px rgba(255,255,255,0.1); }
+    50% { box-shadow: 0 0 0 8px rgba(30,215,96,0.1), 0 0 120px rgba(255,255,255,0.15); }
+  }
+  
+  .ob-arrow {
+    position: absolute; width: 0; height: 0;
+    border: 8px solid transparent;
+    animation: obArrowPulse 2.5s infinite ease-in-out;
+  }
+  @keyframes obArrowPulse {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-4px) scale(1.05); }
+  }
+  
+  .ep-ob-tooltip.pos-bottom .ob-arrow { top: -16px; left: 24px; border-bottom-color: #1ed760; }
+  .ep-ob-tooltip.pos-top .ob-arrow { bottom: -16px; left: 24px; border-top-color: #1ed760; animation: obArrowPulseTop 2.5s infinite ease-in-out; }
+  @keyframes obArrowPulseTop { 0%, 100% { transform: translateY(0) scale(1); } 50% { transform: translateY(4px) scale(1.05); } }
+  
+  .ep-ob-tooltip.pos-left .ob-arrow { top: 50%; right: -16px; margin-top: -8px; border-left-color: #1ed760; animation: obArrowPulseLeft 2.5s infinite ease-in-out; }
+  @keyframes obArrowPulseLeft { 0%, 100% { transform: translateX(0) scale(1); } 50% { transform: translateX(4px) scale(1.05); } }
+
   /* Responsive */
   @media (max-width: 1100px) {
     .ep-layout { grid-template-columns: 220px 1fr; }
@@ -1168,8 +1199,9 @@
 <!-- Onboarding Elements -->
 <div class="ep-ob-backdrop" id="ob-backdrop"></div>
 <div class="ep-ob-tooltip" id="ob-tooltip">
+  <div class="ob-arrow"></div>
   <div class="ep-ob-step" id="ob-step">1/4</div>
-  <div class="ep-ob-text" id="ob-text">Search by intention, not by artist.</div>
+  <div class="ep-ob-text" id="ob-text"></div>
   <ul class="ep-ob-examples" id="ob-examples"></ul>
 </div>
 <div class="ep-ob-success" id="ob-success">
@@ -1852,17 +1884,17 @@ const obSuccess = $('ob-success');
 
 const TOOLTIPS = {
   1: {
-    el: $('search-bar'), pos: 'pos-bottom', text: "Search by intention, not by artist.",
-    ex: ["Songs like Arijit Singh but underrated", "Rainy evening drive", "Hidden indie artists"]
+    el: $('search-bar'), pos: 'pos-bottom', text: "Start by telling Spotify what you're looking for. You don't need artist names anymore. Describe the mood, activity, or type of music you want.",
+    ex: ["Songs like Arijit Singh but underrated", "Rainy evening drive", "Late-night coding music", "Hidden indie artists"]
   },
   2: {
-    el: $('disc-slider'), pos: 'pos-top', text: "Control how adventurous your recommendations should be.", ex: []
+    el: $('disc-slider'), pos: 'pos-top', text: "This slider controls how adventurous your recommendations are.", ex: []
   },
   3: {
-    el: $('why-toggle'), pos: 'pos-top', text: "Understand why every recommendation appears.", ex: []
+    el: $('why-toggle'), pos: 'pos-top', text: "Every recommendation has a reason. Tap here to understand why Spotify selected this song for you.", ex: []
   },
   4: {
-    el: $('listen-way-btn'), pos: 'pos-left', text: "Experience music differently.", ex: []
+    el: $('listen-way-btn'), pos: 'pos-left', text: "Experience the same song in different ways.", ex: []
   }
 };
 
@@ -1903,11 +1935,29 @@ function startOnboardingStep(stepNum) {
   setTimeout(()=>showObTooltip(stepNum), 50);
 
   if (stepNum === 1) {
+    // Intercept search trigger by overriding the core triggerSearch function temporarily
+    const originalTriggerSearch = window.triggerSearch || function(){};
+    window.triggerSearch = async function() {
+      // Allow normal search to proceed
+      if(searchInput.value.trim().length > 0) {
+        await originalTriggerSearch.apply(this, arguments);
+        if(navigator.vibrate) navigator.vibrate(30);
+        // Once recommendations loaded, advance
+        setTimeout(() => startOnboardingStep(2), 200);
+      }
+    };
+    // Also listen to Enter key explicitly in case triggerSearch takes a while to overwrite
     const handleS = (e) => {
       if (e.key === 'Enter' && searchInput.value.trim().length > 0) {
         searchInput.removeEventListener('keydown', handleS);
-        if(navigator.vibrate) navigator.vibrate(30);
-        setTimeout(() => startOnboardingStep(2), 600);
+        // Wait for sugLoading to be hidden (meaning load complete)
+        const checkLoad = setInterval(() => {
+          if ($('sug-loading').style.display === 'none') {
+            clearInterval(checkLoad);
+            if(navigator.vibrate) navigator.vibrate(30);
+            setTimeout(() => startOnboardingStep(2), 300);
+          }
+        }, 300);
       }
     };
     searchInput.addEventListener('keydown', handleS);
@@ -1916,17 +1966,28 @@ function startOnboardingStep(stepNum) {
     const handleSl = () => {
       sliderEl.removeEventListener('change', handleSl);
       if(navigator.vibrate) navigator.vibrate(30);
+      // Let the live UI update finish before showing step 3
       setTimeout(() => startOnboardingStep(3), 600);
     };
     sliderEl.addEventListener('change', handleSl);
   }
   else if (stepNum === 3) {
-    const handleW = () => {
-      $('why-toggle').removeEventListener('click', handleW);
+    const handleWOpen = () => {
+      $('why-toggle').removeEventListener('click', handleWOpen);
       if(navigator.vibrate) navigator.vibrate(30);
-      setTimeout(() => startOnboardingStep(4), 600);
+      
+      // Wait for it to close (or they click it again)
+      const handleWClose = () => {
+        $('why-toggle').removeEventListener('click', handleWClose);
+        if(navigator.vibrate) navigator.vibrate(30);
+        setTimeout(() => startOnboardingStep(4), 100);
+      };
+      // Short timeout to prevent immediate double-click resolution
+      setTimeout(() => {
+        $('why-toggle').addEventListener('click', handleWClose);
+      }, 500);
     };
-    $('why-toggle').addEventListener('click', handleW);
+    $('why-toggle').addEventListener('click', handleWOpen);
   }
   else if (stepNum === 4) {
     const handleL = function() {
@@ -1940,6 +2001,7 @@ function startOnboardingStep(stepNum) {
 
 function completeOnboarding() {
   O_STATE.active = false;
+  document.body.classList.remove('ob-active');
   clearObHighlight();
   obBackdrop.classList.remove('show');
   obSuccess.classList.add('show');
@@ -2005,6 +2067,7 @@ $('sm-notify').addEventListener('click', () => {
 // ── INIT ───────────────────────────────────────────────────────
 if (!localStorage.getItem('explore_onboarded')) {
   O_STATE.active = true;
+  document.body.classList.add('ob-active');
   obBackdrop.classList.add('show');
   setTimeout(() => startOnboardingStep(1), 500);
 } else {
