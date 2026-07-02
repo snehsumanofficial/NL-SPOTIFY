@@ -743,19 +743,149 @@
   }
   .ep-demo-skip:hover { border-color: #555; color: #fff; }
 
+  /* ──────────────── COACH CARD ──────────────────────────────── */
+  #ob-coach {
+    position: fixed; z-index: 10002; width: 300px;
+    background: #fff; color: #000; border-radius: 12px;
+    padding: 18px 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    pointer-events: auto !important;
+    opacity: 0; transform: translateY(8px) scale(0.97);
+    transition: opacity 0.35s cubic-bezier(.2,.8,.2,1), transform 0.35s cubic-bezier(.2,.8,.2,1);
+    display: none;
+  }
+  #ob-coach.show { opacity: 1; transform: translateY(0) scale(1); display: block; }
+  .ob-coach-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+  .ob-ai-badge {
+    font-size: 10px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase;
+    color: #1ed760; background: rgba(30,215,96,0.12); padding: 3px 8px; border-radius: 4px;
+  }
+  #ob-step-badge { font-size: 11px; font-weight: 700; color: #535353; }
+  #ob-coach-msg { font-size: 13px; line-height: 1.55; color: #1a1a1a; margin-bottom: 14px; }
+  .ob-checklist { list-style: none; display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+  .ob-checklist li { font-size: 12px; font-weight: 600; color: #888; display: flex; align-items: center; gap: 8px; transition: color 0.3s ease; }
+  .ob-checklist li.ck-done { color: #1a1a1a; }
+  .ob-checklist li .ck-icon { width: 18px; text-align: center; font-size: 13px; transition: all 0.3s; }
+  .ob-action-hint { font-size: 11px; color: #b3b3b3; font-style: italic; margin-top: 4px; animation: obHintPulse 2s ease-in-out infinite; }
+  @keyframes obHintPulse { 0%,100%{opacity:.6} 50%{opacity:1} }
+
+  /* Step micro-toast */
+  .ob-step-toast {
+    position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-60px);
+    background: #1a1a1a; color: #fff; border-radius: 100px;
+    padding: 10px 22px; font-size: 13px; font-weight: 700;
+    z-index: 10004; white-space: nowrap; pointer-events: none;
+    transition: transform 0.4s cubic-bezier(.2,.8,.2,1), opacity 0.4s ease;
+    opacity: 0; border: 1px solid #333;
+  }
+  .ob-step-toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+  /* Animated Hand Cursor */
+  #ob-hand {
+    position: fixed; z-index: 10003; pointer-events: none;
+    font-size: 28px; line-height: 1; user-select: none;
+    transition: left 0.5s cubic-bezier(.2,.8,.2,1), top 0.5s cubic-bezier(.2,.8,.2,1), opacity 0.3s ease, transform 0.3s ease;
+    opacity: 0; transform: scale(0.8);
+    filter: drop-shadow(0 2px 8px rgba(0,0,0,0.5));
+  }
+  #ob-hand.show { opacity: 1; transform: scale(1); }
+  #ob-hand.ob-hand-click { animation: handClick 0.3s ease forwards; }
+  @keyframes handClick { 0%{transform:scale(1) rotate(0)} 35%{transform:scale(0.82) rotate(-8deg) translateY(4px)} 100%{transform:scale(1) rotate(0)} }
+  #ob-hand.ob-hand-type { animation: handType 1s ease-in-out infinite; }
+  @keyframes handType { 0%,100%{transform:translateX(0) scale(1)} 50%{transform:translateX(10px) scale(1)} }
+
+  /* Confetti */
+  #ob-confetti-container { position: fixed; inset: 0; z-index: 10010; pointer-events: none; display: none; }
+  #ob-confetti-container.show { display: block; }
+  #ob-confetti { width: 100%; height: 100%; }
+
+  /* Success Screen */
+  #ob-success {
+    position: fixed; top: 50%; left: 50%; transform: translate(-50%,-44%);
+    background: #181818; padding: 32px; border-radius: 16px; width: 420px; max-width: 92vw;
+    z-index: 10005; text-align: center; box-shadow: 0 24px 64px rgba(0,0,0,.95);
+    opacity: 0; pointer-events: none; display: none;
+    transition: all .4s cubic-bezier(.2,.8,.2,1);
+  }
+  #ob-success.show { opacity: 1; pointer-events: auto; transform: translate(-50%,-50%); display: block; }
+  #ob-success h2 { font-size: 26px; font-weight: 800; margin-bottom: 6px; }
+  #ob-success .ob-succ-sub { font-size: 14px; color: #b3b3b3; margin-bottom: 22px; }
+  .ob-final-list { list-style: none; text-align: left; background: #242424; border-radius: 8px; padding: 16px; margin-bottom: 18px; display: flex; flex-direction: column; gap: 10px; }
+  .ob-final-list li { font-size: 14px; font-weight: 600; display: flex; gap: 10px; align-items: center; color: #fff; }
+  .ob-final-list li i { color: #1ed760; }
+  .ob-prompt-box { background: rgba(30,215,96,.1); border: 1px solid rgba(30,215,96,.25); border-radius: 8px; padding: 12px 16px; margin-bottom: 22px; text-align: left; }
+  .ob-prompt-box span { display: block; font-size: 10px; font-weight: 800; color: #1ed760; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
+  .ob-prompt-box p { font-size: 13px; font-style: italic; color: #fff; line-height: 1.4; }
+  #ob-finish-btn { background: #1ed760; color: #000; border: none; padding: 14px 36px; border-radius: 100px; font-size: 15px; font-weight: 800; cursor: pointer; font-family: 'Inter', sans-serif; transition: transform .2s, background .2s; }
+  #ob-finish-btn:hover { background: #1db954; transform: scale(1.04); }
+
+  /* Help Icons */
+  .ep-help-icon { display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px; border-radius: 50%; border: 1px solid #535353; color: #535353; font-size: 9px; font-weight: 800; cursor: pointer; margin-left: 6px; transition: all .15s; opacity: 0; pointer-events: none; vertical-align: middle; flex-shrink: 0; }
+  .onboarded .ep-help-icon { opacity: 1; pointer-events: auto; }
+  .ep-help-icon:hover { border-color: #fff; color: #fff; background: rgba(255,255,255,.1); }
+
+  /* Help popover */
+  .ob-help-popover { position: fixed; z-index: 8000; background: #fff; color: #000; border-radius: 8px; padding: 12px 16px; width: 240px; font-size: 13px; line-height: 1.5; box-shadow: 0 8px 32px rgba(0,0,0,0.5); opacity: 0; pointer-events: none; transition: opacity 0.25s ease; }
+  .ob-help-popover.show { opacity: 1; pointer-events: auto; }
+
+  /* Studio Modal */
+  .ep-studio-modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%,-40%); background: #181818; padding: 0; border-radius: 12px; width: 440px; overflow: hidden; z-index: 2000; box-shadow: 0 24px 64px rgba(0,0,0,.8); opacity: 0; pointer-events: none; transition: all .3s ease; display: none; }
+  .ep-studio-modal.open { opacity: 1; pointer-events: auto; transform: translate(-50%,-50%); display: block; }
+  .ep-sm-img { width: 100%; height: 160px; object-fit: cover; }
+  .ep-sm-body { padding: 24px; }
+  .ep-sm-title { font-size: 22px; font-weight: 800; margin-bottom: 8px; }
+  .ep-sm-sub { font-size: 14px; color: #b3b3b3; margin-bottom: 20px; line-height: 1.5; }
+  .ep-sm-features { list-style: none; display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; }
+  .ep-sm-feature { display: flex; align-items: flex-start; gap: 12px; }
+  .ep-sm-feature i { color: #1ed760; font-size: 16px; margin-top: 2px; }
+  .ep-sm-feature div h4 { font-size: 14px; font-weight: 700; margin-bottom: 2px; color: #fff; }
+  .ep-sm-feature div p { font-size: 12px; color: #b3b3b3; line-height: 1.4; }
+  .ep-sm-actions { display: flex; gap: 12px; justify-content: flex-end; }
+  .ep-sm-btn-close { background: transparent; border: none; color: #b3b3b3; font-weight: 700; cursor: pointer; padding: 10px 16px; font-family: 'Inter', sans-serif; transition: color .2s; }
+  .ep-sm-btn-close:hover { color: #fff; }
+  .ep-sm-btn-notify { background: #fff; color: #000; border: none; border-radius: 20px; padding: 10px 20px; font-weight: 700; font-size: 14px; cursor: pointer; font-family: 'Inter', sans-serif; transition: transform .2s; }
+  .ep-sm-btn-notify:hover { transform: scale(1.04); }
+
+  /* EQ Preview */
+  .ep-eq-preview { background: #0a0a0a; border-radius: 8px; padding: 14px; margin-top: 14px; display: none; flex-direction: column; gap: 10px; border: 1px solid #282828; }
+  .ep-eq-preview.show { display: flex; animation: slideUp .3s ease; }
+  .ep-eq-title { font-size: 10px; color: #1ed760; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; gap: 6px; }
+  .ep-eq-layers { display: flex; flex-direction: column; gap: 8px; }
+  .ep-layer { display: flex; align-items: center; gap: 10px; opacity: 0.35; transition: opacity .3s; }
+  .ep-layer.active { opacity: 1; }
+  .ep-layer-name { width: 56px; font-size: 11px; font-weight: 700; color: #fff; }
+  .ep-layer-bars { display: flex; gap: 3px; height: 16px; align-items: flex-end; flex: 1; }
+  .ep-layer-bar { width: 4px; background: #333; border-radius: 2px; height: 4px; }
+  .ep-layer.active .ep-layer-bar { background: #1ed760; animation: eqBounce 0.8s infinite alternate ease-in-out; }
+  .ep-layer.active .ep-layer-bar:nth-child(2){animation-delay:.12s} .ep-layer.active .ep-layer-bar:nth-child(3){animation-delay:.25s}
+  .ep-layer.active .ep-layer-bar:nth-child(4){animation-delay:.08s} .ep-layer.active .ep-layer-bar:nth-child(5){animation-delay:.38s}
+  .ep-layer.active .ep-layer-bar:nth-child(6){animation-delay:.18s} .ep-layer.active .ep-layer-bar:nth-child(7){animation-delay:.45s}
+  .ep-layer.active .ep-layer-bar:nth-child(8){animation-delay:.22s}
+  @keyframes eqBounce { 0%{height:4px} 100%{height:16px} }
+  .ep-chips { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+  .ep-chip[data-mode] { padding: 6px 14px; border-radius: 100px; font-size: 12px; font-weight: 700; background: #242424; color: #b3b3b3; border: 1px solid #333; cursor: pointer; transition: all .2s; font-family: 'Inter', sans-serif; pointer-events: auto !important; }
+  .ep-chip[data-mode]:hover { background: #2a2a2a; color: #fff; border-color: #555; }
+  .ep-chip[data-mode].selected { background: rgba(30,215,96,.12); border-color: #1ed760; color: #1ed760; }
+
   .demo-ring { outline: 2px solid #1ed760 !important; outline-offset: 3px !important; transition: outline .3s !important; border-radius: 6px; }
 
-  /* ── GUIDED ONBOARDING ───────────────────────────────────────── */
+  /* ── PREMIUM GUIDED ONBOARDING ────────────────────────────── */
   body.ob-active { pointer-events: none; }
-  
-  .ob-highlight {
-    position: relative !important; z-index: 10000 !important;
-    box-shadow: 0 0 0 4px #1ed760, 0 8px 32px rgba(30,215,96,0.3), 0 0 120px rgba(255,255,255,0.1) !important;
-    border-radius: inherit; pointer-events: auto !important;
-    animation: obPulse 2s infinite ease-in-out;
+
+  #ob-overlay {
+    position: fixed; inset: 0; z-index: 9990;
+    background: radial-gradient(ellipse var(--sw,0px) var(--sh,0px) at var(--sx,50%) var(--sy,50%),
+      transparent 35%, rgba(0,0,0,0.82) 80%);
+    pointer-events: none;
+    transition: --sx 0.5s ease, --sy 0.5s ease, --sw 0.5s ease, --sh 0.5s ease, opacity 0.4s ease;
+    opacity: 0;
   }
-  @keyframes obPulse {
-    0%, 100% { box-shadow: 0 0 0 2px rgba(30,215,96,0.6), 0 0 120px rgba(255,255,255,0.1); }
+  @property --sx { syntax: '<length-percentage>'; inherits: false; initial-value: 50%; }
+  @property --sy { syntax: '<length-percentage>'; inherits: false; initial-value: 50%; }
+  @property --sw { syntax: '<length>'; inherits: false; initial-value: 0px; }
+  @property --sh { syntax: '<length>'; inherits: false; initial-value: 0px; }
+  #ob-overlay.show { opacity: 1; }
+
+  .ob-highlight {
     50% { box-shadow: 0 0 0 8px rgba(30,215,96,0.1), 0 0 120px rgba(255,255,255,0.15); }
   }
   
@@ -1196,29 +1326,41 @@
   <button class="ep-demo-skip" id="demo-skip">Skip</button>
 </div>
 
-<!-- Onboarding Elements -->
-<div class="ep-ob-backdrop" id="ob-backdrop"></div>
-<div class="ep-ob-tooltip" id="ob-tooltip">
-  <div class="ob-arrow"></div>
-  <div class="ep-ob-step" id="ob-step">1/4</div>
-  <div class="ep-ob-text" id="ob-text"></div>
-  <ul class="ep-ob-examples" id="ob-examples"></ul>
+
+<!-- ══════════════ PREMIUM ONBOARDING LAYER ══════════════ -->
+<div id="ob-overlay"></div>
+<div id="ob-hand">👆</div>
+<div id="ob-coach">
+  <div class="ob-coach-header">
+    <span class="ob-ai-badge">✦ Spotify AI Guide</span>
+    <span id="ob-step-badge">Step 1 of 4</span>
+  </div>
+  <p id="ob-coach-msg">Loading...</p>
+  <ul class="ob-checklist">
+    <li id="ck-1"><span class="ck-icon">☐</span> AI Discovery Search</li>
+    <li id="ck-2"><span class="ck-icon">☐</span> Discovery Slider</li>
+    <li id="ck-3"><span class="ck-icon">☐</span> Why This Song</li>
+    <li id="ck-4"><span class="ck-icon">☐</span> Listen Your Way</li>
+  </ul>
+  <p class="ob-action-hint" id="ob-hint"></p>
 </div>
-<div class="ep-ob-success" id="ob-success">
-  <h2>🎉 You're Ready to Explore!</h2>
-  <p class="sub">You've unlocked:</p>
-  <ul class="ep-unlocks">
+
+<div id="ob-success">
+  <h2>🎉 Explore Setup Complete</h2>
+  <p class="ob-succ-sub">You're now ready to experience Spotify Explore.</p>
+  <ul class="ob-final-list">
     <li><i class="fa-solid fa-circle-check"></i> AI Discovery Search</li>
     <li><i class="fa-solid fa-circle-check"></i> Discovery Slider</li>
     <li><i class="fa-solid fa-circle-check"></i> Why This Song</li>
     <li><i class="fa-solid fa-circle-check"></i> Listen Your Way</li>
   </ul>
-  <div class="ep-ob-prompt-box">
-    <span>Suggested Prompt</span>
+  <div class="ob-prompt-box">
+    <span>Try your first discovery</span>
     <p>🎵 "Recommend underrated indie songs for a rainy evening."</p>
   </div>
-  <button class="ep-ob-btn" id="ob-finish-btn">Start Exploring</button>
+  <button id="ob-finish-btn">Start Exploring</button>
 </div>
+<div id="ob-confetti-container"><canvas id="ob-confetti"></canvas></div>
 
 <!-- Studio Modal -->
 <div class="ep-studio-modal" id="studio-modal">
@@ -1237,6 +1379,7 @@
     </div>
   </div>
 </div>
+
 
 <!-- ════════════════ JAVASCRIPT ENGINE ════════════════ -->
 <script>
@@ -1873,209 +2016,436 @@ async function runDemo(sc){
   }
 }
 
-// ── ONBOARDING ENGINE ──────────────────────────────────────────
-const O_STATE = { step: 0, active: false };
-const obBackdrop = $('ob-backdrop');
-const obTooltip = $('ob-tooltip');
-const obStep = $('ob-step');
-const obText = $('ob-text');
-const obExamples = $('ob-examples');
-const obSuccess = $('ob-success');
+// ══════════════════════════════════════════════════════════════
+// PREMIUM GUIDED ONBOARDING ENGINE
+// ══════════════════════════════════════════════════════════════
+const OB = {
+  active: false, step: 0,
+  overlay: $('ob-overlay'),
+  coach: $('ob-coach'),
+  hand: $('ob-hand'),
+  success: $('ob-success'),
+  confettiContainer: $('ob-confetti-container'),
+  stepBadge: $('ob-step-badge'),
+  coachMsg: $('ob-coach-msg'),
+  hint: $('ob-hint'),
+  handTimer: null,
+  stepToast: null,
+};
 
-const TOOLTIPS = {
+// Coach messages per step
+const OB_STEPS = {
   1: {
-    el: $('search-bar'), pos: 'pos-bottom', text: "Start by telling Spotify what you're looking for. You don't need artist names anymore. Describe the mood, activity, or type of music you want.",
-    ex: ["Songs like Arijit Singh but underrated", "Rainy evening drive", "Late-night coding music", "Hidden indie artists"]
+    msg: "👋 Welcome to Spotify Explore!\n\nInstead of searching by artist, describe the kind of music you're looking for — a mood, activity, or feeling.\n\nGo ahead and type something below.",
+    hint: "Type a prompt and press Enter to continue...",
+    el: () => $('search-bar'),
+    side: 'below'
   },
   2: {
-    el: $('disc-slider'), pos: 'pos-top', text: "This slider controls how adventurous your recommendations are.", ex: []
+    msg: "🎚️ Great! Now let's make your recommendations even more adventurous.\n\nThis slider controls how far outside your comfort zone Spotify should go.",
+    hint: "Drag the slider to update your journey...",
+    el: () => $('disc-slider'),
+    side: 'above'
   },
   3: {
-    el: $('why-toggle'), pos: 'pos-top', text: "Every recommendation has a reason. Tap here to understand why Spotify selected this song for you.", ex: []
+    msg: "🔍 Awesome! Every recommendation has a reason.\n\nTap the button below to see exactly why Spotify selected this song for you.",
+    hint: "Tap 'Why This Song?' to continue...",
+    el: () => $('why-toggle'),
+    side: 'above'
   },
   4: {
-    el: $('listen-way-btn'), pos: 'pos-left', text: "Experience the same song in different ways.", ex: []
+    msg: "🎧 Almost there! You can experience the same song in completely different ways.\n\nSelect any listening mode to see the equalizer change in real time.",
+    hint: "Choose a listening mode below to complete setup...",
+    el: () => $('listen-way-btn'),
+    side: 'left'
   }
 };
 
-function showObTooltip(stepNum) {
-  const t = TOOLTIPS[stepNum];
-  if(!t) return;
-  const rect = t.el.getBoundingClientRect();
-  obTooltip.className = `ep-ob-tooltip show ${t.pos}`;
-  obStep.textContent = `${stepNum}/4`;
-  obText.textContent = t.text;
-  obExamples.innerHTML = t.ex.map(e=>`<li>${e}</li>`).join('');
-  
-  if (t.pos === 'pos-bottom') {
-    obTooltip.style.top = `${rect.bottom}px`;
-    obTooltip.style.left = `${rect.left}px`;
-  } else if (t.pos === 'pos-top') {
-    obTooltip.style.top = `${rect.top - obTooltip.offsetHeight}px`;
-    obTooltip.style.left = `${rect.left}px`;
-  } else if (t.pos === 'pos-left') {
-    obTooltip.style.top = `${rect.top - (obTooltip.offsetHeight - rect.height)/2}px`;
-    obTooltip.style.left = `${rect.left - obTooltip.offsetWidth}px`;
+// ── SPOTLIGHT ──────────────────────────────────────────────────
+function setSpotlight(el) {
+  if (!el) return;
+  const r = el.getBoundingClientRect();
+  const pad = 24;
+  const cx = r.left + r.width / 2;
+  const cy = r.top + r.height / 2;
+  const rw = (r.width / 2) + pad;
+  const rh = (r.height / 2) + pad;
+  OB.overlay.style.setProperty('--sx', `${cx}px`);
+  OB.overlay.style.setProperty('--sy', `${cy}px`);
+  OB.overlay.style.setProperty('--sw', `${rw * 2.2}px`);
+  OB.overlay.style.setProperty('--sh', `${rh * 2.8}px`);
+  // Highlight element
+  $$('.ob-highlight').forEach(e => e.classList.remove('ob-highlight'));
+  el.classList.add('ob-highlight');
+}
+
+// ── COACH CARD POSITIONING ─────────────────────────────────────
+function positionCoach(el, side) {
+  const r = el.getBoundingClientRect();
+  const pad = 16;
+  OB.coach.style.removeProperty('left');
+  OB.coach.style.removeProperty('right');
+  OB.coach.style.removeProperty('top');
+  OB.coach.style.removeProperty('bottom');
+
+  if (side === 'below') {
+    OB.coach.style.top = `${r.bottom + pad}px`;
+    OB.coach.style.left = `${Math.min(r.left, window.innerWidth - 316)}px`;
+  } else if (side === 'above') {
+    // Position will be calculated after display:block
+    OB.coach.style.top = `${r.top - 240}px`;
+    OB.coach.style.left = `${Math.min(r.left, window.innerWidth - 316)}px`;
+  } else if (side === 'left') {
+    OB.coach.style.top = `${Math.max(r.top - 60, 20)}px`;
+    OB.coach.style.left = `${Math.max(r.left - 316 - pad, 20)}px`;
   }
 }
 
-function clearObHighlight() {
-  $$('.ob-highlight').forEach(el=>el.classList.remove('ob-highlight'));
-  obTooltip.classList.remove('show');
+// ── HAND CURSOR ────────────────────────────────────────────────
+function moveHandTo(x, y) {
+  OB.hand.style.left = `${x}px`;
+  OB.hand.style.top  = `${y}px`;
 }
 
-function startOnboardingStep(stepNum) {
-  if (!O_STATE.active) return;
-  O_STATE.step = stepNum;
-  clearObHighlight();
-  const t = TOOLTIPS[stepNum];
-  t.el.classList.add('ob-highlight');
-  
-  // Show tooltip slightly delayed so rect calculation works properly
-  setTimeout(()=>showObTooltip(stepNum), 50);
+function showHand(el, type = 'click') {
+  if (!el) return;
+  const r = el.getBoundingClientRect();
+  OB.hand.classList.remove('ob-hand-click', 'ob-hand-type', 'show');
+  void OB.hand.offsetWidth; // reflow
+  moveHandTo(r.left + r.width / 2 - 14, r.top + r.height / 2 - 14);
+  OB.hand.classList.add('show');
 
-  if (stepNum === 1) {
-    // Intercept search trigger by overriding the core triggerSearch function temporarily
-    const originalTriggerSearch = window.triggerSearch || function(){};
-    window.triggerSearch = async function() {
-      // Allow normal search to proceed
-      if(searchInput.value.trim().length > 0) {
-        await originalTriggerSearch.apply(this, arguments);
-        if(navigator.vibrate) navigator.vibrate(30);
-        // Once recommendations loaded, advance
-        setTimeout(() => startOnboardingStep(2), 200);
-      }
-    };
-    // Also listen to Enter key explicitly in case triggerSearch takes a while to overwrite
-    const handleS = (e) => {
-      if (e.key === 'Enter' && searchInput.value.trim().length > 0) {
-        searchInput.removeEventListener('keydown', handleS);
-        // Wait for sugLoading to be hidden (meaning load complete)
-        const checkLoad = setInterval(() => {
-          if ($('sug-loading').style.display === 'none') {
-            clearInterval(checkLoad);
-            if(navigator.vibrate) navigator.vibrate(30);
-            setTimeout(() => startOnboardingStep(2), 300);
+  if (type === 'click') {
+    setTimeout(() => {
+      OB.hand.classList.add('ob-hand-click');
+    }, 400);
+  } else if (type === 'type') {
+    setTimeout(() => {
+      OB.hand.classList.add('ob-hand-type');
+    }, 300);
+    // Simulate typing text character by character
+    const searchText = "Songs like Arijit Singh but underrated";
+    let i = 0;
+    clearInterval(OB.handTimer);
+    OB.handTimer = setInterval(() => {
+      if (!OB.active) { clearInterval(OB.handTimer); return; }
+      if (searchInput.value.length > 0) { clearInterval(OB.handTimer); return; }
+      searchInput.value = searchText.slice(0, ++i);
+      // Pulse input border
+      searchInput.style.borderColor = '#1ed760';
+      if (i >= searchText.length) {
+        clearInterval(OB.handTimer);
+        // After typing demo, clear and focus for user
+        setTimeout(() => {
+          if (searchInput.value === searchText && OB.active && OB.step === 1) {
+            searchInput.value = '';
+            searchInput.style.borderColor = '';
           }
-        }, 300);
+        }, 1800);
       }
-    };
-    searchInput.addEventListener('keydown', handleS);
-  }
-  else if (stepNum === 2) {
-    const handleSl = () => {
-      sliderEl.removeEventListener('change', handleSl);
-      if(navigator.vibrate) navigator.vibrate(30);
-      // Let the live UI update finish before showing step 3
-      setTimeout(() => startOnboardingStep(3), 600);
-    };
-    sliderEl.addEventListener('change', handleSl);
-  }
-  else if (stepNum === 3) {
-    const handleWOpen = () => {
-      $('why-toggle').removeEventListener('click', handleWOpen);
-      if(navigator.vibrate) navigator.vibrate(30);
-      
-      // Wait for it to close (or they click it again)
-      const handleWClose = () => {
-        $('why-toggle').removeEventListener('click', handleWClose);
-        if(navigator.vibrate) navigator.vibrate(30);
-        setTimeout(() => startOnboardingStep(4), 100);
-      };
-      // Short timeout to prevent immediate double-click resolution
-      setTimeout(() => {
-        $('why-toggle').addEventListener('click', handleWClose);
-      }, 500);
-    };
-    $('why-toggle').addEventListener('click', handleWOpen);
-  }
-  else if (stepNum === 4) {
-    const handleL = function() {
-      $$('#ls-modes-chips .ep-chip').forEach(c=>c.removeEventListener('click', handleL));
-      if(navigator.vibrate) navigator.vibrate([30,50,30]);
-      setTimeout(() => completeOnboarding(), 1500);
-    };
-    $$('#ls-modes-chips .ep-chip').forEach(c=>c.addEventListener('click', handleL));
+    }, 60);
+  } else if (type === 'drag') {
+    OB.hand.classList.add('ob-hand-type');
   }
 }
 
+function hideHand() {
+  clearInterval(OB.handTimer);
+  OB.hand.classList.remove('show', 'ob-hand-click', 'ob-hand-type');
+}
+
+// ── STEP MICRO-TOAST ───────────────────────────────────────────
+function showStepToast(msg) {
+  if (OB.stepToast) { OB.stepToast.remove(); }
+  const el = document.createElement('div');
+  el.className = 'ob-step-toast';
+  el.textContent = msg;
+  document.body.appendChild(el);
+  OB.stepToast = el;
+  requestAnimationFrame(() => {
+    el.classList.add('show');
+    setTimeout(() => {
+      el.classList.remove('show');
+      setTimeout(() => el.remove(), 400);
+    }, 2000);
+  });
+}
+
+// ── CHECKLIST ──────────────────────────────────────────────────
+function checkItem(n) {
+  const li = $(`ck-${n}`);
+  if (!li) return;
+  li.classList.add('ck-done');
+  li.querySelector('.ck-icon').textContent = '✅';
+}
+
+// ── TRANSITION TO NEXT STEP ────────────────────────────────────
+function transitionToStep(n) {
+  // Brief coach fade-out before repositioning
+  OB.coach.style.opacity = '0';
+  OB.coach.style.transform = 'translateY(8px) scale(0.97)';
+  hideHand();
+  setTimeout(() => {
+    startOnboardingStep(n);
+  }, 350);
+}
+
+// ── START ONBOARDING STEP ──────────────────────────────────────
+function startOnboardingStep(n) {
+  if (!OB.active) return;
+  OB.step = n;
+  const cfg = OB_STEPS[n];
+  if (!cfg) return;
+
+  const el = cfg.el();
+  if (!el) return;
+
+  // Spotlight
+  setSpotlight(el);
+
+  // Coach card
+  OB.stepBadge.textContent = `Step ${n} of 4`;
+  OB.coachMsg.textContent = cfg.msg;
+  OB.hint.textContent = cfg.hint;
+  positionCoach(el, cfg.side);
+  OB.coach.style.display = 'block';
+  requestAnimationFrame(() => {
+    OB.coach.style.opacity = '1';
+    OB.coach.style.transform = 'translateY(0) scale(1)';
+  });
+
+  // Step-specific animations & listeners
+  if (n === 1) {
+    setTimeout(() => showHand(el, 'type'), 800);
+
+    const handleSearch = async (e) => {
+      if (e.key === 'Enter' && searchInput.value.trim().length > 0) {
+        searchInput.removeEventListener('keydown', handleSearch);
+        hideHand();
+        searchInput.style.borderColor = '';
+        // Let triggerSearch run (it takes 1600ms)
+        await triggerSearch(searchInput.value.trim());
+        checkItem(1);
+        showStepToast("✅ Nice! You just discovered AI Search. 3 features left.");
+        if (navigator.vibrate) navigator.vibrate(30);
+        setTimeout(() => transitionToStep(2), 1200);
+      }
+    };
+    searchInput.addEventListener('keydown', handleSearch);
+
+  } else if (n === 2) {
+    setTimeout(() => showHand($('disc-slider'), 'drag'), 600);
+
+    const handleSlider = () => {
+      sliderEl.removeEventListener('input', handleSlider);
+      hideHand();
+      checkItem(2);
+      showStepToast("✅ Perfect! Recommendations updated. 2 features left.");
+      if (navigator.vibrate) navigator.vibrate(30);
+      setTimeout(() => transitionToStep(3), 1000);
+    };
+    sliderEl.addEventListener('input', handleSlider);
+
+  } else if (n === 3) {
+    setTimeout(() => showHand($('why-toggle'), 'click'), 600);
+
+    const handleOpen = () => {
+      $('why-toggle').removeEventListener('click', handleOpen);
+      hideHand();
+      // Immediately listen for close
+      const handleClose = () => {
+        $('why-toggle').removeEventListener('click', handleClose);
+        checkItem(3);
+        showStepToast("✅ Great! Now you'll always know why. 1 feature left.");
+        if (navigator.vibrate) navigator.vibrate(30);
+        setTimeout(() => {
+          // Step 4: need to open listen sheet first. Scroll into view then highlight
+          closeListenSheet && closeListenSheet(); // close any open sheet
+          transitionToStep(4);
+        }, 300);
+      };
+      // Short delay before watching close to prevent same-click advance
+      setTimeout(() => $('why-toggle').addEventListener('click', handleClose), 400);
+    };
+    $('why-toggle').addEventListener('click', handleOpen);
+
+  } else if (n === 4) {
+    // Open the Listen Your Way sheet automatically so user sees chips
+    setTimeout(() => {
+      showHand($('listen-way-btn'), 'click');
+      setTimeout(() => {
+        openListenSheet();
+        // Now reposition spotlight & hand to chip area
+        setTimeout(() => {
+          const chipArea = $('ls-modes-chips');
+          if (chipArea) {
+            setSpotlight($('listen-sheet'));
+            showHand($$('#ls-modes-chips .ep-chip')[0], 'click');
+          }
+        }, 500);
+      }, 400);
+    }, 600);
+
+    const handleChip = function() {
+      $$('#ls-modes-chips .ep-chip').forEach(c => c.removeEventListener('click', handleChip));
+      hideHand();
+      checkItem(4);
+      showStepToast("🎉 Amazing! You've unlocked Listen Your Way.");
+      if (navigator.vibrate) navigator.vibrate([30, 50, 30]);
+      setTimeout(() => completeOnboarding(), 1200);
+    };
+    $$('#ls-modes-chips .ep-chip').forEach(c => c.addEventListener('click', handleChip));
+  }
+}
+
+// ── COMPLETE ONBOARDING ────────────────────────────────────────
 function completeOnboarding() {
-  O_STATE.active = false;
+  OB.active = false;
   document.body.classList.remove('ob-active');
-  clearObHighlight();
-  obBackdrop.classList.remove('show');
-  obSuccess.classList.add('show');
+  // Fade out overlay + coach + hand
+  OB.overlay.style.opacity = '0';
+  OB.coach.style.opacity = '0';
+  OB.coach.style.transform = 'scale(0.95)';
+  hideHand();
+  $$('.ob-highlight').forEach(e => e.classList.remove('ob-highlight'));
+  // Close listen sheet if open
+  if (typeof closeListenSheet === 'function') closeListenSheet();
+
+  setTimeout(() => {
+    OB.overlay.classList.remove('show');
+    OB.coach.style.display = 'none';
+    // Fire confetti
+    launchConfetti();
+    // Show success modal
+    OB.success.classList.add('show');
+  }, 400);
+
   localStorage.setItem('explore_onboarded', 'true');
   document.body.classList.add('onboarded');
 }
 
-$('ob-finish-btn').addEventListener('click', ()=>{
-  obSuccess.classList.remove('show');
-  if(navigator.vibrate) navigator.vibrate(20);
+// ── CONFETTI ───────────────────────────────────────────────────
+function launchConfetti() {
+  const container = OB.confettiContainer;
+  const canvas = $('ob-confetti');
+  container.classList.add('show');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  const ctx = canvas.getContext('2d');
+  const COLORS = ['#1ed760','#fff','#1db954','#b3b3b3','#535353'];
+  const particles = Array.from({length: 120}, () => ({
+    x: Math.random() * canvas.width,
+    y: -20 - Math.random() * 100,
+    r: 4 + Math.random() * 6,
+    c: COLORS[Math.floor(Math.random() * COLORS.length)],
+    vx: (Math.random() - 0.5) * 4,
+    vy: 3 + Math.random() * 5,
+    angle: Math.random() * 360,
+    spin: (Math.random() - 0.5) * 8,
+    opacity: 1,
+  }));
+  let frame;
+  const tick = () => {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    let alive = 0;
+    particles.forEach(p => {
+      p.x += p.vx; p.y += p.vy; p.vy += 0.12;
+      p.angle += p.spin; p.opacity -= 0.008;
+      if (p.y < canvas.height + 20 && p.opacity > 0) { alive++; }
+      ctx.save();
+      ctx.globalAlpha = Math.max(0, p.opacity);
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.angle * Math.PI / 180);
+      ctx.fillStyle = p.c;
+      ctx.fillRect(-p.r / 2, -p.r / 2, p.r, p.r * 0.5);
+      ctx.restore();
+    });
+    if (alive > 0) { frame = requestAnimationFrame(tick); }
+    else { container.classList.remove('show'); cancelAnimationFrame(frame); }
+  };
+  frame = requestAnimationFrame(tick);
+}
+
+// ── FINISH BUTTON ──────────────────────────────────────────────
+$('ob-finish-btn').addEventListener('click', () => {
+  OB.success.classList.remove('show');
+  if (navigator.vibrate) navigator.vibrate(20);
 });
 
-// Help Icons Logic
+// ── HELP ICONS (post-onboarding contextual help) ───────────────
+const HELP_TEXTS = {
+  'help-search': "Type a mood, activity, or feeling instead of an artist name. Spotify AI will generate a personalised discovery journey.",
+  'help-slider': "Drag left for familiar recommendations, right for adventurous ones. The recommendations update live as you move it.",
+  'help-why':    "Tap 'Why This Song?' to see the exact reasons — artist similarity, genre match, mood, and your listening history.",
+  'help-listen': "Select any audio mode to isolate or blend specific instruments. Vocals Only, Beats Only, Instrumental, and more.",
+};
+let helpPopover = null;
+
+function showHelpPopover(iconEl, text) {
+  if (helpPopover) { helpPopover.remove(); helpPopover = null; }
+  const pop = document.createElement('div');
+  pop.className = 'ob-help-popover';
+  pop.textContent = text;
+  document.body.appendChild(pop);
+  helpPopover = pop;
+  const r = iconEl.getBoundingClientRect();
+  pop.style.top  = `${r.bottom + 8}px`;
+  pop.style.left = `${Math.min(r.left, window.innerWidth - 256)}px`;
+  requestAnimationFrame(() => pop.classList.add('show'));
+  const dismiss = (e) => {
+    if (!pop.contains(e.target) && e.target !== iconEl) {
+      pop.classList.remove('show');
+      setTimeout(() => { pop.remove(); helpPopover = null; }, 250);
+      document.removeEventListener('click', dismiss, true);
+    }
+  };
+  setTimeout(() => document.addEventListener('click', dismiss, true), 100);
+}
+
 $$('.ep-help-icon').forEach(icon => {
   icon.addEventListener('click', (e) => {
-    e.stopPropagation(); // prevent parent clicks like why-toggle accordion
-    const id = e.target.id;
-    let step = 1;
-    if(id==='help-slider') step=2;
-    if(id==='help-why') step=3;
-    if(id==='help-listen') step=4;
-    
-    if(obTooltip.classList.contains('show') && obStep.textContent === `${step}/4`) {
-      obTooltip.classList.remove('show');
-    } else {
-      showObTooltip(step);
-      // auto hide after 5s
-      setTimeout(() => obTooltip.classList.remove('show'), 5000);
-    }
+    e.stopPropagation();
+    const text = HELP_TEXTS[icon.id];
+    if (text) showHelpPopover(icon, text);
   });
 });
 
-// Nudge on missed clicks during onboarding
-document.addEventListener('click', (e)=>{
-  if (O_STATE.active) {
-    const hl = document.querySelector('.ob-highlight');
-    if (hl && !hl.contains(e.target)) {
-      hl.classList.remove('ob-shake');
-      void hl.offsetWidth; // trigger reflow
-      hl.classList.add('ob-shake');
-      if(navigator.vibrate) navigator.vibrate(50);
-    }
+// ── NUDGE: Shake when clicking outside active area ─────────────
+document.addEventListener('click', (e) => {
+  if (!OB.active) return;
+  const hl = document.querySelector('.ob-highlight');
+  const coach = $('ob-coach');
+  const listenSheet = $('listen-sheet');
+  if (hl && !hl.contains(e.target) && !coach.contains(e.target) && !(listenSheet && listenSheet.contains(e.target))) {
+    hl.classList.remove('ob-shake');
+    void hl.offsetWidth;
+    hl.classList.add('ob-shake');
+    if (navigator.vibrate) navigator.vibrate(50);
   }
 }, true);
 
-// Studio Modal Logic
+// ── STUDIO MODAL ───────────────────────────────────────────────
 $$('[data-modal="studio"]').forEach(el => {
-  el.addEventListener('click', () => {
-    $('studio-modal').classList.add('open');
-    obBackdrop.classList.add('show');
-  });
+  el.addEventListener('click', () => { $('studio-modal').classList.add('open'); });
 });
-$('sm-close').addEventListener('click', () => {
-  $('studio-modal').classList.remove('open');
-  if(!O_STATE.active) obBackdrop.classList.remove('show');
-});
+$('sm-close').addEventListener('click', () => $('studio-modal').classList.remove('open'));
 $('sm-notify').addEventListener('click', () => {
   $('studio-modal').classList.remove('open');
-  if(!O_STATE.active) obBackdrop.classList.remove('show');
   toast('You will be notified when Studio features arrive!', 'success');
 });
 
 // ── INIT ───────────────────────────────────────────────────────
+loadJourney('default', true);
+loadSong(SONGS.default);
+
 if (!localStorage.getItem('explore_onboarded')) {
-  O_STATE.active = true;
+  OB.active = true;
   document.body.classList.add('ob-active');
-  obBackdrop.classList.add('show');
-  setTimeout(() => startOnboardingStep(1), 500);
+  OB.overlay.classList.add('show');
+  setTimeout(() => startOnboardingStep(1), 600);
 } else {
   document.body.classList.add('onboarded');
 }
-
-loadJourney('default', true);
-loadSong(SONGS.default);
 </script>
 </body>
 </html>
