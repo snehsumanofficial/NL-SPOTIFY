@@ -746,6 +746,13 @@
   .demo-ring { outline: 2px solid #1ed760 !important; outline-offset: 3px !important; transition: outline .3s !important; border-radius: 6px; }
 
   /* Responsive */
+  @media (max-width: 1100px) {
+    .ep-layout { grid-template-columns: 220px 1fr; }
+    .ep-studio-col { display: none; }
+  }
+  @media (max-width: 768px) {
+    .ep-layout { grid-template-columns: 1fr; grid-template-rows: 1fr 90px; }
+    .ep-sidebar { display: none; }
     .ep-main { grid-column: 1; }
     .ep-player { grid-column: 1; }
     .ep-rec-card { flex-direction: column; }
