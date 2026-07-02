@@ -874,8 +874,6 @@
   .demo-ring { outline: 2px solid #1ed760 !important; outline-offset: 3px !important; transition: outline .3s !important; border-radius: 6px; }
 
   /* ── PREMIUM GUIDED ONBOARDING ────────────────────────────── */
-  body.ob-active { pointer-events: none; }
-
   #ob-overlay {
     position: fixed; inset: 0; z-index: 9990;
     background: radial-gradient(ellipse var(--sw,0px) var(--sh,0px) at var(--sx,50%) var(--sy,50%),
@@ -2446,19 +2444,29 @@ $$('.ep-help-icon').forEach(icon => {
   });
 });
 
-// ── NUDGE: Shake when clicking outside active area ─────────────
-document.addEventListener('click', (e) => {
-  if (!OB.active) return;
-  const hl = document.querySelector('.ob-highlight');
-  const coach = $('ob-coach');
-  const listenSheet = $('listen-sheet');
-  if (hl && !hl.contains(e.target) && !coach.contains(e.target) && !(listenSheet && listenSheet.contains(e.target))) {
-    hl.classList.remove('ob-shake');
-    void hl.offsetWidth;
-    hl.classList.add('ob-shake');
-    if (navigator.vibrate) navigator.vibrate(50);
-  }
-}, true);
+// ── NUDGE & BLOCK interactions outside active area ─────────────
+['mousedown', 'click', 'touchstart'].forEach(evt => {
+  document.addEventListener(evt, (e) => {
+    if (!OB.active) return;
+    const hl = document.querySelector('.ob-highlight');
+    const coach = $('ob-coach');
+    const listenSheet = $('listen-sheet');
+    
+    // If click is outside the allowed areas
+    if (hl && !hl.contains(e.target) && !coach.contains(e.target) && !(listenSheet && listenSheet.contains(e.target))) {
+      e.preventDefault();
+      e.stopPropagation();
+      
+      // Only shake on down events so it doesn't double-trigger
+      if (evt === 'mousedown' || evt === 'touchstart') {
+        hl.classList.remove('ob-shake');
+        void hl.offsetWidth;
+        hl.classList.add('ob-shake');
+        if (navigator.vibrate) navigator.vibrate(50);
+      }
+    }
+  }, true);
+});
 
 // ── STUDIO MODAL ───────────────────────────────────────────────
 $$('[data-modal="studio"]').forEach(el => {
