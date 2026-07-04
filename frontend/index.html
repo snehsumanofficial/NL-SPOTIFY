@@ -937,6 +937,37 @@
     .ep-demo-btn { bottom: 106px; right: 12px; }
   }
   </style>
+  <style>
+  @keyframes blinkFlash {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(1.05); }
+  }
+  .ep-demo-badge {
+    position: absolute;
+    left: 45px;
+    top: 36px;
+    background: #1ed760;
+    color: #000;
+    font-size: 11px;
+    font-weight: 800;
+    padding: 3px 6px;
+    border-radius: 4px;
+    pointer-events: none;
+    animation: blinkFlash 1s infinite;
+    box-shadow: 0 0 10px rgba(30,215,96,0.6);
+    white-space: nowrap;
+    z-index: 10;
+  }
+  .ep-demo-badge::before {
+    content: '';
+    position: absolute;
+    left: 10px;
+    top: -5px;
+    border-width: 0 5px 5px 5px;
+    border-style: solid;
+    border-color: transparent transparent #1ed760 transparent;
+  }
+  </style>
 </head>
 <body class="explore-page">
 <div class="ep-layout">
@@ -952,7 +983,10 @@
     <li><a href="/" class="nav-link ep-active" data-route="/"><i class="fa-solid fa-house"></i> Home</a></li>
     <li><a href="/search" class="nav-link" data-route="/search"><i class="fa-solid fa-magnifying-glass"></i> Search</a></li>
     <li><a href="/library" class="nav-link" data-route="/library"><i class="fa-solid fa-book-open"></i> Your Library</a></li>
-    <li><a href="/explore" class="nav-link" data-route="/explore"><i class="fa-regular fa-compass"></i> AI Discovery Hub</a></li>
+    <li style="position: relative; margin-bottom: 24px;">
+      <a href="/explore" class="nav-link" data-route="/explore"><i class="fa-regular fa-compass"></i> AI Discovery Hub</a>
+      <div class="ep-demo-badge">👆 Try This Only for you!</div>
+    </li>
   </ul>
   <ul class="ep-nav-secondary">
     <li><a href="/create" class="nav-link" data-route="/create"><span class="ep-icon-box ep-icon-gray"><i class="fa-solid fa-plus"></i></span> Create Playlist</a></li>
