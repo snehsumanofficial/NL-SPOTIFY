@@ -942,6 +942,24 @@
     0%, 100% { opacity: 1; transform: scale(1); }
     50% { opacity: 0.6; transform: scale(1.05); }
   }
+  
+  /* Spotify Home Mockup */
+  .ep-home-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+  .ep-quick-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; margin-bottom: 24px; }
+  .ep-quick-card { background: rgba(255,255,255,0.07); border-radius: 4px; display: flex; align-items: center; gap: 16px; cursor: pointer; transition: background .3s; position: relative; overflow: hidden; }
+  .ep-quick-card:hover { background: rgba(255,255,255,0.15); }
+  .ep-quick-card img { width: 64px; height: 64px; object-fit: cover; box-shadow: 0 4px 12px rgba(0,0,0,0.5); }
+  .ep-quick-card span { font-size: 15px; font-weight: 700; color: #fff; }
+  .ep-quick-card .ep-play-btn { position: absolute; right: 16px; top: 50%; transform: translateY(-50%) translateY(8px); opacity: 0; background: #1ed760; color: #000; border: none; width: 44px; height: 44px; border-radius: 50%; font-size: 18px; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 16px rgba(0,0,0,0.4); transition: all 0.3s; cursor: pointer; }
+  .ep-quick-card:hover .ep-play-btn { opacity: 1; transform: translateY(-50%) translateY(0); }
+  
+  .ep-card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 24px; }
+  .ep-spotify-card { background: #181818; padding: 16px; border-radius: 8px; transition: background .3s; cursor: pointer; display: flex; flex-direction: column; gap: 12px; }
+  .ep-spotify-card:hover { background: #282828; }
+  .ep-spotify-card img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 6px; box-shadow: 0 8px 16px rgba(0,0,0,0.3); }
+  .ep-spotify-card h4 { font-size: 15px; font-weight: 700; color: #fff; line-height: 1.2; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; }
+  .ep-spotify-card p { font-size: 13px; color: #b3b3b3; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
   .ep-demo-badge {
     position: absolute;
     left: 45px;
@@ -980,7 +998,7 @@
   </a>
 
   <ul class="ep-nav">
-    <li><a href="https://open.spotify.com" target="_blank" class="ep-active"><i class="fa-solid fa-house"></i> Home</a></li>
+    <li><a href="/" class="nav-link ep-active" data-route="/"><i class="fa-solid fa-house"></i> Home</a></li>
     <li><a href="/search" class="nav-link" data-route="/search"><i class="fa-solid fa-magnifying-glass"></i> Search</a></li>
     <li><a href="/library" class="nav-link" data-route="/library"><i class="fa-solid fa-book-open"></i> Your Library</a></li>
     <li style="position: relative; margin-bottom: 24px;">
@@ -1073,7 +1091,36 @@
 
 <!-- ════════════════ MAIN ════════════════ -->
 <main class="ep-main" id="ep-main">
-  <div id="view-explore">
+  <!-- Spotify Home Mockup -->
+  <div id="view-home" style="display: none; padding: 24px;">
+    <div class="ep-home-header">
+      <h2 style="font-size: 28px; font-weight: 800;">Good afternoon</h2>
+      <div class="ep-header-right">
+        <button class="ep-icon-btn ripple-active"><i class="fa-regular fa-bell"></i></button>
+        <img src="https://i.scdn.co/image/ab67616d00004851a35a1d4983e2b4fd0094f910" alt="Profile" class="ep-profile img-zoom">
+      </div>
+    </div>
+    
+    <div class="ep-quick-grid">
+      <div class="ep-quick-card card-elevate"><img src="https://i.scdn.co/image/ab67616d0000b27341e31d6ea1d493dd77933ee5"><span>Road Trip</span><button class="ep-play-btn"><i class="fa-solid fa-play"></i></button></div>
+      <div class="ep-quick-card card-elevate"><img src="https://i.scdn.co/image/ab67706f00000002f5a716b84d334c9c9b207371"><span>Workout</span><button class="ep-play-btn"><i class="fa-solid fa-play"></i></button></div>
+      <div class="ep-quick-card card-elevate"><img src="https://i.scdn.co/image/ab67616d0000b2737359994525d219f64872d3b1"><span>Chill</span><button class="ep-play-btn"><i class="fa-solid fa-play"></i></button></div>
+      <div class="ep-quick-card card-elevate"><img src="https://i.scdn.co/image/ab6775700000ee8555c25988a6ac314394d3fbf5"><span>Bollywood</span><button class="ep-play-btn"><i class="fa-solid fa-play"></i></button></div>
+      <div class="ep-quick-card card-elevate"><img src="https://i.scdn.co/image/ab67616d0000b2731d1cc2e40d533d7bcebf5dae"><span>Focus</span><button class="ep-play-btn"><i class="fa-solid fa-play"></i></button></div>
+      <div class="ep-quick-card card-elevate"><img src="https://i.scdn.co/image/ab67616d00004851e3d69e17dde129037a1f09e2"><span>LANY Radio</span><button class="ep-play-btn"><i class="fa-solid fa-play"></i></button></div>
+    </div>
+
+    <div class="ep-sec-hdr" style="margin-top: 32px; margin-bottom: 16px;"><span class="ep-sec-title">Made For You</span></div>
+    <div class="ep-card-grid">
+      <div class="ep-spotify-card card-elevate"><img src="https://i.scdn.co/image/ab67706f00000002f5a716b84d334c9c9b207371"><h4>Discover Weekly</h4><p>Your weekly mixtape of fresh music. Enjoy new music and deep cuts...</p></div>
+      <div class="ep-spotify-card card-elevate"><img src="https://i.scdn.co/image/ab67616d0000b2737359994525d219f64872d3b1"><h4>Release Radar</h4><p>Catch up on the latest releases from artists you follow...</p></div>
+      <div class="ep-spotify-card card-elevate"><img src="https://i.scdn.co/image/ab6775700000ee8555c25988a6ac314394d3fbf5"><h4>Daily Mix 1</h4><p>Anuv Jain, Prateek Kuhad, The Local Train and more</p></div>
+      <div class="ep-spotify-card card-elevate"><img src="https://i.scdn.co/image/ab67616d0000b2731d1cc2e40d533d7bcebf5dae"><h4>Daily Mix 2</h4><p>Talwiinder, Seedhe Maut, AP Dhillon and more</p></div>
+      <div class="ep-spotify-card card-elevate"><img src="https://i.scdn.co/image/ab67616d00004851a35a1d4983e2b4fd0094f910"><h4>Daily Mix 3</h4><p>LANY, Phoebe Bridgers, Novo Amor and more</p></div>
+    </div>
+  </div>
+
+  <div id="view-explore" style="display: none;">
   <header class="ep-page-header">
     <div>
       <h1>AI Discovery Hub <i class="fa-solid fa-question ep-help-icon" id="help-search"></i></h1>
@@ -1471,11 +1518,16 @@ function handleRoute(path) {
     if (homeLink) homeLink.classList.add('ep-active');
   }
 
-  const isExplore = path === '/' || path === '/explore' || path === '/index.html';
+  const isExplore = path === '/explore';
+  const isHome = path === '/' || path === '/index.html';
+  
   document.getElementById('view-explore').style.display = isExplore ? 'block' : 'none';
-  document.getElementById('view-placeholder').style.display = isExplore ? 'none' : 'flex';
+  const homeView = document.getElementById('view-home');
+  if (homeView) homeView.style.display = isHome ? 'block' : 'none';
+  
+  document.getElementById('view-placeholder').style.display = (!isExplore && !isHome) ? 'flex' : 'none';
 
-  if (!isExplore) {
+  if (!isExplore && !isHome) {
     const titles = {
       '/search': 'Search',
       '/library': 'Your Library',
