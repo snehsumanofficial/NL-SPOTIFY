@@ -1661,11 +1661,11 @@ $('vol-bar').addEventListener('click', e => {
 // ── LIKE / DISLIKE ─────────────────────────────────────────────
 $('rec-like').addEventListener('click', ()=>{
   S.liked=!S.liked; if(S.liked){S.disliked=false;} syncLikeDislike();
-  if(S.liked) toast('Added to Liked Songs');
+  if(S.liked) toast(`Saved. We'll recommend more artists like ${S.currentSong.artist}.`);
 });
 $('pl-like').addEventListener('click', ()=>{
   S.liked=!S.liked; if(S.liked){S.disliked=false;} syncLikeDislike();
-  if(S.liked) toast('Added to Liked Songs');
+  if(S.liked) toast(`Saved. We'll recommend more artists like ${S.currentSong.artist}.`);
 });
 
 function openDislikeSheet() { $('dislike-sheet').classList.add('open'); openBackdrop(); }
