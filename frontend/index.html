@@ -31,7 +31,7 @@
   /* ── LAYOUT ──────────────────────────────────────────────────── */
   .ep-layout {
     display: grid;
-    grid-template-columns: 240px 1fr 280px;
+    grid-template-columns: 240px 1fr;
     grid-template-rows: 1fr 90px;
     height: 100vh;
     gap: 8px;
@@ -993,6 +993,46 @@
     <li><a href="/liked" class="nav-link" data-route="/liked"><span class="ep-icon-box ep-icon-liked"><i class="fa-solid fa-heart"></i></span> Liked Songs</a></li>
   </ul>
 
+  <!-- ════════════════ STUDIO WIDGET ════════════════ -->
+  <div id="studio-col" style="margin-top: 16px; margin-bottom: 8px;">
+    <div class="ep-studio-hdr" id="studio-toggle-hdr">
+      <span class="ep-studio-title">Spotify Studio <span class="ep-coming-soon">SOON</span></span>
+      <i class="fa-solid fa-chevron-down" id="studio-chevron" style="color:#b3b3b3;font-size:12px; transition: transform 0.3s;"></i>
+    </div>
+    <p class="ep-studio-sub">Exclusive music experiences</p>
+    
+    <div class="ep-studio-dropdown" id="studio-dropdown">
+    <ul class="ep-studio-items">
+      <li class="ep-si" data-studio="live" tabindex="0">
+        <div class="ep-si-img-wrap"><img class="ep-si-thumb" src="https://i.scdn.co/image/ab67616d00004851b622d42c30697e1e1414343c" alt="Live Sessions"></div>
+        <div><h4>Live Sessions</h4><p>Exclusive live performances <span class="ep-snew">NEW</span></p></div>
+      </li>
+      <li class="ep-si" data-studio="originals" tabindex="0">
+        <div class="ep-si-img-wrap"><img class="ep-si-thumb" src="https://i.scdn.co/image/ab67616d00004851e3d69e17dde129037a1f09e2" alt="Studio Originals"></div>
+        <div><h4>Studio Originals</h4><p>Spotify-recorded versions <span class="ep-snew">NEW</span></p></div>
+      </li>
+      <li class="ep-si" data-studio="behind" tabindex="0">
+        <div class="ep-si-img-wrap"><img class="ep-si-thumb" src="https://i.scdn.co/image/ab67616d0000485103cadf1b3fe324c1dc710ed4" alt="Behind the Song"></div>
+        <div><h4>Behind the Song</h4><p>Stories from artists <span class="ep-snew">NEW</span></p></div>
+      </li>
+      <li class="ep-si" data-studio="early" tabindex="0">
+        <div class="ep-si-img-wrap"><img class="ep-si-thumb" src="https://i.scdn.co/image/ab67616d0000485190958927fbba47a62c3e63f8" alt="Early Releases"></div>
+        <div><h4>Early Releases</h4><p>Hear new music first <span class="ep-snew">NEW</span></p></div>
+      </li>
+      <li class="ep-si" data-studio="commentary" tabindex="0">
+        <div class="ep-si-img-wrap"><img class="ep-si-thumb" src="https://i.scdn.co/image/ab67616d00004851c7c031ce9d06b131f8563676" alt="Commentary"></div>
+        <div><h4>Artist Commentary</h4><p>Hear it from the artist <span class="ep-snew">NEW</span></p></div>
+      </li>
+    </ul>
+    <div class="ep-premium-note" style="margin-top:16px;">
+      <i class="fa-brands fa-spotify"></i><span>Premium-only exclusive content</span>
+    </div>
+    <div class="ep-notify-btn-wrap">
+      <button class="ep-notify-btn" id="studio-notify-btn">Notify Me</button>
+    </div>
+    </div>
+  </div>
+
   <hr class="ep-hr">
 
   <div class="ep-playlist-header">
@@ -1145,45 +1185,7 @@
   </div>
 </main>
 
-<!-- ════════════════ STUDIO COLUMN ════════════════ -->
-<aside class="ep-studio-col" id="studio-col">
-  <div class="ep-studio-hdr" id="studio-toggle-hdr">
-    <span class="ep-studio-title">Spotify Studio <span class="ep-coming-soon">SOON</span></span>
-    <i class="fa-solid fa-chevron-down" id="studio-chevron" style="color:#b3b3b3;font-size:12px; transition: transform 0.3s;"></i>
-  </div>
-  <p class="ep-studio-sub">Exclusive music experiences</p>
-  
-  <div class="ep-studio-dropdown" id="studio-dropdown">
-  <ul class="ep-studio-items">
-    <li class="ep-si" data-studio="live" tabindex="0">
-      <div class="ep-si-img-wrap"><img class="ep-si-thumb" src="https://i.scdn.co/image/ab67616d00004851b622d42c30697e1e1414343c" alt="Live Sessions"></div>
-      <div><h4>Live Sessions</h4><p>Exclusive live performances <span class="ep-snew">NEW</span></p></div>
-    </li>
-    <li class="ep-si" data-studio="originals" tabindex="0">
-      <div class="ep-si-img-wrap"><img class="ep-si-thumb" src="https://i.scdn.co/image/ab67616d00004851e3d69e17dde129037a1f09e2" alt="Studio Originals"></div>
-      <div><h4>Studio Originals</h4><p>Spotify-recorded versions <span class="ep-snew">NEW</span></p></div>
-    </li>
-    <li class="ep-si" data-studio="behind" tabindex="0">
-      <div class="ep-si-img-wrap"><img class="ep-si-thumb" src="https://i.scdn.co/image/ab67616d0000485103cadf1b3fe324c1dc710ed4" alt="Behind the Song"></div>
-      <div><h4>Behind the Song</h4><p>Stories from artists <span class="ep-snew">NEW</span></p></div>
-    </li>
-    <li class="ep-si" data-studio="early" tabindex="0">
-      <div class="ep-si-img-wrap"><img class="ep-si-thumb" src="https://i.scdn.co/image/ab67616d0000485190958927fbba47a62c3e63f8" alt="Early Releases"></div>
-      <div><h4>Early Releases</h4><p>Hear new music first <span class="ep-snew">NEW</span></p></div>
-    </li>
-    <li class="ep-si" data-studio="commentary" tabindex="0">
-      <div class="ep-si-img-wrap"><img class="ep-si-thumb" src="https://i.scdn.co/image/ab67616d00004851c7c031ce9d06b131f8563676" alt="Commentary"></div>
-      <div><h4>Artist Commentary</h4><p>Hear it from the artist <span class="ep-snew">NEW</span></p></div>
-    </li>
-  </ul>
-  <div class="ep-premium-note" style="margin-top:16px;">
-    <i class="fa-brands fa-spotify"></i><span>Premium-only exclusive content</span>
-  </div>
-  <div class="ep-notify-btn-wrap">
-    <button class="ep-notify-btn" id="studio-notify-btn">Notify Me</button>
-  </div>
-  </div>
-</aside>
+
 
 <!-- ════════════════ PLAYER ════════════════ -->
 <footer class="ep-player">
