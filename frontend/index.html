@@ -998,7 +998,7 @@
   </a>
 
   <ul class="ep-nav">
-    <li><a href="/" class="nav-link ep-active" data-route="/"><i class="fa-solid fa-house"></i> Home</a></li>
+    <li><a href="/home" class="nav-link" data-route="/home"><i class="fa-solid fa-house"></i> Home</a></li>
     <li><a href="/search" class="nav-link" data-route="/search"><i class="fa-solid fa-magnifying-glass"></i> Search</a></li>
     <li><a href="/library" class="nav-link" data-route="/library"><i class="fa-solid fa-book-open"></i> Your Library</a></li>
     <li style="position: relative; margin-bottom: 24px;">
@@ -1502,7 +1502,11 @@
 // ── ROUTING ────────────────────────────────────────────────────
 function handleRoute(path) {
   if (window.location.pathname !== path) {
-    window.history.pushState({}, '', path);
+    try {
+      window.history.pushState({}, '', path);
+    } catch (e) {
+      console.warn('pushState failed, likely running from file:// URI');
+    }
   }
   
   document.querySelectorAll('.ep-nav a, .ep-nav-secondary a, .nav-link').forEach(el => {
@@ -1512,14 +1516,14 @@ function handleRoute(path) {
     }
   });
   
-  // Special case: if path is '/' activate Home
-  if (path === '/' || path === '/index.html') {
-    const homeLink = document.querySelector('.ep-nav a[data-route="/"]');
-    if (homeLink) homeLink.classList.add('ep-active');
+  // Special case: if path is '/' activate Explore
+  if (path === '/' || path.endsWith('/index.html')) {
+    const exploreLink = document.querySelector('.ep-nav a[data-route="/explore"]');
+    if (exploreLink) exploreLink.classList.add('ep-active');
   }
 
-  const isExplore = path === '/explore';
-  const isHome = path === '/' || path === '/index.html';
+  const isExplore = path === '/' || path === '/explore' || path.endsWith('/index.html');
+  const isHome = path === '/home';
   
   document.getElementById('view-explore').style.display = isExplore ? 'block' : 'none';
   const homeView = document.getElementById('view-home');
