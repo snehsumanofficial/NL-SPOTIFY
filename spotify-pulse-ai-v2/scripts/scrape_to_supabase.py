@@ -13,8 +13,15 @@ url = os.environ.get("NEXT_PUBLIC_SUPABASE_URL")
 key = os.environ.get("NEXT_PUBLIC_SUPABASE_ANON_KEY")
 openai_key = os.environ.get("OPENAI_API_KEY")
 
-if not url or not key or not openai_key:
+missing = []
+if not url: missing.append("NEXT_PUBLIC_SUPABASE_URL")
+if not key: missing.append("NEXT_PUBLIC_SUPABASE_ANON_KEY")
+if not openai_key: missing.append("OPENAI_API_KEY")
+
+if missing:
+    print(f"MISSING ENV VARIABLES: {', '.join(missing)}")
     raise ValueError("Supabase URL, Key, and OpenAI Key must be set in environment variables.")
+
 
 url = url.strip()
 key = key.strip()
@@ -126,5 +133,12 @@ def scrape_and_upload():
         
     print("Live scrape complete!")
 
+import traceback
+
 if __name__ == "__main__":
-    scrape_and_upload()
+    try:
+        scrape_and_upload()
+    except Exception as e:
+        print("An error occurred during scrape_and_upload:")
+        traceback.print_exc()
+        raise
