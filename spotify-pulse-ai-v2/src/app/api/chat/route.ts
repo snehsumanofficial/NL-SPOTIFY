@@ -68,7 +68,7 @@ export async function POST(req: Request) {
 
     // 4. Format retrieved reviews into a string for the LLM
     const reviewsContext = retrievedReviews.map((r: any, i: number) => 
-      `[${i+1}] Source: ${r.source} | Rating: ${r.rating} | Review: "${r.text}"`
+      `[${i+1}] Source: ${r.source} | Date: ${new Date(r.date).toLocaleString()} | Rating: ${r.rating} | Review: "${r.text}"`
     ).join('\n');
 
     const systemPrompt = `You are a Senior Product Manager at Spotify.
@@ -94,8 +94,8 @@ Format your response exactly as follows:
 * **Sources:** [List sources with percentages, e.g., Reddit (65%), Spotify Community (35%)]
 
 ### Representative User Quotes
-> "[Quote 1]" - *[Source 1]*
-> "[Quote 2]" - *[Source 2]*
+> "[Quote 1]" - *[Source 1], [Date and Time]*
+> "[Quote 2]" - *[Source 2], [Date and Time]*
 
 ### Root Cause
 [Explain the underlying reason for the user pain point]
