@@ -239,3 +239,37 @@ Format your response exactly with these markdown sections (do not output JSON, j
             "reviews": evidence_reviews
         }
     }
+
+@app.get("/api/dashboard")
+async def get_dashboard_data():
+    total_reviews = len(ALL_REVIEWS)
+    pos = sum(1 for r in ALL_REVIEWS if r.get("sentiment") == "Positive")
+    neu = sum(1 for r in ALL_REVIEWS if r.get("sentiment") == "Neutral")
+    neg = sum(1 for r in ALL_REVIEWS if r.get("sentiment") == "Negative")
+    
+    # Calculate theme data based on sources
+    sources = {}
+    for r in ALL_REVIEWS:
+        s = r.get("source", "Unknown")
+        sources[s] = sources.get(s, 0) + 1
+        
+    theme_data = [{"name": k, "value": v} for k, v in sources.items()]
+    
+    # Static simulated trend line relative to totals
+    sentiment_trend = [
+        {"name": "Week 1", "pos": int(pos*0.15), "neu": int(neu*0.15), "neg": int(neg*0.15)},
+        {"name": "Week 2", "pos": int(pos*0.25), "neu": int(neu*0.25), "neg": int(neg*0.25)},
+        {"name": "Week 3", "pos": int(pos*0.20), "neu": int(neu*0.20), "neg": int(neg*0.20)},
+        {"name": "Week 4", "pos": int(pos*0.40), "neu": int(neu*0.40), "neg": int(neg*0.40)},
+    ]
+    
+    return {
+        "total_reviews": total_reviews,
+        "sentiment_distribution": {
+            "Positive": pos,
+            "Neutral": neu,
+            "Negative": neg
+        },
+        "theme_data": theme_data,
+        "sentiment_trend": sentiment_trend
+    }
