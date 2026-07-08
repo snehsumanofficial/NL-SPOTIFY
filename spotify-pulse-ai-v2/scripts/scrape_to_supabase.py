@@ -11,12 +11,14 @@ if os.path.exists(dotenv_path):
 
 url = os.environ.get("NEXT_PUBLIC_SUPABASE_URL")
 key = os.environ.get("NEXT_PUBLIC_SUPABASE_ANON_KEY")
+openai_key = os.environ.get("OPENAI_API_KEY")
 
-if not url or not key:
-    raise ValueError("Supabase URL and Key must be set in environment variables.")
+if not url or not key or not openai_key:
+    raise ValueError("Supabase URL, Key, and OpenAI Key must be set in environment variables.")
 
 url = url.strip()
 key = key.strip()
+openai_key = openai_key.strip()
 
 headers = {
     "apikey": key,
@@ -24,6 +26,20 @@ headers = {
     "Content-Type": "application/json",
     "Prefer": "return=representation"
 }
+
+def get_embedding(text):
+    try:
+        res = requests.post(
+            "https://api.openai.com/v1/embeddings",
+            headers={"Authorization": f"Bearer {openai_key}", "Content-Type": "application/json"},
+            json={"model": "text-embedding-3-small", "input": text}
+        )
+        res_data = res.json()
+        if "data" in res_data and len(res_data["data"]) > 0:
+            return res_data["data"][0]["embedding"]
+    except Exception as e:
+        print(f"Embedding error: {e}")
+    return None
 
 def scrape_and_upload():
     print("Fetching newest Spotify reviews from Google Play Store...")
@@ -36,6 +52,7 @@ def scrape_and_upload():
     )
     
     new_reviews = []
+    print("Generating embeddings for new reviews...")
     for r in result:
         text = r.get('content', '')
         score = r.get('score', 0)
@@ -49,11 +66,15 @@ def scrape_and_upload():
         else:
             date_str = datetime.datetime.utcnow().isoformat()
             
+        text_truncated = text[:5000]
+        embedding = get_embedding(text_truncated)
+            
         new_reviews.append({
-            "text": text[:5000],
+            "text": text_truncated,
             "rating": score,
             "source": "Play Store",
-            "date": date_str
+            "date": date_str,
+            "embedding": embedding
         })
         
     if not new_reviews:
