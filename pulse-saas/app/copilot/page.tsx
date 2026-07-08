@@ -35,7 +35,7 @@ export default function CopilotPage() {
     setIsTyping(true);
 
     try {
-      const response = await fetch("http://localhost:8000/api/copilot", {
+      const response = await fetch("/api/copilot", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ query: input }),

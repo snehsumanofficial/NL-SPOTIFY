@@ -28,12 +28,15 @@ class CopilotRequest(BaseModel):
 
 def load_reviews():
     all_reviews = []
-    # Find all CSV files in the current directory
-    csv_files = glob.glob("*.csv")
+    # Find all CSV files in the data directory
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    data_dir = os.path.join(base_dir, "data")
+    csv_files = glob.glob(os.path.join(data_dir, "*.csv"))
     for file in csv_files:
         try:
             df = pd.read_csv(file)
-            source_name = file.replace(".csv", "").replace("_", " ").title()
+            basename = os.path.basename(file)
+            source_name = basename.replace(".csv", "").replace("_", " ").title()
             
             # Find the text column (could be 'summary_paraphrased' or 'comment_text')
             text_col = None
