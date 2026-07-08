@@ -1,4 +1,4 @@
-name: Daily Scraper
+name: Daily Supabase Scraper
 
 on:
   schedule:
@@ -6,7 +6,7 @@ on:
   workflow_dispatch: # Allows manual triggering from GitHub UI
 
 jobs:
-  scrape-and-update:
+  scrape-and-upload:
     runs-on: ubuntu-latest
     
     steps:
@@ -19,15 +19,10 @@ jobs:
           python-version: '3.10'
           
       - name: Install dependencies
-        run: pip install -r pulse-saas/requirements.txt
+        run: pip install -r spotify-pulse-ai-v2/requirements.txt
         
-      - name: Run Play Store Scraper
-        run: python pulse-saas/scripts/scrape_reviews.py
-        
-      - name: Commit and Push Changes
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add pulse-saas/api/data/live_playstore_reviews.csv
-          # Only commit if there are changes
-          git diff --quiet && git diff --staged --quiet || (git commit -m "Automated update of live play store reviews [skip ci]" && git push)
+      - name: Run Supabase Play Store Scraper
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+        run: python spotify-pulse-ai-v2/scripts/scrape_to_supabase.py
